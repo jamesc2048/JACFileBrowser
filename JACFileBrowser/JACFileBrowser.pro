@@ -55,3 +55,11 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../JACFFmpegLib/release/ -lJACFFmpegLib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../JACFFmpegLib/debug/ -lJACFFmpegLib
+
+INCLUDEPATH += $$PWD/../../JACFFmpegLib \
+                $$PWD/../../JACFFmpegLib/FFmpeg_libs/include
+DEPENDPATH += $$PWD/../../JACFFmpegLib \
+                $$PWD/../../JACFFmpegLib/FFmpeg_libs/include

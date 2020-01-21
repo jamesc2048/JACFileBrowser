@@ -9,6 +9,8 @@
 #include "qmlutils.hpp"
 #include "viewmodelbase.hpp"
 
+#include <string>
+
 #define REGISTER_METATYPE(t) qRegisterMetaType<t>(#t)
 
 #endif // PCH_HPP
