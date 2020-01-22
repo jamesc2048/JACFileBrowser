@@ -7,6 +7,7 @@
 
 int main(int argc, char *argv[])
 {
+
     qDebug() << JACFFmpegLib().test().c_str();
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

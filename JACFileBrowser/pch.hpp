@@ -10,6 +10,7 @@
 #include "viewmodelbase.hpp"
 
 #include <string>
+#include <cstdlib>
 
 #define REGISTER_METATYPE(t) qRegisterMetaType<t>(#t)
 

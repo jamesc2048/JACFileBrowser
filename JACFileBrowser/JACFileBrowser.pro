@@ -1,5 +1,5 @@
-QT += quick network qml
-CONFIG += c++17
+QT += quick network qml multimedia
+CONFIG += c++17 console
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -36,12 +36,12 @@ PRECOMPILED_HEADER = pch.hpp
 RESOURCES += qml.qrc
 
 *g++ {
-   message("Adding -Werror for G++")
+   #message("Adding -Werror for G++")
    QMAKE_CXXFLAGS += -Werror
 }
 
 win32-msvc* {
-   message("Adding /WX for MSVC")
+   #message("Adding /WX for MSVC")
    QMAKE_CXXFLAGS += /WX
 }
 
@@ -56,10 +56,30 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../JACFFmpegLib/release/ -lJACFFmpegLib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../JACFFmpegLib/debug/ -lJACFFmpegLib
+# Copy over FFmpeg DLLs on Windows. Not sure if there is a nicer way to do this
+# On Linux FFmpeg binaries should be in standard paths
+win32 {
+    CONFIG(debug, debug|release) {
+        LIBS += -L$$OUT_PWD/../../JACFFmpegLib/debug/ -lJACFFmpegLib
+        QMAKE_POST_LINK += xcopy /Y $$shell_quote($$shell_path($$PWD/../../JACFFmpegLib/FFmpeg_libs/bin/*.dll)) \
+                                    $$shell_quote($$shell_path($$OUT_PWD/debug))
+
+        QMAKE_POST_LINK += && xcopy /Y $$shell_quote($$shell_path($$PWD/../JACFFmpegLib/debug/*.dll)) \
+                                    $$shell_quote($$shell_path($$OUT_PWD/debug))
+    }
+
+    CONFIG(release, debug|release) {
+        LIBS += -L$$OUT_PWD/../../JACFFmpegLib/release/ -lJACFFmpegLib
+        QMAKE_POST_LINK += xcopy /Y $$shell_quote($$shell_path($$PWD/../../JACFFmpegLib/FFmpeg_libs/bin/*.dll)) \
+                                    $$shell_quote($$shell_path($$OUT_PWD/release))
+
+        QMAKE_POST_LINK += && xcopy /Y $$shell_quote($$shell_path($$PWD/../JACFFmpegLib/release/*.dll)) \
+                                    $$shell_quote($$shell_path($$OUT_PWD/release))
+    }
+}
 
 INCLUDEPATH += $$PWD/../../JACFFmpegLib \
                 $$PWD/../../JACFFmpegLib/FFmpeg_libs/include
 DEPENDPATH += $$PWD/../../JACFFmpegLib \
                 $$PWD/../../JACFFmpegLib/FFmpeg_libs/include
+

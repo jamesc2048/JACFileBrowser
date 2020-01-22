@@ -9,10 +9,12 @@ class ExplorerTabViewModel : public ViewModelBase
 {
     Q_OBJECT
 
+    QML_READONLY_PROPERTY(int, tabId)
     QML_READONLY_PROPERTY(QString, name)
     QML_READONLY_PROPERTY(QString, currentPath)
     QML_READONLY_PROPERTY(QQmlObjectListModel<ContentsViewModel> *, currentContents)
 
+    QDir currentPathDir;
     void refreshFilesAndDirs();
 
 public:

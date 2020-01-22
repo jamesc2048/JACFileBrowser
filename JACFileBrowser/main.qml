@@ -9,6 +9,32 @@ ApplicationWindow {
     height: 600
     title: "JAC File Browser"
 
+    menuBar: MenuBar {
+        Menu {
+            title: "&File"
+
+            Action {
+                text: qsTr("&Quit")
+                onTriggered: Qt.quit()
+            }
+        }
+
+        Menu {
+            title: ("&Edit")
+
+            Action { text: qsTr("Cu&t") }
+            Action { text: qsTr("&Copy") }
+            Action { text: qsTr("&Paste") }
+        }
+
+        Menu {
+            title: ("&Help")
+
+            Action { text: ("&About") }
+        }
+
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
@@ -21,7 +47,7 @@ ApplicationWindow {
                 model: viewModel.explorerTabs
 
                 delegate: TabButton {
-                    text: "Tab " + (index + 1) + " - " + name
+                    text: name
                 }
             }
 

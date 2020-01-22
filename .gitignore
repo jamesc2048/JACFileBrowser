@@ -52,3 +52,5 @@ compile_commands.json
 *creator.user*
 /JACFFmpegLib/debug
 /JACFFmpegLib/.qmake.stash
+/install
+/JACFFmpegLib/release
