@@ -1,7 +1,7 @@
 #ifndef EXPLORERTABVIEWMODEL_HPP
 #define EXPLORERTABVIEWMODEL_HPP
 
-#include "pch.hpp"
+#include "common.hpp"
 
 #include "contentsviewmodel.hpp"
 
@@ -10,6 +10,7 @@ class ExplorerTabViewModel : public ViewModelBase
     Q_OBJECT
 
     QML_READONLY_PROPERTY(int, tabId)
+    QML_READONLY_PROPERTY(bool, isRefreshing)
     QML_READONLY_PROPERTY(QString, name)
     QML_READONLY_PROPERTY(QString, currentPath)
     QML_READONLY_PROPERTY(QQmlObjectListModel<ContentsViewModel> *, currentContents)
@@ -18,7 +19,7 @@ class ExplorerTabViewModel : public ViewModelBase
     void refreshFilesAndDirs();
 
 public:
-    ExplorerTabViewModel();
+    ExplorerTabViewModel(QObject *parent = nullptr);
 
     Q_INVOKABLE void contentDoubleClick(int i);
 };

@@ -9,8 +9,10 @@ class ContentsViewModel : public ViewModelBase
 
     QML_WRITABLE_PROPERTY(QString, name)
     QML_WRITABLE_PROPERTY(bool, isDir)
-public:
-    ContentsViewModel(QFileInfo fi);
+    QML_WRITABLE_PROPERTY(bool, isSelected)
+
+public:  
+    ContentsViewModel(QFileInfo fi, QObject *parent = nullptr);
 };
 
 #endif // FILEVIEWMODEL_HPP

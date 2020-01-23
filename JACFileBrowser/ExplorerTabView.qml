@@ -8,50 +8,50 @@ ScrollView {
 
     clip: true
 
-    ListView {
-        id: listView
+    StackLayout {
         Layout.preferredHeight: contentHeight
         Layout.fillWidth: true
+        currentIndex: isRefreshing ? 0 : 1
 
-        model: currentContents
+        Text {
+            renderType: Text.NativeRendering
+            text: "Refreshing..."
+        }
 
-//        highlight: Rectangle {
-//            color: "lightsteelblue";
-//            radius: 5
-//            width: parent.width
-//        }
+        ListView {
 
-        //highlightFollowsCurrentItem: true
+            id: listView
+            Layout.preferredHeight: contentHeight
+            Layout.fillWidth: true
+            focus: true
 
-        delegate: Rectangle {
-            property bool isSelected: false
+            model: currentContents
 
-            id: rect
-            width: parent.width
-            height: 20
-            color: isSelected ? "#FFCCCCCC" : "transparent"
+            property bool ctrlPressed: false
 
-            Text {
-                id: text
+            Keys.onPressed: {
+                if (event.modifiers == Qt.ControlModifier) {
+                    ctrlPressed = true
+                }
+            }
+
+            Keys.onReleased:  {
+                if (event.modifiers == Qt.ControlModifier) {
+                    ctrlPressed = false
+                }
+            }
+
+            delegate: Rectangle {
+                id: rect
                 width: parent.width
-                height: 20
-                text: (isDir ? "Dir: " : "File: ") + name + (rect.isSelected ? "(selected)" : "")
+                height: 25
+                color: isSelected ? "#FFCCCCCC" : "transparent"
 
-                MouseArea {
-                    acceptedButtons: Qt.AllButtons
+                Text {
+                    renderType: Text.NativeRendering
+                    id: text
                     anchors.fill: parent
-                    onClicked: {
-                        if (mouse.button == Qt.LeftButton) {
-                            console.log("Left mouse")
-                            rect.isSelected = !rect.isSelected
-                        }
-                        else if (mouse.button == Qt.RightButton) {
-                            console.log("Right mouse")
-                            menu.open()
-                        }
-                    }
-
-                    onDoubleClicked: viewModel.explorerTabs.get(vmIndex).contentDoubleClick(index)
+                    text: (isDir ? "Dir: " : "File: ") + name + (isSelected ? "(selected)" : "")
 
                     Menu {
                         id: menu
@@ -60,6 +60,32 @@ ScrollView {
                         Action { text: "Cu&t" }
                         Action { text: "&Copy" }
                         Action { text: "&Paste" }
+                    }
+
+                    MouseArea {
+                        propagateComposedEvents: true
+                        acceptedButtons: Qt.AllButtons
+                        anchors.fill: parent
+                        onContainsMouseChanged: console.log("mouseee")
+                        onClicked: {
+                            console.log("mousebutton " + mouse.button)
+
+                            if (mouse.button == Qt.LeftButton && viewModel.isCtrlPressed) {
+                                console.log("Left mouse with ctrl")
+                                isSelected = !isSelected
+                            }
+                            else if (mouse.button == Qt.RightButton) {
+                                console.log("Right mouse")
+                                menu.open()
+                            }
+                        }
+
+                        onDoubleClicked: {
+                            console.log("doubleclicked")
+                            viewModel.explorerTabs.get(vmIndex).contentDoubleClick(index)
+                        }
+
+
                     }
                 }
             }

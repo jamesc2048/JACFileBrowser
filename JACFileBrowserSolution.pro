@@ -1,8 +1,8 @@
 TEMPLATE = subdirs
 
 SUBDIRS += JACFileBrowser \
-            ../JACFFmpegLib
+#           ../JACFFmpegLib
 
 
-JACFileBrowser.depends = ../JACFFmpegLib
+#JACFileBrowser.depends = ../JACFFmpegLib
 

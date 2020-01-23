@@ -37,11 +37,45 @@ ApplicationWindow {
 
     ColumnLayout {
         anchors.fill: parent
+        focus: true
+
+        Keys.onPressed: {
+            console.log(event.key)
+            console.log(event.modifiers)
+
+            // Ctrl key id
+            if (event.key == 16777249) {
+                viewModel.isCtrlPressed = true
+            }
+
+            if (viewModel.isCtrlPressed) {
+                if (event.key == Qt.Key_T) {
+                    viewModel.openNewTab()
+                    event.accepted = true
+                }
+                else if (event.key == Qt.Key_W) {
+                    viewModel.closeCurrentTab()
+                    event.accepted = true
+                }
+            }
+        }
+
+        Keys.onReleased: {
+            console.log(event.key)
+            console.log(event.modifiers)
+
+            if (event.key == 16777249) {
+                viewModel.isCtrlPressed = false
+            }
+        }
 
         TabBar {
+            visible: viewModel.explorerTabs.count > 1
             Layout.fillWidth: true
 
             id: tabBar
+
+            onCurrentIndexChanged: viewModel.currentTabIndex = tabBar.currentIndex
 
             Repeater {
                 model: viewModel.explorerTabs
@@ -65,6 +99,14 @@ ApplicationWindow {
                 delegate: ExplorerTabView {
                     vmIndex: index
                 }
+            }
+
+            MouseArea {
+                acceptedButtons: Qt.AllButtons
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+
+                onPressed: console.log("aaaaa")
             }
         }
     }
