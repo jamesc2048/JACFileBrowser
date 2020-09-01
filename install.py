@@ -3,7 +3,7 @@ import os
 import subprocess as sp
 
 install_dir = "install"
-qt_sdk_path = r"C:\SDK\Qt\5.14.0\msvc2017_64"
+qt_sdk_path = r"C:\SDK\Qt\5.15.1\msvc2019_64"
 
 try:
     os.removedirs(install_dir)
