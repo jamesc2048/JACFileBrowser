@@ -15,7 +15,7 @@ try:
 except:
     pass
 
-out_dirs = [r"build-JACFileBrowserSolution-Desktop_Qt_5_14_0_MSVC2017_64bit-Release\JACFileBrowser\release", r"JACFFmpegLib\release"]
+out_dirs = [r"build-JACFileBrowser-Desktop_Qt_5_15_1_MSVC2019_64bit-Release\release"]
 
 for out_dir in out_dirs:
     for f in (x for x in os.listdir(out_dir) if os.path.splitext(x)[1] in [".dll", ".exe"]):

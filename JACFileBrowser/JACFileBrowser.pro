@@ -1,6 +1,14 @@
-QT += quick
+QT += quick gui
 
-CONFIG += c++17
+CONFIG += c++17 qtquickcompiler
+
+CONFIG(release, debug|release): {
+    message("Release mode")
+    CONFIG += ltcg
+}
+else {
+    message("Debug mode")
+}
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -29,3 +37,17 @@ HEADERS += \
     backend.hpp \
     contentsmodel.hpp \
     tabsmodel.hpp
+
+VERSION = 0.1.0.0
+
+win32: {
+    RC_ICONS = icons/appIcon.ico
+}
+
+msvc {
+    message("MSVC opts")
+    QMAKE_CXXFLAGS += /WX
+}
+else {
+    QMAKE_CXXFLAGS += -Werror
+}
