@@ -7,7 +7,7 @@ ApplicationWindow {
     width: 800
     height: 600
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("JACFileExplorer")
 
     menuBar: MenuBar {
         Menu {
@@ -16,13 +16,19 @@ ApplicationWindow {
             Action {
                 text: "New Tab"
                 shortcut: "Ctrl+T"
-                onTriggered: Qt.quit()
+                onTriggered: backend.newTab(tabBar.currentIndex)
             }
 
             Action {
                 text: "Close Tab"
                 shortcut: "Ctrl+W"
-                onTriggered: Qt.quit()
+                onTriggered: {
+                    backend.closeTab(tabBar.currentIndex)
+
+                    if (backend.tabsModel.rowCount() <= 0) {
+                        Qt.quit();
+                    }
+                }
             }
 
             MenuSeparator { }
@@ -62,6 +68,10 @@ ApplicationWindow {
                 model: backend.tabsModel
 
                 delegate: ListView {
+                    flickableDirection: Flickable.VerticalFlick
+                    boundsBehavior: Flickable.StopAtBounds
+                    ScrollBar.vertical: ScrollBar {}
+
                     model: contentsModel
 
                     delegate: Text {

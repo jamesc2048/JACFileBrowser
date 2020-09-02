@@ -15,6 +15,9 @@ class Backend : public QObject
 public:
     explicit Backend(QObject *parent = nullptr);
 
+    Q_INVOKABLE void newTab(int index);
+    Q_INVOKABLE void closeTab(int index);
+
 signals:
     void tabsModelChanged(QObject* tabsModel);
 };
