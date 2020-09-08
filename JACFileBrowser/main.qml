@@ -89,159 +89,193 @@ ApplicationWindow {
             }
         }
 
-        StackLayout {
-            currentIndex: tabBar.currentIndex
-            Layout.fillWidth: true
+        SplitView {
             Layout.fillHeight: true
+            Layout.fillWidth: true
 
-            Repeater {
-                model: backend.tabsModel
+            ListView {
+                SplitView.preferredWidth: 200
 
-                delegate: ColumnLayout {
-                    ToolBar {
-                        Layout.fillWidth: true
+                model: backend.drivesModel
 
-                        RowLayout {
-                             anchors.fill: parent
+                delegate: Rectangle {
+                    id: rect
+                    width: parent.width
+                    height: 30
 
-                             ToolButton {
-                                 text: "<"
-                                 onClicked: stack.pop()
-                             }
+                    color: ma.containsMouse ? "lightgray" : "white"
 
-                             ToolButton {
-                                 text: ">"
-                                 onClicked: stack.pop()
-                             }
+                    Text {
+                        anchors.fill: parent
+                        verticalAlignment: Text.AlignVCenter
 
-//                             Label {
-//                                 text: path
-//                                 elide: Label.ElideRight
-//                                 horizontalAlignment: Qt.AlignHCenter
-//                                 verticalAlignment: Qt.AlignVCenter
-//                                 Layout.fillWidth: true
-//                             }
+                        text: path + (name != "" ? " (" + name + ")" : "")
 
-                             TextField {
-                                 Layout.fillWidth: true
+                        MouseArea {
+                            id: ma
+                            anchors.fill: parent
+                            hoverEnabled: true
 
-                                 text: contentsModel.path
-                                 //horizontalAlignment: Qt.AlignHCenter
-                                 verticalAlignment: Qt.AlignVCenter
+                            onDoubleClicked: backend.navigateTab(tabBar.currentIndex, path)
+                        }
+                    }
+                }
+            }
 
-                                 Keys.onPressed: {
-                                     switch (event.key) {
-                                         // enter = keypad enter, return = normal enter
-                                        case Qt.Key_Enter:
-                                        case Qt.Key_Return:
-                                            console.log("Key pressed", text, event.key, Qt.Key_Enter)
+            StackLayout {
+                currentIndex: tabBar.currentIndex
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                                            contentsModel.path = text
+                Repeater {
+                    model: backend.tabsModel
+
+                    delegate: ColumnLayout {
+                        ToolBar {
+                            Layout.fillWidth: true
+
+                            RowLayout {
+                                 anchors.fill: parent
+
+                                 ToolButton {
+                                     text: "<"
+                                     onClicked: stack.pop()
+                                 }
+
+                                 ToolButton {
+                                     text: ">"
+                                     onClicked: stack.pop()
+                                 }
+
+    //                             Label {
+    //                                 text: path
+    //                                 elide: Label.ElideRight
+    //                                 horizontalAlignment: Qt.AlignHCenter
+    //                                 verticalAlignment: Qt.AlignVCenter
+    //                                 Layout.fillWidth: true
+    //                             }
+
+                                 TextField {
+                                     Layout.fillWidth: true
+
+                                     text: contentsModel.path
+                                     //horizontalAlignment: Qt.AlignHCenter
+                                     verticalAlignment: Qt.AlignVCenter
+
+                                     Keys.onPressed: {
+                                         switch (event.key) {
+                                             // enter = keypad enter, return = normal enter
+                                            case Qt.Key_Enter:
+                                            case Qt.Key_Return:
+                                                console.log("Key pressed", text, event.key, Qt.Key_Enter)
+
+                                                contentsModel.path = text
+                                         }
                                      }
                                  }
                              }
-                         }
-                    }
+                        }
 
-                    GridView {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
+                        GridView {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
 
-                        id: gridView
-
-                        clip: true
-                        flickableDirection: Flickable.VerticalFlick
-                        boundsBehavior: Flickable.StopAtBounds
-                        ScrollBar.vertical: ScrollBar {}
-
-                        model: contentsModel
-
-                        cellWidth: props.cellWidth
-                        cellHeight: props.cellHeight
-
-                        delegate: Rectangle {
-                            id: rect
+                            id: gridView
 
                             clip: true
+                            flickableDirection: Flickable.VerticalFlick
+                            boundsBehavior: Flickable.StopAtBounds
+                            ScrollBar.vertical: ScrollBar {}
 
-                            border {
-                                color: "black"
-                                width: 1
-                            }
+                            model: contentsModel
 
-                            color: isSelected ? "lightsteelblue" :
-                                                mouseArea.containsMouse ? "lightgray" : "white"
+                            cellWidth: props.cellWidth
+                            cellHeight: props.cellHeight
 
-                            radius: 5
+                            delegate: Rectangle {
+                                id: rect
 
-                            width: gridView.cellWidth - 10
-                            height: gridView.cellHeight - 10
+                                clip: true
 
-                            ColumnLayout {
-                                width: rect.width
-                                height: rect.height
-
-                                Image {
-                                    Layout.topMargin: 5
-                                    Layout.preferredWidth: rect.width
-                                    Layout.preferredHeight: rect.height / 2
-
-                                    fillMode: Image.PreserveAspectFit
-                                    source: isFolder ? "qrc:/icons/folderIcon.png" : "qrc:/icons/fileIcon.png"
-                                    // NOTE: set to false when using the real preview
-                                    cache: true
+                                border {
+                                    color: "black"
+                                    width: 1
                                 }
 
-                                Text {
-                                    Layout.fillHeight: true
-                                    Layout.maximumWidth: rect.width
-                                    Layout.margins: 5
-                                    Layout.alignment: Qt.AlignHCenter
+                                color: isSelected ? "lightsteelblue" :
+                                                    mouseArea.containsMouse ? "lightgray" : "white"
 
-                                    renderType: Text.NativeRendering
-                                    wrapMode: Text.Wrap
-                                    text: name
-                                }
+                                radius: 5
 
-                                Popup {
-                                    id: popup
-                                     //x: 100
-                                     y: rect.height
-                                     //width: 200
-                                     //height: 300
-                                     //modal: true
-                                     //focus: true
-                                     //closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-                                     visible: mouseArea.containsMouse
+                                width: gridView.cellWidth - 10
+                                height: gridView.cellHeight - 10
 
-                                    contentItem: Text {
+                                ColumnLayout {
+                                    width: rect.width
+                                    height: rect.height
+
+                                    Image {
+                                        Layout.topMargin: 5
+                                        Layout.preferredWidth: rect.width
+                                        Layout.preferredHeight: rect.height / 2
+
+                                        fillMode: Image.PreserveAspectFit
+                                        source: isFolder ? "qrc:/icons/folderIcon.png" : "qrc:/icons/fileIcon.png"
+                                        // NOTE: set to false when using the real preview
+                                        cache: true
+                                    }
+
+                                    Text {
+                                        Layout.fillHeight: true
+                                        Layout.maximumWidth: rect.width
+                                        Layout.margins: 5
+                                        Layout.alignment: Qt.AlignHCenter
+
                                         renderType: Text.NativeRendering
                                         wrapMode: Text.Wrap
                                         text: name
                                     }
+
+                                    Popup {
+                                        id: popup
+                                         //x: 100
+                                         y: rect.height
+                                         //width: 200
+                                         //height: 300
+                                         //modal: true
+                                         //focus: true
+                                         //closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+                                         visible: mouseArea.containsMouse
+
+                                        contentItem: Text {
+                                            renderType: Text.NativeRendering
+                                            wrapMode: Text.Wrap
+                                            text: name
+                                        }
+                                    }
                                 }
-                            }
 
-                            MouseArea {
-                                id: mouseArea
-                                hoverEnabled: true
-                                anchors.fill: parent
+                                MouseArea {
+                                    id: mouseArea
+                                    hoverEnabled: true
+                                    anchors.fill: parent
 
-                                onDoubleClicked: {
-                                    // May open file or change dir.
-                                    backend.openAction(tabBar.currentIndex, index)
-                                }
+                                    onDoubleClicked: {
+                                        // May open file or change dir.
+                                        backend.openAction(tabBar.currentIndex, index)
+                                    }
 
-                                onClicked: {
-                                    //listView.currentIndex = index
-                                    //if (view.ctrlPressed) {
-                                    isSelected = !isSelected
-                                    //}
-    //                                else {
-    //                                    view.model.setSelected(index, !isSelected)
-    //                                }
+                                    onClicked: {
+                                        //listView.currentIndex = index
+                                        //if (view.ctrlPressed) {
+                                        isSelected = !isSelected
+                                        //}
+        //                                else {
+        //                                    view.model.setSelected(index, !isSelected)
+        //                                }
 
-                                    console.log("switch selected " + index, tabBar.currentIndex, isSelected)
+                                        console.log("switch selected " + index, tabBar.currentIndex, isSelected)
+                                    }
                                 }
                             }
                         }

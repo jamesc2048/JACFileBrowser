@@ -12,10 +12,10 @@ class TabsModel : public QAbstractListModel
     QList<ContentsModel *> mContentsModelList;
 
 public:
-    enum TabRoles
+    enum Roles
     {
         pathRole = Qt::UserRole + 1,
-        contentsModelRole = pathRole + 1
+        contentsModelRole
     };
 
     TabsModel(QObject *parent = nullptr);

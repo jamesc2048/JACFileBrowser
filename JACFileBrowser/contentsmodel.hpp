@@ -10,7 +10,7 @@ class ContentsModel : public QAbstractListModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString path MEMBER mPath NOTIFY pathChanged)
+    Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
 
     QString mPath;
     QVector<bool> isSelectedList;
@@ -22,11 +22,22 @@ public:
     enum ContentsRoles
     {
         nameRole = Qt::UserRole + 1,
-        isSelectedRole = nameRole + 1,
-        isFolderRole = isSelectedRole + 1,
-        sizeRole = isFolderRole + 1,
-        absolutePathRole = sizeRole + 1
+        isSelectedRole,
+        isFolderRole,
+        sizeRole,
+        absolutePathRole
     };
+
+    QString path()
+    {
+        return mPath;
+    }
+
+    void setPath(QString path)
+    {
+        mPath = path;
+        emit pathChanged(path);
+    }
 
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;

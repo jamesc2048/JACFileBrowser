@@ -3,6 +3,7 @@
 Backend::Backend(QObject *parent) : QObject(parent)
 {
     mTabsModel = new TabsModel(parent);
+    mDrivesModel = new DrivesModel(parent);
 }
 
 void Backend::newTab(int index)
@@ -40,4 +41,12 @@ bool Backend::openAction(int tabIndex, int contentIndex)
     }
 
     return false;
+}
+
+void Backend::navigateTab(int index, QString path)
+{
+    ContentsModel *contents = mTabsModel->data(mTabsModel->index(index), TabsModel::contentsModelRole)
+                                        .value<ContentsModel *>();
+
+    contents->setPath(path);
 }

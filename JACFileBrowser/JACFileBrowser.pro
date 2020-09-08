@@ -17,6 +17,7 @@ else {
 SOURCES += \
         backend.cpp \
         contentsmodel.cpp \
+        drivesmodel.cpp \
         main.cpp \
         tabsmodel.cpp
 
@@ -36,6 +37,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     backend.hpp \
     contentsmodel.hpp \
+    drivesmodel.hpp \
     tabsmodel.hpp
 
 VERSION = 0.1.0.0
