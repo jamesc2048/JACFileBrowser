@@ -9,6 +9,12 @@ ApplicationWindow {
     visible: true
     title: "JACFileBrowserQt6"
 
+    Component.onCompleted: {
+        Utils.httpGet("https://www.httpvshttps.com/", function(result) {
+            console.log(result)
+        })
+    }
+
     menuBar: MenuBar {
          Menu {
              title: qsTr("&File")
