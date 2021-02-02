@@ -69,14 +69,33 @@ ApplicationWindow {
     SplitView {
         anchors.fill: parent
 
-        Text {
+        ListView {
             SplitView.minimumWidth: 100
-            text: "drives"
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: ScrollBar{}
+
+            model: 50
+
+            delegate: Text {
+                text: modelData
+            }
         }
 
-        Text {
+        GridView {
+            id: mainGrid
+
             SplitView.fillWidth: true
-            text: "contents"
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: ScrollBar{}
+
+            cellWidth: 50
+            cellHeight: 50
+
+            model: 1000
+
+            delegate: Text {
+                text: modelData
+            }
         }
     }
 
