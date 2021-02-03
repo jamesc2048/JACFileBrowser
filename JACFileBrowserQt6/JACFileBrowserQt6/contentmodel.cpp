@@ -18,7 +18,8 @@ void ContentModel::setPath(QString path)
     emit pathChanged();
 
     beginResetModel();
-    mContents = QDir(path).entryInfoList(QDir::Filter::NoFilter, QDir::SortFlag::DirsFirst);
+    mContents = QDir(path).entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
+                                         QDir::SortFlag::DirsFirst);
     mIsSelectedList.resize(mContents.size());
     endResetModel();
 }
