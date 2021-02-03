@@ -10,30 +10,26 @@ ApplicationWindow {
     title: "JACFileBrowserQt6"
 
     Component.onCompleted: {
-        Utils.httpGet("https://www.httpvshttps.com/", function(result) {
-            console.log(result)
-        })
+//        Utils.httpGet("https://www.httpvshttps.com/", function(result) {
+//            console.log(result)
+//        })
+
+        ViewModel.contentModel.path = "D:\\"
+        ViewModel.contentModel.path = "E:\\QuickVideoRecorder\\swimming pool\\frames\\V_20200806_152438_ES0"
     }
 
     menuBar: MenuBar {
          Menu {
-             title: qsTr("&File")
-             Action { text: qsTr("&New...") }
-             Action { text: qsTr("&Open...") }
-             Action { text: qsTr("&Save") }
-             Action { text: qsTr("Save &As...") }
-             MenuSeparator { }
-             Action { text: qsTr("&Quit") }
-         }
-         Menu {
-             title: qsTr("&Edit")
-             Action { text: qsTr("Cu&t") }
-             Action { text: qsTr("&Copy") }
-             Action { text: qsTr("&Paste") }
-         }
-         Menu {
-             title: qsTr("&Help")
-             Action { text: qsTr("&About") }
+             title: qsTr("&View")
+
+             Action {
+                 text: "Increase Grid Size"
+                 onTriggered: grid.cellSize *= 1.25;
+             }
+             Action {
+                 text: "Decrease Grid Size"
+                 onTriggered: grid.cellSize /= 1.25;
+             }
          }
      }
 
@@ -49,14 +45,16 @@ ApplicationWindow {
                  onClicked: stack.pop()
              }
              TextField {
-                 text: "path"
+                 text: ViewModel.contentModel.path
                  horizontalAlignment: Qt.AlignHCenter
                  verticalAlignment: Qt.AlignVCenter
                  Layout.fillWidth: true
                  selectByMouse: true
 
-                 Keys.onEnterPressed: {
-                     // load path
+                 Keys.onPressed: {
+                     if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+                        ViewModel.contentModel.path = text
+                     }
                  }
              }
              ToolButton {
@@ -82,19 +80,54 @@ ApplicationWindow {
         }
 
         GridView {
-            id: mainGrid
+            id: grid
 
             SplitView.fillWidth: true
             boundsBehavior: Flickable.StopAtBounds
             ScrollBar.vertical: ScrollBar{}
 
-            cellWidth: 50
-            cellHeight: 50
+            property int cellSize: 100
+            cellWidth: cellSize
+            cellHeight: cellSize
 
-            model: 1000
+            model: ViewModel.contentModel
 
-            delegate: Text {
-                text: modelData
+            delegate: Rectangle {
+                width: grid.cellWidth
+                height: grid.cellHeight
+
+                color: isSelected ? "lightblue" : "white"
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: isSelected = !isSelected
+                }
+
+                ColumnLayout {
+                    width: grid.cellWidth
+                    height: grid.cellHeight
+
+                    Image {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+
+                        source: url
+                        sourceSize.width: grid.cellWidth
+                        sourceSize.height: 0
+                        asynchronous: true
+                        cache: false
+                        fillMode: Image.PreserveAspectFit
+                    }
+
+                    Text {
+                        Layout.preferredHeight: 20
+                        Layout.fillWidth: true
+
+                        text: name
+                        elide: Text.ElideRight
+                    }
+                }
             }
         }
     }

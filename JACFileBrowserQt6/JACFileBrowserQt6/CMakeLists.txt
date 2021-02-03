@@ -29,7 +29,9 @@ find_package(Qt6 COMPONENTS Core Quick REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
-        utils.cpp
+        mainviewmodel.cpp
+        qmlutils.cpp
+        contentmodel.cpp
         qml.qrc
 )
 
