@@ -33,8 +33,8 @@ QVariant ContentModel::data(const QModelIndex &index, int role) const
 {
     switch (role)
     {
-    case nameRole:
-        return mContents[index.row()].fileName();
+        case nameRole:
+            return mContents[index.row()].fileName();
 
         case isDirRole:
             return mContents[index.row()].isDir();
