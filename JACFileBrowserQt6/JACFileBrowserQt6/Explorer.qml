@@ -5,12 +5,11 @@ import QtQuick.Layouts
 
 SplitView {
     id: splitView
-    anchors.fill: parent
     focus: true
 
     property int cellSize: 100
 
-    signal imageViewRequested(url image)
+    signal imageViewRequested(url imageUrl)
 
     ListView {
         id: driveList

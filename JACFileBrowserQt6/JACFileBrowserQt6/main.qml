@@ -72,7 +72,7 @@ ApplicationWindow {
             id: explorer
 
             onImageViewRequested: {
-                stackView.push("ImageViewer.qml", { "image": image })
+                stackView.push("ImageViewer.qml", { "imageUrl": imageUrl })
             }
         }
 
