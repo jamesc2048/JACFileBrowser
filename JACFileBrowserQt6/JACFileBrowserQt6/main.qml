@@ -24,11 +24,11 @@ ApplicationWindow {
 
              Action {
                  text: "Increase Grid Size"
-                 onTriggered: grid.cellSize *= 1.25;
+                 onTriggered: explorer.cellSize *= 1.25;
              }
              Action {
                  text: "Decrease Grid Size"
-                 onTriggered: grid.cellSize /= 1.25;
+                 onTriggered: explorer.cellSize /= 1.25;
              }
          }
      }
@@ -64,81 +64,18 @@ ApplicationWindow {
          }
      }
 
-    SplitView {
-        id: splitView
+    StackView {
+        id: stackView
         anchors.fill: parent
-        focus: true
 
-        ListView {
-            SplitView.minimumWidth: 100
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar{}
+        initialItem: Explorer {
+            id: explorer
 
-            model: 50
-
-            delegate: Text {
-                text: modelData
+            onImageViewRequested: {
+                stackView.push("ImageViewer.qml", { "image": image })
             }
         }
 
-        GridView {
-            id: grid
-
-            SplitView.fillWidth: true
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar{}
-
-            property int cellSize: 100
-            cellWidth: cellSize
-            cellHeight: cellSize
-
-            model: ViewModel.contentModel
-
-            delegate: Rectangle {
-                width: grid.cellWidth
-                height: grid.cellHeight
-
-                color: isSelected ? "lightblue" : "white"
-
-                MouseArea {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        ViewModel.contentModel.toggleSelect(index)
-                        splitView.focus = true
-                    }
-                    onDoubleClicked: {
-                        console.log("double click " + index)
-                        ViewModel.contentModel.itemDoubleClicked(index)
-                    }
-                }
-
-                ColumnLayout {
-                    width: grid.cellWidth
-                    height: grid.cellHeight
-
-                    Image {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-
-                        source: url
-                        sourceSize.width: grid.cellWidth
-                        sourceSize.height: 0
-                        asynchronous: true
-                        cache: false
-                        fillMode: Image.PreserveAspectFit
-                    }
-
-                    Text {
-                        Layout.preferredHeight: 20
-                        Layout.fillWidth: true
-
-                        text: name
-                        elide: Text.ElideRight
-                    }
-                }
-            }
-        }
     }
 
     footer: Item {

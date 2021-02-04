@@ -25,7 +25,7 @@ void ContentModel::setPath(QString path)
     beginResetModel();
 
     mContents = QDir(path).entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
-                                         QDir::SortFlag::DirsFirst);
+                                         QDir::SortFlag::DirsFirst | QDir::SortFlag::Name | QDir::SortFlag::IgnoreCase);
     mIsSelectedList.resize(mContents.size());
     // assuming boolean 1 byte
     memset(mIsSelectedList.data(), 0, mIsSelectedList.size());
@@ -92,6 +92,9 @@ QVariant ContentModel::data(const QModelIndex &index, int role) const
 
         case isSelectedRole:
             return mIsSelectedList[index.row()];
+
+        case isImageRole:
+            return imageExtensionsSet.contains(mContents[index.row()].completeSuffix());
 
         default:
             return "(unknown role)";

@@ -14,6 +14,7 @@ class ContentModel : public QAbstractListModel
     static constexpr int urlRole = isDirRole + 1;
     static constexpr int absolutePathRole = urlRole + 1;
     static constexpr int isSelectedRole = absolutePathRole + 1;
+    static constexpr int isImageRole = isSelectedRole + 1;
 
     static inline QHash<int, QByteArray> roleNamesMap = {
         { nameRole, "name" },
@@ -21,6 +22,13 @@ class ContentModel : public QAbstractListModel
         { urlRole, "url" },
         { absolutePathRole, "absolutePath" },
         { isSelectedRole, "isSelected" },
+        { isImageRole, "isImage" },
+    };
+
+    static inline QSet<QString> imageExtensionsSet = {
+        "png",
+        "jpg",
+        "jpeg",
     };
 
     QList<QFileInfo> mContents;

@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>resources/file.png</file>
+        <file>resources/folder.png</file>
+        <file>Explorer.qml</file>
+        <file>ImageViewer.qml</file>
     </qresource>
 </RCC>
