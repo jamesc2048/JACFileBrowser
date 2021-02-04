@@ -15,7 +15,7 @@ ApplicationWindow {
 //        })
 
         ViewModel.contentModel.path = "D:\\"
-        ViewModel.contentModel.path = "E:\\QuickVideoRecorder\\swimming pool\\frames\\V_20200806_152438_ES0"
+        //ViewModel.contentModel.path = "E:\\QuickVideoRecorder\\swimming pool\\frames\\V_20200806_152438_ES0"
     }
 
     menuBar: MenuBar {
@@ -102,6 +102,10 @@ ApplicationWindow {
                     anchors.fill: parent
 
                     onClicked: isSelected = !isSelected
+                    onDoubleClicked: {
+                        console.log("double click " + index)
+                        ViewModel.contentModel.itemDoubleClicked(index)
+                    }
                 }
 
                 ColumnLayout {

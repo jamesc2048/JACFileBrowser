@@ -33,6 +33,7 @@ public:
     explicit ContentModel(QObject *parent = nullptr);
     QString path();
     void setPath(QString path);
+    Q_INVOKABLE void itemDoubleClicked(int index);
 
 signals:
     void pathChanged();

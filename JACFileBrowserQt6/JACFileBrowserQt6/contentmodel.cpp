@@ -3,6 +3,10 @@
 #include <QDir>
 #include <QUrl>
 
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 ContentModel::ContentModel(QObject *parent) : QAbstractListModel(parent)
 {
 }
@@ -22,6 +26,23 @@ void ContentModel::setPath(QString path)
                                          QDir::SortFlag::DirsFirst);
     mIsSelectedList.resize(mContents.size());
     endResetModel();
+}
+
+void ContentModel::itemDoubleClicked(int index)
+{
+    bool isDir = mContents[index].isDir();
+    QString absPath = mContents[index].absoluteFilePath();
+
+    if (isDir)
+    {
+        setPath(absPath);
+    }
+    else
+    {
+#ifdef _WIN32
+        ShellExecuteA(nullptr, nullptr, qPrintable(absPath), nullptr, nullptr, 0);
+#endif
+    }
 }
 
 int ContentModel::rowCount(const QModelIndex &parent) const
