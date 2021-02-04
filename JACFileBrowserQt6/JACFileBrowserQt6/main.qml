@@ -65,7 +65,9 @@ ApplicationWindow {
      }
 
     SplitView {
+        id: splitView
         anchors.fill: parent
+        focus: true
 
         ListView {
             SplitView.minimumWidth: 100
@@ -101,7 +103,10 @@ ApplicationWindow {
                 MouseArea {
                     anchors.fill: parent
 
-                    onClicked: isSelected = !isSelected
+                    onClicked: {
+                        ViewModel.contentModel.toggleSelect(index)
+                        splitView.focus = true
+                    }
                     onDoubleClicked: {
                         console.log("double click " + index)
                         ViewModel.contentModel.itemDoubleClicked(index)

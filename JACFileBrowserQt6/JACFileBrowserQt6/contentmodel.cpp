@@ -2,6 +2,7 @@
 
 #include <QDir>
 #include <QUrl>
+#include <QGuiApplication>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -22,9 +23,13 @@ void ContentModel::setPath(QString path)
     emit pathChanged();
 
     beginResetModel();
+
     mContents = QDir(path).entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
                                          QDir::SortFlag::DirsFirst);
     mIsSelectedList.resize(mContents.size());
+    // assuming boolean 1 byte
+    memset(mIsSelectedList.data(), 0, mIsSelectedList.size());
+
     endResetModel();
 }
 
@@ -43,6 +48,25 @@ void ContentModel::itemDoubleClicked(int index)
         ShellExecuteA(nullptr, nullptr, qPrintable(absPath), nullptr, nullptr, 0);
 #endif
     }
+}
+
+void ContentModel::toggleSelect(int i)
+{
+    if (QGuiApplication::keyboardModifiers() & Qt::ControlModifier)
+    {
+        setData(index(i), !mIsSelectedList[i], isSelectedRole);
+    }
+    else
+    {
+        // is there a more efficient way?
+        for (int j = 0; j < mIsSelectedList.size(); j++)
+        {
+            setData(index(j), false, isSelectedRole);
+        }
+
+        setData(index(i), true, isSelectedRole);
+    }
+
 }
 
 int ContentModel::rowCount(const QModelIndex &parent) const

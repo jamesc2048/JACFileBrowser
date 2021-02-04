@@ -34,6 +34,7 @@ public:
     QString path();
     void setPath(QString path);
     Q_INVOKABLE void itemDoubleClicked(int index);
+    Q_INVOKABLE void toggleSelect(int index);
 
 signals:
     void pathChanged();
