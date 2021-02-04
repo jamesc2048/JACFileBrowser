@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 Item {
     property url imageUrl
+    focus: true
 
     Image {
         id: image
@@ -24,9 +25,9 @@ Item {
             origin.y: image.height / 2
 
             function resetScale() {
-                scaleTransform.scale = 1
-                scaleTransform.origin.x = image.width / 2
-                scaleTransform.origin.y = image.height / 2
+                scale = 1
+                origin.x = image.width / 2
+                origin.y = image.height / 2
             }
         }
     }
