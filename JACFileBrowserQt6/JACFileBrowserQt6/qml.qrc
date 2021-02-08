@@ -5,5 +5,6 @@
         <file>resources/folder.png</file>
         <file>Explorer.qml</file>
         <file>ImageViewer.qml</file>
+        <file>qtquickcontrols2.conf</file>
     </qresource>
 </RCC>

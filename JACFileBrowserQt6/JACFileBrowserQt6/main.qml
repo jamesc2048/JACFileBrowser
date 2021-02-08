@@ -33,49 +33,73 @@ ApplicationWindow {
          }
      }
 
-    header: ToolBar {
-         RowLayout {
-             anchors.fill: parent
-             ToolButton {
-                 text: qsTr("<")
-                 onClicked: stack.pop()
-             }
-             ToolButton {
-                 text: qsTr(">")
-                 onClicked: stack.pop()
-             }
-             TextField {
-                 text: ViewModel.contentModel.path
-                 horizontalAlignment: Qt.AlignHCenter
-                 verticalAlignment: Qt.AlignVCenter
-                 Layout.fillWidth: true
-                 selectByMouse: true
+    ColumnLayout {
+        anchors.fill: parent
 
-                 Keys.onPressed: {
-                     if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
-                        ViewModel.contentModel.path = text
+        ToolBar {
+            id: toolBar
+
+            Layout.fillWidth: true
+
+            // only visible on initial stack
+            visible: stackView.depth == 1
+
+             RowLayout {
+                 id: toolRow
+                 anchors.fill: parent
+
+                 ToolButton {
+                     text: "←"
+                     // TODO implement history
+                     //onClicked: stack.pop()
+                 }
+
+                 ToolButton {
+                     text: "→"
+                     // TODO implement history
+                     //onClicked: stack.pop()
+                 }
+
+                 ToolButton {
+                     text: "↑"
+
+                     onClicked: ViewModel.contentModel.path = ViewModel.contentModel.path + "/.."
+                 }
+
+                 TextField {
+                     text: ViewModel.contentModel.path
+                     horizontalAlignment: Qt.AlignHCenter
+                     verticalAlignment: Qt.AlignVCenter
+                     Layout.fillWidth: true
+                     selectByMouse: true
+
+                     Keys.onPressed: {
+                         if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+                            ViewModel.contentModel.path = text
+                         }
                      }
                  }
              }
-             ToolButton {
-                 text: qsTr("⋮")
-                 onClicked: menu.open()
-             }
          }
-     }
 
-    StackView {
-        id: stackView
-        anchors.fill: parent
+        StackView {
+            id: stackView
 
-        initialItem: Explorer {
-            id: explorer
+            Layout.fillWidth: true
+            Layout.fillHeight: true
 
-            onImageViewRequested: {
-                stackView.push("ImageViewer.qml", { "imageUrl": imageUrl })
+            initialItem: Explorer {
+                id: explorer
+
+                onImageViewRequested: {
+                    stackView.push("ImageViewer.qml", {
+                        "imageUrl": imageUrl,
+                        "stackView": stackView
+                    })
+                }
             }
-        }
 
+        }
     }
 
     footer: Item {

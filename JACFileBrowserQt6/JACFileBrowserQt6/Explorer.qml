@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Window
 import QtQuick.Layouts
 
+import QtQuick.Controls.Universal
+
 SplitView {
     id: splitView
     focus: true
@@ -19,7 +21,7 @@ SplitView {
 
         model: 50
 
-        delegate: Text {
+        delegate: Label {
             text: modelData
         }
 
@@ -51,10 +53,13 @@ SplitView {
             width: cellSize
             height: cellSize
 
-            color: isSelected ? "lightblue" : "white"
+            // TODO query style?
+            color: isSelected ? "lightblue" : (Universal.theme == Universal.Dark ? "#333" : "white")
 
             MouseArea {
                 anchors.fill: parent
+                hoverEnabled: true
+                id: mouseArea
 
                 onClicked: {
                     ViewModel.contentModel.toggleSelect(index)
@@ -69,6 +74,12 @@ SplitView {
                         ViewModel.contentModel.itemDoubleClicked(index)
                     }
                 }
+            }
+
+            ToolTip {
+                delay: 300
+                text: name
+                visible: mouseArea.containsMouse
             }
 
             ColumnLayout {
@@ -98,7 +109,7 @@ SplitView {
                     fillMode: Image.PreserveAspectFit
                 }
 
-                Text {
+                Label {
                     Layout.preferredHeight: 20
                     Layout.maximumWidth: cellSize
                     Layout.alignment: Qt.AlignHCenter

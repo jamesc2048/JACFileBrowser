@@ -19,7 +19,7 @@ QString ContentModel::path()
 
 void ContentModel::setPath(QString path)
 {
-    mPath = path;
+    mPath = QDir::cleanPath(path);
     emit pathChanged();
 
     beginResetModel();
