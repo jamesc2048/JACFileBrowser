@@ -24,10 +24,20 @@ Window {
             cellHeight: 100
 
             delegate: Text {
-                width: gridView.cellWidth
-                height: gridView.cellHeight
-                text: field1
-                wrapMode: Text.WrapAnywhere
+                    width: gridView.cellWidth
+                    height: gridView.cellHeight
+                    text: field1
+                    wrapMode: Text.WrapAnywhere
+                }
+
+            MouseArea {
+                anchors.fill: parent
+
+                // Add contentX/Y to make it work
+                onClicked: console.log("cell",
+                                       gridView.indexAt(mouse.x + gridView.contentX,
+                                                        mouse.y + gridView.contentY))
+
             }
         }
 
@@ -67,7 +77,11 @@ Window {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: console.log("cell", tableView.cellAtPos(mouse.x, mouse.y, true))
+                    // Unlike gridView, subtract contentX/Y to make it work
+                    onClicked: console.log("cell",
+                                           tableView.cellAtPos(mouse.x - tableView.contentX,
+                                                               mouse.y - tableView.contentY,
+                                                               true))
                 }
 
                 // https://stackoverflow.com/questions/55610163/how-to-create-a-tableview-5-12-with-column-headers
@@ -93,9 +107,10 @@ Window {
 
                             background: Rectangle { color: "#333333" }
 
+                            // spawn individual mouse areas per header
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: console.log("sort?", mouse.x, mouse.y, modelData)
+                                onClicked: console.log("sort?", modelData)
                             }
                         }
                     }
