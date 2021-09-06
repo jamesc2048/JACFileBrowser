@@ -20,7 +20,7 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
     {
         // Name
         case Qt::UserRole + 0:
-            return elem.baseName();
+            return elem.fileName();
         // Size
         case Qt::UserRole + 1:
         {
@@ -35,6 +35,15 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
             humanSize /= (1024.0 * 1024.0);
 
             return QString("%1 MB").arg(humanSize, 0, 'f', 2);
+        }
+        // IsDir
+        case Qt::UserRole + 2:
+            return elem.isDir();
+
+        // Absolute Path
+        case Qt::UserRole + 3:
+        {
+            return elem.filePath();
         }
 
         default:
@@ -52,8 +61,8 @@ void ContentsModel::loadDirectory(QString path)
 {
     beginResetModel();
 
-    contents = QDir(path)
-                .entryInfoList(QDir::Filter::NoFilter, QDir::SortFlag::DirsFirst);
+    contents = QDir(QDir::cleanPath(path))
+                .entryInfoList(QDir::Filter::NoFilter, QDir::SortFlag::DirsFirst | QDir::SortFlag::Name);
 
     endResetModel();
 }

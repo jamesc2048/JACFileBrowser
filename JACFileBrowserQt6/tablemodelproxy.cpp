@@ -5,8 +5,11 @@ TableModelProxy::TableModelProxy(QAbstractListModel *proxy) :
     proxy(proxy)
 {
     // TODO maybe this should subclass QSortProxyFilter model to avoid this?
-    connect(proxy, &QAbstractListModel::modelReset, [this] {
+    connect(proxy, &QAbstractListModel::modelAboutToBeReset, [this] {
         beginResetModel();
+    });
+
+    connect(proxy, &QAbstractListModel::modelReset, [this] {
         endResetModel();
     });
 }

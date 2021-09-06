@@ -19,6 +19,7 @@ set(PROJECT_SOURCES
         tablemodelproxy.hpp tablemodelproxy.cpp
         drivesmodel.hpp drivesmodel.cpp
         contentsmodel.hpp contentsmodel.cpp
+        utils.hpp utils.cpp
         qml.qrc
 )
 

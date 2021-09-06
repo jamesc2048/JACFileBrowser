@@ -11,6 +11,8 @@ class ContentsModel : public QAbstractListModel
     static inline const QHash<int, QByteArray> roles = {
         { Qt::UserRole + 0, "Name" },
         { Qt::UserRole + 1, "Size" },
+        { Qt::UserRole + 2, "IsDir" },
+        { Qt::UserRole + 3, "Absolute Path" },
     };
 
     QFileInfoList contents;

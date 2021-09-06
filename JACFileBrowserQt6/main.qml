@@ -10,6 +10,16 @@ Window {
     visible: true
     title: "JACFileBrowser"
 
+    Timer {
+        id: timer
+    }
+
+    function delay(delayTime, cb) {
+        timer.interval = delayTime;
+        timer.repeat = false;
+        timer.triggered.connect(cb);
+        timer.start();
+    }
 
 //        GridView {
 //            id: gridView
@@ -88,9 +98,12 @@ Window {
                        }
 
                        // perform navigation
-                       const drive = drivesModel.data(drivesModel.index(clicked, 0));
+                       const drive = drivesModel.data(drivesModel.index(clicked, 0), Qt.DisplayRole);
                        console.log("navigating to drive", drive)
-                       contentsModel.loadDirectory(drive)
+
+                       // Workaround...
+                       tableView.positionViewAtRow(0, Qt.AlignTop, -35)
+                       contentsModel.loadDirectory(drive);
                    }
 
                 }
@@ -112,19 +125,50 @@ Window {
                     return 300;
                 }
 
-                delegate: Text {
+                delegate: Label {
                     text: display
                 }
 
-                ScrollBar.vertical: ScrollBar{}
+                ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AlwaysOn
+                }
+                ScrollBar.horizontal: ScrollBar {}
+
+
 
                 MouseArea {
                     anchors.fill: parent
-                    // Unlike gridView, subtract contentX/Y to make it work
-                    onClicked: console.log("clicked tableview cell",
-                                           tableView.cellAtPos(mouse.x - tableView.contentX,
-                                                               mouse.y - tableView.contentY,
-                                                               true))
+
+                    onDoubleClicked: {
+                        // Unlike gridView, subtract contentX/Y to make it work
+                        const pos = tableView.cellAtPos(mouse.x - tableView.contentX,
+                                                        mouse.y - tableView.contentY,
+                                                        true);
+
+                        console.log("clicked tableview cell", pos)
+
+                        if (pos == Qt.point(-1, -1)) {
+                            return;
+                        }
+
+                        const isDir = contentsModel.data(contentsModel.index(pos.y, 0), Qt.UserRole + 2);
+                        console.log(isDir)
+
+                        if (isDir) {
+                            const dir = contentsModel.data(contentsModel.index(pos.y, 0), Qt.UserRole + 3);
+                            console.log("navigating to folder", dir)
+
+                            // Workaround...
+                            tableView.positionViewAtRow(0, Qt.AlignTop, -35)
+                            contentsModel.loadDirectory(dir);
+                        }
+                        else {
+                            const file = contentsModel.data(contentsModel.index(pos.y, 0), Qt.UserRole + 3);
+                            console.log("navigating to file", file)
+
+                            utils.shellExecute(file)
+                        }
+                    }
                 }
 
                 // https://stackoverflow.com/questions/55610163/how-to-create-a-tableview-5-12-with-column-headers

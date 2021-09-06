@@ -4,8 +4,8 @@
 
 #include "drivesmodel.hpp"
 #include "contentsmodel.hpp"
-
 #include "tablemodelproxy.hpp"
+#include "utils.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -23,10 +23,15 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
 
+    auto rc = engine.rootContext();
+
+    // TODO this should be one per tab
     ContentsModel* contentsModel = new ContentsModel();
-    engine.rootContext()->setContextProperty("contentsModel", contentsModel);
-    engine.rootContext()->setContextProperty("tableModelProxy", new TableModelProxy(contentsModel));
-    engine.rootContext()->setContextProperty("drivesModel", new DrivesModel());
+
+    rc->setContextProperty("contentsModel", contentsModel);
+    rc->setContextProperty("tableModelProxy", new TableModelProxy(contentsModel));
+    rc->setContextProperty("drivesModel", new DrivesModel());
+    rc->setContextProperty("utils", new Utils());
 
     engine.load(url);
 
