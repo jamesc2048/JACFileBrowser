@@ -3,8 +3,7 @@
 ContentsModel::ContentsModel(QObject *parent) : QAbstractListModel(parent)
 {
     // TODO temp
-    contents = QDir("C:\\Users\\James Crisafulli\\Downloads")
-                .entryInfoList(QDir::Filter::NoFilter, QDir::SortFlag::DirsFirst);
+    loadDirectory("C:\\Users\\James Crisafulli\\Downloads");
 }
 
 
@@ -24,6 +23,7 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
             return elem.baseName();
         // Size
         case Qt::UserRole + 1:
+        {
             if (elem.isDir())
             {
                 // Mimic Windows explorer on this
@@ -35,6 +35,10 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
             humanSize /= (1024.0 * 1024.0);
 
             return QString("%1 MB").arg(humanSize, 0, 'f', 2);
+        }
+
+        default:
+            return "Unknown role";
     }
 }
 
@@ -42,4 +46,14 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> ContentsModel::roleNames() const
 {
     return roles;
+}
+
+void ContentsModel::loadDirectory(QString path)
+{
+    beginResetModel();
+
+    contents = QDir(path)
+                .entryInfoList(QDir::Filter::NoFilter, QDir::SortFlag::DirsFirst);
+
+    endResetModel();
 }

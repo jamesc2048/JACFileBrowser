@@ -88,7 +88,9 @@ Window {
                        }
 
                        // perform navigation
-                       console.log("navigating to drive")
+                       const drive = drivesModel.data(drivesModel.index(clicked, 0));
+                       console.log("navigating to drive", drive)
+                       contentsModel.loadDirectory(drive)
                    }
 
                 }
