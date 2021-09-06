@@ -4,7 +4,6 @@ TableModelProxy::TableModelProxy(QAbstractListModel *proxy) :
     QAbstractTableModel(proxy),
     proxy(proxy)
 {
-
 }
 
 

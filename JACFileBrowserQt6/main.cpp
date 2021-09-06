@@ -2,7 +2,9 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include "listmodel.hpp"
+#include "drivesmodel.hpp"
+#include "contentsmodel.hpp"
+
 #include "tablemodelproxy.hpp"
 
 int main(int argc, char *argv[])
@@ -21,9 +23,10 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
 
-    auto listModel = new ListModel();
-    engine.rootContext()->setContextProperty("listModel", listModel);
-    engine.rootContext()->setContextProperty("tableModelProxy", new TableModelProxy(listModel));
+    ContentsModel* contentsModel = new ContentsModel();
+    engine.rootContext()->setContextProperty("contentsModel", contentsModel);
+    engine.rootContext()->setContextProperty("tableModelProxy", new TableModelProxy(contentsModel));
+    engine.rootContext()->setContextProperty("drivesModel", new DrivesModel());
 
     engine.load(url);
 

@@ -10,36 +10,34 @@ Window {
     visible: true
     title: "JACFileBrowser"
 
-    RowLayout {
-       anchors.fill: parent
 
-        GridView {
-            id: gridView
-            Layout.preferredWidth: window.width / 2
-            Layout.fillHeight: true
+//        GridView {
+//            id: gridView
+//            Layout.preferredWidth: window.width / 2
+//            Layout.fillHeight: true
 
-            model: listModel
+//            model: listModel
 
-            cellWidth: 100
-            cellHeight: 100
+//            cellWidth: 100
+//            cellHeight: 100
 
-            delegate: Text {
-                    width: gridView.cellWidth
-                    height: gridView.cellHeight
-                    text: field1
-                    wrapMode: Text.WrapAnywhere
-                }
+//            delegate: Text {
+//                    width: gridView.cellWidth
+//                    height: gridView.cellHeight
+//                    text: field1
+//                    wrapMode: Text.WrapAnywhere
+//                }
 
-            MouseArea {
-                anchors.fill: parent
+//            MouseArea {
+//                anchors.fill: parent
 
-                // Add contentX/Y to make it work
-                onClicked: console.log("cell",
-                                       gridView.indexAt(mouse.x + gridView.contentX,
-                                                        mouse.y + gridView.contentY))
+//                // Add contentX/Y to make it work
+//                onClicked: console.log("clicked gridview cell",
+//                                       gridView.indexAt(mouse.x + gridView.contentX,
+//                                                        mouse.y + gridView.contentY))
 
-            }
-        }
+//            }
+//        }
 
 
 
@@ -57,39 +55,83 @@ Window {
 //            }
 
 
+       SplitView {
+           anchors.fill: parent
+
+           ListView {
+               id: listView
+               SplitView.preferredWidth: 200
+               SplitView.fillHeight: true
+
+
+               boundsBehavior: Flickable.StopAtBounds
+
+               model: drivesModel
+
+               delegate: Label {
+                   text: display
+               }
+
+               ScrollBar.vertical: ScrollBar{}
+
+               MouseArea {
+                   anchors.fill: parent
+
+                   onDoubleClicked: {
+                       // Add contentX/Y to make it work when scrolled
+                       const clicked = listView.indexAt(mouse.x + listView.contentX,
+                                                        mouse.y + listView.contentY)
+                       console.log("clicked listview cell", clicked)
+
+                       if (clicked == -1) {
+                            return;
+                       }
+
+                       // perform navigation
+                       console.log("navigating to drive")
+                   }
+
+                }
+           }
+
             TableView {
                 id: tableView
+
+                boundsBehavior: Flickable.StopAtBounds
 
                 clip: true
                 model: tableModelProxy
                 topMargin: columnsHeader.height
 
-                Layout.preferredWidth: window.width / 2
-                Layout.fillHeight: true
+                SplitView.fillWidth: true
+                SplitView.fillHeight: true
 
                 columnWidthProvider: function(column) {
-                    return 100;
+                    return 300;
                 }
 
                 delegate: Text {
                     text: display
                 }
 
+                ScrollBar.vertical: ScrollBar{}
+
                 MouseArea {
                     anchors.fill: parent
                     // Unlike gridView, subtract contentX/Y to make it work
-                    onClicked: console.log("cell",
+                    onClicked: console.log("clicked tableview cell",
                                            tableView.cellAtPos(mouse.x - tableView.contentX,
                                                                mouse.y - tableView.contentY,
                                                                true))
                 }
 
                 // https://stackoverflow.com/questions/55610163/how-to-create-a-tableview-5-12-with-column-headers
+                // note that HorizontalHeaderView is not good enough for this
                 Row {
                     id: columnsHeader
                     // shift it down with the content
                     y: tableView.contentY
-                    // stay on top as content scrolls
+                    // stay on top as content scrolls (TableView has z = 1?)
                     z: 2
 
                     // Note: this is slow for big headers as these stay loaded
@@ -110,12 +152,13 @@ Window {
                             // spawn individual mouse areas per header
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: console.log("sort?", modelData)
+                                onClicked: console.log("clicked headers", modelData)
                             }
                         }
                     }
                 }
             }
 
-    }
+
+        }
 }

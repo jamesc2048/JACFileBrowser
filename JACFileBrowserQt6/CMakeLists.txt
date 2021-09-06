@@ -16,8 +16,9 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
-        listmodel.hpp listmodel.cpp
         tablemodelproxy.hpp tablemodelproxy.cpp
+        drivesmodel.hpp drivesmodel.cpp
+        contentsmodel.hpp contentsmodel.cpp
         qml.qrc
 )
 
