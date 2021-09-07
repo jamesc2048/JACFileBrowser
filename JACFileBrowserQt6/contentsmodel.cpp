@@ -28,11 +28,10 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
                 return QStringLiteral("");
             }
 
-            // TODO dynamic human readable size
-            double humanSize = elem.size();
-            humanSize /= (1024.0 * 1024.0);
+            // TODO dynamic sizes? MB GB TB?
+            uint64_t humanSize = (uint64_t)(elem.size() / 1024.0);
 
-            return QString("%1 MB").arg(humanSize, 0, 'f', 2);
+            return QString("%1 KB").arg(locale.toString(humanSize));
         }
         // IsDir
         case Qt::UserRole + 2:
@@ -44,7 +43,7 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
 
         // Date Modified
         case Qt::UserRole + 4:
-            return elem.lastModified().toString("yyyy-MM-dd hh:mm:ss");
+            return elem.lastModified().toString("yyyy/MM/dd hh:mm");
 
         default:
             return "Unknown role";

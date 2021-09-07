@@ -12,19 +12,33 @@ ApplicationWindow {
     //color: "white"
 
     // Workaround: Tableview has quirk on startup, so delay initial load
-    Component.onCompleted: delay(50, function() {
+    Component.onCompleted: timer.delay(50, function() {
         contentsModel.loadDirectory("C:\\Users\\James Crisafulli\\Downloads");
     })
 
     Timer {
         id: timer
+
+        function delay(delayTime, cb) {
+            timer.interval = delayTime;
+            timer.repeat = false;
+            timer.triggered.connect(cb);
+            timer.start();
+        }
     }
 
-    function delay(delayTime, cb) {
-        timer.interval = delayTime;
-        timer.repeat = false;
-        timer.triggered.connect(cb);
-        timer.start();
+    Connections {
+        target: contentsModel
+
+        function onModelAboutToBeReset() {
+            // Workaround for Qt quirk...
+            tableView.resetView()
+        }
+
+        function onModelReset() {
+            // I don't think I can bind this directly? Would have to make a QProperty?
+            contentsCountLabel.contentsCount = contentsModel.rowCount()
+        }
     }
 
 //        GridView {
@@ -126,14 +140,6 @@ ApplicationWindow {
                leftPadding: 5
                text: `${contentsCount} item${contentsCount != 1 ? "s" : ""}`
            }
-
-           Connections {
-               target: contentsModel
-
-               function onModelReset() {
-                   contentsCountLabel.contentsCount = contentsModel.rowCount()
-               }
-           }
        }
 
        SplitView {
@@ -177,8 +183,6 @@ ApplicationWindow {
                        const drive = drivesModel.data(drivesModel.index(clicked, 0), Qt.DisplayRole);
                        console.log("navigating to drive", drive)
 
-                       // Workaround...
-                       tableView.resetView()
                        contentsModel.loadDirectory(drive);
                    }
 

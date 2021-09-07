@@ -21,6 +21,7 @@ class ContentsModel : public QAbstractListModel
     Q_PROPERTY(QString currentDir READ currentDir WRITE setCurrentDir NOTIFY currentDirChanged)
 
     QString m_currentDir;
+    QLocale locale;
 
 public:
     explicit ContentsModel(QObject *parent = nullptr);

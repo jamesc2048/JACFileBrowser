@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import Qt.labs.qmlmodels
+
 TableView {
     id: tableView
 
@@ -9,7 +11,7 @@ TableView {
         300,    // Name
         100,    // Size
         0,      // isDir
-        0,      //
+        0,      // absolute path
         300     // last modified
     ]
 
@@ -18,9 +20,10 @@ TableView {
                                      Qt.point(-tableView.leftMargin, -columnsHeader.height))
     }
 
-    //maximumFlickVelocity: 0
     boundsBehavior: Flickable.StopAtBounds
     boundsMovement:  Flickable.StopAtBounds
+
+    // to make it be more like desktop scrolling
     flickDeceleration: 10000
 
     columnSpacing: 5
@@ -44,9 +47,58 @@ TableView {
         return colWidth
     }
 
-    delegate: Label {
-        text: display
-        elide: Text.ElideRight
+    delegate: DelegateChooser {
+        component LabelComponent : Label {
+            text: display
+            elide: Text.ElideRight
+        }
+
+        DelegateChoice {
+            column: 0
+
+            RowLayout {
+                Label {
+                    text: IsDir ? "📁" : ""
+                    Layout.preferredWidth: 20
+                }
+
+                LabelComponent {
+                    Layout.fillWidth: true
+                }
+            }
+        }
+
+        DelegateChoice {
+            column: 1
+
+            LabelComponent {
+                horizontalAlignment: Text.AlignRight
+            }
+        }
+
+        DelegateChoice {
+            column: 2
+
+            LabelComponent {}
+        }
+
+        DelegateChoice {
+            column: 3
+
+            LabelComponent {}
+        }
+
+        DelegateChoice {
+            column: 4
+
+            LabelComponent {}
+        }
+
+        DelegateChoice {
+            column: 5
+
+            LabelComponent {}
+        }
     }
 
     ScrollBar.vertical: ScrollBar {
@@ -76,8 +128,6 @@ TableView {
                 const dir = contentsModel.data(contentsModel.index(pos.y, 0), Qt.UserRole + 3);
                 console.log("navigating to folder", dir)
 
-                // Workaround...
-                resetView();
                 contentsModel.loadDirectory(dir);
             }
             else {
