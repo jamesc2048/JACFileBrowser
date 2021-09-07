@@ -15,5 +15,5 @@ int DrivesModel::rowCount(const QModelIndex &parent) const
 
 QVariant DrivesModel::data(const QModelIndex &index, int role) const
 {
-    return drives.at(index.row()).absolutePath();
+    return QDir::toNativeSeparators(drives.at(index.row()).absolutePath());
 }

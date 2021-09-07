@@ -13,9 +13,14 @@ class ContentsModel : public QAbstractListModel
         { Qt::UserRole + 1, "Size" },
         { Qt::UserRole + 2, "IsDir" },
         { Qt::UserRole + 3, "Absolute Path" },
+        { Qt::UserRole + 4, "Last Modified" },
     };
 
     QFileInfoList contents;
+
+    Q_PROPERTY(QString currentDir READ currentDir WRITE setCurrentDir NOTIFY currentDirChanged)
+
+    QString m_currentDir;
 
 public:
     explicit ContentsModel(QObject *parent = nullptr);
@@ -25,6 +30,12 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void loadDirectory(QString path);
+
+    const QString &currentDir() const;
+    void setCurrentDir(const QString &newCurrentDir);
+
+signals:
+    void currentDirChanged();
 };
 
 #endif // CONTENTSMODEL_HPP

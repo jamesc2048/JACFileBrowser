@@ -2,8 +2,6 @@
 
 ContentsModel::ContentsModel(QObject *parent) : QAbstractListModel(parent)
 {
-    // TODO temp
-    loadDirectory("C:\\Users\\James Crisafulli\\Downloads");
 }
 
 
@@ -20,7 +18,7 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
     {
         // Name
         case Qt::UserRole + 0:
-            return elem.fileName();
+            return QDir::toNativeSeparators(elem.fileName());
         // Size
         case Qt::UserRole + 1:
         {
@@ -42,9 +40,11 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
 
         // Absolute Path
         case Qt::UserRole + 3:
-        {
-            return elem.filePath();
-        }
+            return QDir::toNativeSeparators(elem.filePath());
+
+        // Date Modified
+        case Qt::UserRole + 4:
+            return elem.lastModified().toString("yyyy-MM-dd hh:mm:ss");
 
         default:
             return "Unknown role";
@@ -59,10 +59,30 @@ QHash<int, QByteArray> ContentsModel::roleNames() const
 
 void ContentsModel::loadDirectory(QString path)
 {
+    // TODO loading state on separate thread, with loading variables
     beginResetModel();
 
-    contents = QDir(QDir::cleanPath(path))
-                .entryInfoList(QDir::Filter::NoFilter, QDir::SortFlag::DirsFirst | QDir::SortFlag::Name);
+    QString cleanPath = QDir::toNativeSeparators(QDir::cleanPath(path));
+    setCurrentDir(cleanPath);
+
+    contents = QDir(cleanPath)
+                .entryInfoList(QDir::Filter::NoFilter,
+                               QDir::SortFlag::DirsFirst | QDir::SortFlag::Name);
 
     endResetModel();
+}
+
+const QString &ContentsModel::currentDir() const
+{
+    return m_currentDir;
+}
+
+void ContentsModel::setCurrentDir(const QString &newCurrentDir)
+{
+    if (m_currentDir == newCurrentDir)
+        return;
+
+    m_currentDir = newCurrentDir;
+
+    emit currentDirChanged();
 }
