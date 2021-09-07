@@ -59,15 +59,25 @@ QHash<int, QByteArray> ContentsModel::roleNames() const
 
 void ContentsModel::loadDirectory(QString path)
 {
+    QString cleanPath = QDir::toNativeSeparators(QDir::cleanPath(path));
+
+    // if it didn't get cleaned up by cleanPath it's an invalid path
+    if (cleanPath.endsWith(".."))
+    {
+        qDebug("Trying to up navigate from %s to %s: disallowed", qPrintable(currentDir()), qPrintable(cleanPath));
+        return;
+    }
+
     // TODO loading state on separate thread, with loading variables
     beginResetModel();
 
-    QString cleanPath = QDir::toNativeSeparators(QDir::cleanPath(path));
     setCurrentDir(cleanPath);
 
     contents = QDir(cleanPath)
-                .entryInfoList(QDir::Filter::NoFilter,
+                .entryInfoList(QDir::AllEntries | QDir::Filter::NoDotAndDotDot,
                                QDir::SortFlag::DirsFirst | QDir::SortFlag::Name);
+
+    qDebug("%s: entryInfoList returned %d items", qPrintable(currentDir()), contents.size());
 
     endResetModel();
 }

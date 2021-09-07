@@ -88,11 +88,20 @@ ApplicationWindow {
                 anchors.fill: parent
 
                 ToolButton {
-                    text: "<"
+                    text: "🡐"
+                    font.pointSize: 24
                 }
 
                 ToolButton {
-                    text: ">"
+                    text: "🡒"
+                    font.pointSize: 24
+                }
+
+                ToolButton {
+                    text: "🡑"
+                    font.pointSize: 24
+
+                    onClicked: contentsModel.loadDirectory(contentsModel.currentDir + "/..")
                 }
 
                 TextField {
