@@ -12,6 +12,11 @@ int ContentsModel::rowCount(const QModelIndex &parent) const
 
 QVariant ContentsModel::data(const QModelIndex &index, int role) const
 {
+    if (!index.isValid())
+    {
+        return {};
+    }
+
     const QFileInfo &elem = contents.at(index.row());
 
     switch (role)
@@ -45,6 +50,10 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
         case Qt::UserRole + 4:
             return elem.lastModified().toString("yyyy/MM/dd hh:mm");
 
+        // IsSelected STUB
+        case Qt::UserRole + 5:
+            return false;
+
         default:
             return "Unknown role";
     }
@@ -54,6 +63,22 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> ContentsModel::roleNames() const
 {
     return roles;
+}
+
+bool ContentsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    switch (role)
+    {
+        // IsSelected
+        case Qt::UserRole + 5:
+            ; // STUB
+
+        default:
+            return false;
+    }
+
+    // STUB
+    return false;
 }
 
 void ContentsModel::loadDirectory(QString path)

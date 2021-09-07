@@ -13,7 +13,7 @@ ApplicationWindow {
 
     // Workaround: Tableview has quirk on startup, so delay initial load
     Component.onCompleted: timer.delay(50, function() {
-        contentsModel.loadDirectory("C:\\Users\\James Crisafulli\\Downloads");
+        contentsModel.loadDirectory(utils.getHomePath());
     })
 
     Timer {

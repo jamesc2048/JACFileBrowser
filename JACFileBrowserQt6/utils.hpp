@@ -10,6 +10,7 @@ public:
     explicit Utils(QObject *parent = nullptr);
 
     Q_INVOKABLE void shellExecute(QString path);
+    Q_INVOKABLE QString getHomePath();
 
 };
 
