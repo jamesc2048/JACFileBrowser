@@ -47,6 +47,10 @@ TableView {
         return colWidth
     }
 
+    rowHeightProvider: function(row) {
+        return 25;
+    }
+
     delegate: DelegateChooser {
         component LabelComponent : Label {
             text: display
@@ -108,6 +112,18 @@ TableView {
 
     MouseArea {
         anchors.fill: parent
+
+        hoverEnabled: true
+
+        onPositionChanged: {
+            const pos = tableView.cellAtPos(mouse.x - tableView.contentX,
+                                            mouse.y - tableView.contentY,
+                                            true);
+
+            highlightRect.rowPosition = pos.y
+        }
+
+        onExited: highlightRect.rowPosition = -1
 
         onDoubleClicked: {
             // Unlike gridView, subtract contentX/Y to make it work
@@ -208,7 +224,29 @@ TableView {
                 }
             }
         }
+    }
 
+    Rectangle {
+        property int rowPosition: -1
+        property int rowHeight: tableView.rowHeightProvider(0)
 
+        id: highlightRect
+        color: "lightblue"
+
+        visible: rowPosition >= 0
+
+        width: tableView.contentWidth
+        height: rowHeight
+
+        y: rowHeight * rowPosition
+        opacity: 0.5
+
+        Connections {
+            target: contentsModel
+
+            function onModelAboutToBeReset() {
+                highlightRect.rowPosition = -1
+            }
+        }
     }
 }
