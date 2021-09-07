@@ -10,7 +10,7 @@ TableView {
         100,    // Size
         0,      // isDir
         0,      //
-        200     // last modified
+        300     // last modified
     ]
 
     function resetView() {
@@ -133,10 +133,12 @@ TableView {
             model: tableView.columns > 0 ? tableView.columns : 1
 
             Label {
+                property int columnWidth: tableView.columnWidthProvider(modelData)
+
                 text: tableModelProxy.headerData(modelData, Qt.Horizontal)
-                visible: tableView.columnWidthProvider(modelData) > 0
+                visible: columnWidth > 0
                 // TODO -5 for the handle?
-                SplitView.preferredWidth: tableView.columnWidthProvider(modelData) - 5
+                SplitView.preferredWidth: columnWidth - 5
                 SplitView.minimumWidth: 75
 
                 color: '#aaaaaa'
@@ -157,28 +159,6 @@ TableView {
             }
         }
 
-//                    Repeater {
-//                        model: tableView.columns > 0 ? tableView.columns : 1
 
-//                        Label {
-//                            // Hide if column width provider returns 0 (hidden column)
-//                            visible: width > 0
-//                            width: tableView.columnWidthProvider(modelData)
-//                            SplitView.preferredHeight: 35
-//                            text: tableModelProxy.headerData(modelData, Qt.Horizontal)
-//                            color: '#aaaaaa'
-//                            font.pixelSize: 15
-//                            padding: 10
-//                            verticalAlignment: Text.AlignVCenter
-
-//                            background: Rectangle { color: "#333333" }
-
-//                            // spawn individual mouse areas per header
-//                            MouseArea {
-//                                anchors.fill: parent
-//                                onClicked: console.log("clicked headers", modelData)
-//                            }
-//                        }
-//                    }
     }
 }
