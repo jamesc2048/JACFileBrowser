@@ -12,7 +12,8 @@ TableView {
         100,    // Size
         0,      // isDir
         0,      // absolute path
-        300     // last modified
+        300,    // last modified
+        0,      // isSelected
     ]
 
     function resetView() {
@@ -57,51 +58,83 @@ TableView {
             elide: Text.ElideRight
         }
 
+        component SelectionRectangleComponent : Rectangle {
+            width: parent.width + 5
+            height: parent.height
+            color: "blue"
+            opacity: 0.5
+            visible: IsSelected
+            enabled: IsSelected
+            x: -5
+        }
+
         DelegateChoice {
             column: 0
 
-            RowLayout {
-                Label {
-                    text: IsDir ? "📁" : ""
-                    Layout.preferredWidth: 20
+            Item {
+                RowLayout {
+                    width: parent.width
+
+                    Label {
+                        text: IsDir ? "📁" : ""
+                        Layout.preferredWidth: 20
+                    }
+
+                    LabelComponent {
+                        Layout.fillWidth: true
+                    }
                 }
 
-                LabelComponent {
-                    Layout.fillWidth: true
-                }
+                SelectionRectangleComponent {}
             }
         }
 
         DelegateChoice {
             column: 1
 
-            LabelComponent {
-                horizontalAlignment: Text.AlignRight
+            Item {
+                LabelComponent {
+                    horizontalAlignment: Text.AlignRight
+                }
+
+                SelectionRectangleComponent {}
             }
         }
 
         DelegateChoice {
             column: 2
 
-            LabelComponent {}
+            Item {
+                LabelComponent {}
+                SelectionRectangleComponent {}
+            }
         }
 
         DelegateChoice {
             column: 3
 
-            LabelComponent {}
+            Item {
+                LabelComponent {}
+                SelectionRectangleComponent {}
+            }
         }
 
         DelegateChoice {
             column: 4
 
-            LabelComponent {}
+            Item {
+                LabelComponent {}
+                SelectionRectangleComponent {}
+            }
         }
 
         DelegateChoice {
             column: 5
 
-            LabelComponent {}
+            Item {
+                LabelComponent {}
+                SelectionRectangleComponent {}
+            }
         }
     }
 
@@ -124,6 +157,21 @@ TableView {
         }
 
         onExited: highlightRect.rowPosition = -1
+
+        onClicked: {
+            // Unlike gridView, subtract contentX/Y to make it work
+            const pos = tableView.cellAtPos(mouse.x - tableView.contentX,
+                                            mouse.y - tableView.contentY,
+                                            true);
+
+            console.log("single click", pos)
+
+            var index = contentsModel.index(pos.y, 0)
+            var isSelected = contentsModel.data(index, Qt.UserRole + 5)
+            console.log(isSelected)
+
+            contentsModel.setData(index, !isSelected, Qt.UserRole + 5)
+        }
 
         onDoubleClicked: {
             // Unlike gridView, subtract contentX/Y to make it work
@@ -234,6 +282,7 @@ TableView {
         color: "lightblue"
 
         visible: rowPosition >= 0
+        enabled: rowPosition >= 0
 
         width: tableView.contentWidth
         height: rowHeight
@@ -250,3 +299,17 @@ TableView {
         }
     }
 }
+
+// for reference
+//HorizontalHeaderView {
+//    id: headerView
+//    syncView: tableView
+//    clip: true
+
+//    Layout.fillWidth: true
+
+//    MouseArea {
+//        anchors.fill: parent
+//        onClicked: console.log("sort?", mouse.x, mouse.y, headerView.cellAtPos(mouse.x, mouse.y, true))
+//    }
+//}

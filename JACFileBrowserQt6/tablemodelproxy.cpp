@@ -12,6 +12,16 @@ TableModelProxy::TableModelProxy(QAbstractListModel *proxy) :
     connect(proxy, &QAbstractListModel::modelReset, [this] {
         endResetModel();
     });
+
+    connect(proxy, &QAbstractListModel::dataChanged, [this]
+            (const QModelIndex &topLeft,
+            const QModelIndex &bottomRight,
+            const QList<int> &roles = QList<int>()) {
+
+        qDebug("contentsModel dataChanged %d %d, %d %d", topLeft.row(), topLeft.column(), bottomRight.row(), bottomRight.column());
+
+        emit dataChanged(index(topLeft.row(), 0), index(topLeft.row(), columnCount({}) - 1));
+    });
 }
 
 
@@ -28,13 +38,19 @@ int TableModelProxy::columnCount(const QModelIndex &parent) const
 
 QVariant TableModelProxy::data(const QModelIndex &index, int role) const
 {
-    // Special IsDir role
+    // Special row-wide IsDir role
     if (role == Qt::UserRole + 2)
     {
         return proxy->data(proxy->index(index.row(), 0), Qt::UserRole + 2);
     }
 
-    // map rolenames to columns
+    // Special row-wide IsSelected role
+    if (role == Qt::UserRole + 5)
+    {
+        return proxy->data(proxy->index(index.row(), 0), Qt::UserRole + 5);
+    }
+
+    // map remaining to columns
     // map from 0 instead of from 1
     return proxy->data(proxy->index(index.row(), 0), Qt::UserRole + index.column());
 }
@@ -55,4 +71,17 @@ QHash<int, QByteArray> TableModelProxy::roleNames() const
     roles[Qt::DisplayRole] = "display";
 
     return roles;
+}
+
+
+bool TableModelProxy::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    bool success = proxy->setData(proxy->index(index.row(), 0), value, Qt::UserRole + 5);
+
+    if (success)
+    {
+        emit dataChanged(index, index, QList<int>() << Qt::DisplayRole);
+    }
+
+    return success;
 }

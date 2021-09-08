@@ -50,9 +50,9 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
         case Qt::UserRole + 4:
             return elem.lastModified().toString("yyyy/MM/dd hh:mm");
 
-        // IsSelected STUB
+        // IsSelected
         case Qt::UserRole + 5:
-            return false;
+            return (bool)(contentFlags[index.row()] & (uint8_t)ContentFlags::IsSelected);
 
         default:
             return "Unknown role";
@@ -67,18 +67,33 @@ QHash<int, QByteArray> ContentsModel::roleNames() const
 
 bool ContentsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    if (!index.isValid())
+    {
+        return false;
+    }
+
     switch (role)
     {
         // IsSelected
         case Qt::UserRole + 5:
-            ; // STUB
+            if (value.toBool())
+            {
+                contentFlags[index.row()] |= (uint8_t)ContentFlags::IsSelected;
+            }
+            else
+            {
+                contentFlags[index.row()] &= ~(uint8_t)ContentFlags::IsSelected;
+            }
+            break;
 
         default:
             return false;
     }
 
-    // STUB
-    return false;
+    qDebug("set data %d", contentFlags[index.row()]);
+
+    emit dataChanged(index, index, QList<int>() << role);
+    return true;
 }
 
 void ContentsModel::loadDirectory(QString path)
@@ -100,6 +115,8 @@ void ContentsModel::loadDirectory(QString path)
     contents = QDir(cleanPath)
                 .entryInfoList(QDir::AllEntries | QDir::Filter::NoDotAndDotDot,
                                QDir::SortFlag::DirsFirst | QDir::SortFlag::Name);
+    contentFlags.resize(contents.size());
+    memset(contentFlags.data(), 0, contentFlags.size());
 
     qDebug("%s: entryInfoList returned %d items", qPrintable(currentDir()), contents.size());
 

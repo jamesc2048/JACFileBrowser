@@ -4,6 +4,19 @@
 #include <QAbstractListModel>
 #include <QDir>
 
+enum class ContentRoles
+{
+    // TODO
+};
+
+enum class ContentFlags : uint8_t
+{
+    IsSelected  = 1 << 0,
+    // unused but for future?
+    IsCut       = 1 << 1,
+    IsCopied    = 1 << 2,
+};
+
 class ContentsModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -18,11 +31,13 @@ class ContentsModel : public QAbstractListModel
     };
 
     QFileInfoList contents;
+    QList<uint8_t> contentFlags;
 
-    Q_PROPERTY(QString currentDir READ currentDir WRITE setCurrentDir NOTIFY currentDirChanged)
+    QLocale locale;
 
     QString m_currentDir;
-    QLocale locale;
+    Q_PROPERTY(QString currentDir READ currentDir WRITE setCurrentDir NOTIFY currentDirChanged)
+
 
 
 public:
