@@ -11,8 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick Concurrent REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick Concurrent REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS Core Quick Concurrent REQUIRED)
+find_package(Qt6 COMPONENTS Core Quick Concurrent REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -23,33 +23,16 @@ set(PROJECT_SOURCES
         qml.qrc
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(JACFileBrowserQt6
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET JACFileBrowserQt6 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(JACFileBrowserQt6 SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(JACFileBrowserQt6
-          ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+# TODO always add WIN32 even on Linux/Mac?
+qt_add_executable(JACFileBrowserQt6 WIN32
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+)
 
 target_compile_definitions(JACFileBrowserQt6
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(JACFileBrowserQt6
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+  PRIVATE Qt6::Core Qt6::Quick)
 
 set_target_properties(JACFileBrowserQt6 PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -57,7 +40,5 @@ set_target_properties(JACFileBrowserQt6 PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_import_qml_plugins(JACFileBrowserQt6)
-    qt_finalize_executable(JACFileBrowserQt6)
-endif()
+qt_import_qml_plugins(JACFileBrowserQt6)
+qt_finalize_executable(JACFileBrowserQt6)

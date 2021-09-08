@@ -5,15 +5,8 @@ import subprocess as sp
 install_dir = "install"
 qt_sdk_path = r"C:\SDK\Qt\6.2.0\msvc2019_64"
 
-try:
-    os.removedirs(install_dir)
-except:
-    pass
-
-try:
-    os.mkdir(install_dir)
-except:
-    pass
+shutil.rmtree(install_dir, ignore_errors=True)
+os.mkdir(install_dir)
 
 out_dirs = [r"build-JACFileBrowserQt6-Desktop_Qt_6_2_0_MSVC2019_64bit-Release"]
 
