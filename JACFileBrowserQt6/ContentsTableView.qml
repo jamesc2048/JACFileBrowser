@@ -62,7 +62,7 @@ TableView {
             width: parent.width + 5
             height: parent.height
             color: "blue"
-            opacity: 0.5
+            opacity: 0.4
             visible: IsSelected
             enabled: IsSelected
             x: -5
@@ -288,7 +288,7 @@ TableView {
         height: rowHeight
 
         y: rowHeight * rowPosition
-        opacity: 0.5
+        opacity: 0.4
 
         Connections {
             target: contentsModel

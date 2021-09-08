@@ -29,6 +29,8 @@ qt_add_executable(JACFileBrowserQt6 WIN32
     ${PROJECT_SOURCES}
 )
 
+target_compile_definitions(JACFileBrowserQt6 PUBLIC APP_VERSION="${PROJECT_VERSION}")
+
 target_compile_definitions(JACFileBrowserQt6
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(JACFileBrowserQt6

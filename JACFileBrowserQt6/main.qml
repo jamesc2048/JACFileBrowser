@@ -2,14 +2,15 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Controls.Universal
 
 ApplicationWindow {
     id: window
     width: 1024
     height: 768
     visible: true
-    title: "JACFileBrowser"
-    //color: "white"
+    title: "JACFileBrowser " + utils.getApplicationVersion()
+    color: Universal.theme == Universal.Dark ? "#333" : "white"
 
     // Workaround: Tableview has quirk on startup, so delay initial load
     Component.onCompleted: timer.delay(50, function() {

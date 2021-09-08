@@ -13,6 +13,7 @@ public:
 
     Q_INVOKABLE void shellExecute(QString path);
     Q_INVOKABLE QString getHomePath();
+    Q_INVOKABLE QString getApplicationVersion();
 
 };
 

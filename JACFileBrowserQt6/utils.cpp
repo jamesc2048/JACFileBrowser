@@ -3,6 +3,7 @@
 #include <QUrl>
 #include <QDesktopServices>
 #include <QStandardPaths>
+#include <QGuiApplication>
 
 Utils::Utils(QObject *parent) : QObject(parent)
 {
@@ -20,4 +21,9 @@ void Utils::shellExecute(QString path)
 QString Utils::getHomePath()
 {
     return QStandardPaths::standardLocations(QStandardPaths::StandardLocation::HomeLocation).at(0);
+}
+
+QString Utils::getApplicationVersion()
+{
+    return qApp->applicationVersion();
 }
