@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <QtConcurrent/QtConcurrent>
+
 class Utils : public QObject
 {
     Q_OBJECT

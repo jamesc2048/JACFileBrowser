@@ -12,7 +12,9 @@ void Utils::shellExecute(QString path)
 {
     // should call ShellExecute, xdg open etc
     // Maybe this is OK?
-    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    QFuture<bool> fut = QtConcurrent::run([=] {
+       return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    });
 }
 
 QString Utils::getHomePath()
