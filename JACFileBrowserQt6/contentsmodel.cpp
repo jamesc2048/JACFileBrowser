@@ -123,6 +123,16 @@ void ContentsModel::loadDirectory(QString path)
     endResetModel();
 }
 
+void ContentsModel::clearSelection()
+{
+    for (auto& flags : contentFlags)
+    {
+        flags &= ~(uint8_t)ContentFlags::IsSelected;
+    }
+
+    emit dataChanged(index(0, 0), index(contentFlags.size() - 1, 0), QList<int>() << (int)ContentFlags::IsSelected);
+}
+
 const QString &ContentsModel::currentDir() const
 {
     return m_currentDir;

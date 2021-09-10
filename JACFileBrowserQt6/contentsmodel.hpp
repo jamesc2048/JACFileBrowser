@@ -49,6 +49,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     Q_INVOKABLE void loadDirectory(QString path);
+    Q_INVOKABLE void clearSelection();
 
     const QString &currentDir() const;
     void setCurrentDir(const QString &newCurrentDir);

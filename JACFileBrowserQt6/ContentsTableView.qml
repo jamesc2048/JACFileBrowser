@@ -59,6 +59,7 @@ TableView {
         }
 
         component SelectionRectangleComponent : Rectangle {
+            // TODO + 5 for the padding?
             width: parent.width + 5
             height: parent.height
             color: "blue"
@@ -145,6 +146,7 @@ TableView {
 
     MouseArea {
         anchors.fill: parent
+        propagateComposedEvents: true
 
         hoverEnabled: true
 
@@ -165,6 +167,10 @@ TableView {
                                             true);
 
             console.log("single click", pos)
+
+            if (!window.ctrlPressed) {
+                contentsModel.clearSelection();
+            }
 
             var index = contentsModel.index(pos.y, 0)
             var isSelected = contentsModel.data(index, Qt.UserRole + 5)

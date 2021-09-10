@@ -4,6 +4,8 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Universal
 
+import Qt.labs.platform as Platform
+
 ApplicationWindow {
     id: window
     width: 1024
@@ -11,6 +13,37 @@ ApplicationWindow {
     visible: true
     title: "JACFileBrowser " + utils.getApplicationVersion()
     color: Universal.theme == Universal.Dark ? "#333" : "white"
+
+    property bool ctrlPressed: false
+
+    Item {
+        id: keyFocus
+        anchors.fill: parent
+
+        Keys.onPressed: {
+            if (event.key == Qt.Key_Control) {
+                window.ctrlPressed = true
+            }
+        }
+        Keys.onReleased: {
+            if (event.key == Qt.Key_Control) {
+                window.ctrlPressed = false
+            }
+        }
+    }
+
+    // Catchall mousearea
+    MouseArea {
+        z: 1
+        anchors.fill: parent
+        propagateComposedEvents: true
+        preventStealing: true
+
+        onPressed: {
+            keyFocus.forceActiveFocus()
+            console.log("forceActiveFocus")
+        }
+    }
 
     // Workaround: Tableview has quirk on startup, so delay initial load
     Component.onCompleted: timer.delay(50, function() {
@@ -43,17 +76,19 @@ ApplicationWindow {
     }
 
 
-       menuBar: MenuBar {
-           Menu {
+       Platform.MenuBar {
+           Platform.Menu {
                title: qsTr("&File")
 
                //MenuSeparator { }
 
-               Action {
+               Platform.MenuItem {
                    text: "&Quit"
                    onTriggered: Qt.quit()
                }
            }
+
+
        }
 
        header: ToolBar {
@@ -99,6 +134,20 @@ ApplicationWindow {
                leftPadding: 5
                text: `${contentsCount} item${contentsCount != 1 ? "s" : ""}`
            }
+
+           // Catchall for footer
+           MouseArea {
+               z: 1
+               Layout.fillHeight: true
+               Layout.fillWidth: true
+               propagateComposedEvents: true
+               preventStealing: true
+
+               onPressed: {
+                   keyFocus.forceActiveFocus()
+                   console.log("forceActiveFocus")
+               }
+           }
        }
 
        SplitView {
@@ -127,6 +176,7 @@ ApplicationWindow {
 
                MouseArea {
                    anchors.fill: parent
+                   propagateComposedEvents: true
 
                    onDoubleClicked: {
                        // Add contentX/Y to make it work when scrolled

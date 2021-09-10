@@ -20,7 +20,7 @@ TableModelProxy::TableModelProxy(QAbstractListModel *proxy) :
 
         qDebug("contentsModel dataChanged %d %d, %d %d", topLeft.row(), topLeft.column(), bottomRight.row(), bottomRight.column());
 
-        emit dataChanged(index(topLeft.row(), 0), index(topLeft.row(), columnCount({}) - 1));
+        emit dataChanged(index(topLeft.row(), 0), index(bottomRight.row(), columnCount({}) - 1));
     });
 }
 
