@@ -261,11 +261,14 @@ TableView {
             model: tableView.columns > 0 ? tableView.columns : 1
 
             Button {
+                id: button
                 // This is needed if not the buttons are transparent?
                 // TODO will this break theming?
                 background: Rectangle {
-                    color: "#aaa"
-                }
+                     border.color: button.hovered ? "#666" : "#ccc"
+                     border.width: 2
+                     color: button.down ? Qt.darker("#ccc", 1.2) : "#ccc"
+                 }
 
                 property int columnWidth: tableView.columnWidthProvider(modelData)
 
