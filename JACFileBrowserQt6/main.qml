@@ -11,7 +11,7 @@ ApplicationWindow {
     width: 1024
     height: 768
     visible: true
-    title: "JACFileBrowser " + utils.getApplicationVersion()
+    title: `JACFileBrowser ${utils.getApplicationVersion()}`
     color: Universal.theme == Universal.Dark ? "#333" : "white"
 
     property bool ctrlPressed: false
@@ -29,19 +29,6 @@ ApplicationWindow {
             if (event.key == Qt.Key_Control) {
                 window.ctrlPressed = false
             }
-        }
-    }
-
-    // Catchall mousearea
-    MouseArea {
-        z: 1
-        anchors.fill: parent
-        propagateComposedEvents: true
-        preventStealing: true
-
-        onPressed: {
-            keyFocus.forceActiveFocus()
-            console.log("forceActiveFocus")
         }
     }
 
@@ -109,6 +96,7 @@ ApplicationWindow {
                     text: "🡑"
                     font.pointSize: 24
 
+                    // TODO this should be a bit more elegant?
                     onClicked: contentsModel.loadDirectory(contentsModel.currentDir + "/..")
                 }
 
@@ -193,6 +181,11 @@ ApplicationWindow {
                        console.log("navigating to drive", drive)
 
                        contentsModel.loadDirectory(drive);
+                   }
+
+                   onPressed: {
+                       keyFocus.forceActiveFocus()
+                       console.log("forceActiveFocus")
                    }
 
                 }

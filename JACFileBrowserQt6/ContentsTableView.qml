@@ -124,7 +124,9 @@ TableView {
             column: 4
 
             Item {
-                LabelComponent {}
+                LabelComponent {
+                    width: parent.width
+                }
                 SelectionRectangleComponent {}
             }
         }
@@ -207,6 +209,11 @@ TableView {
                 utils.shellExecute(file)
             }
         }
+
+        onPressed: {
+            keyFocus.forceActiveFocus()
+            console.log("forceActiveFocus")
+        }
     }
 
     // https://stackoverflow.com/questions/55610163/how-to-create-a-tableview-5-12-with-column-headers
@@ -232,9 +239,10 @@ TableView {
                         // TODO empirically determined
                         var childWidth = child.width + 5;
 
-                        if (i == columnsHeader.contentChildren.length - 1) {
+                        // TODO HACK
+                        if (child.text == "Last Modified") {
                             // TODO -8 empirically determined
-                            childWidth = child.width - 8
+                            childWidth = child.width - 8;
                         }
 
                         tableView.columnWidths[i] = childWidth;
@@ -252,29 +260,24 @@ TableView {
             // Workaround for columns being 0 in the beginning
             model: tableView.columns > 0 ? tableView.columns : 1
 
-            Label {
+            Button {
+                // This is needed if not the buttons are transparent?
+                // TODO will this break theming?
+                background: Rectangle {
+                    color: "#aaa"
+                }
+
                 property int columnWidth: tableView.columnWidthProvider(modelData)
 
                 text: tableModelProxy.headerData(modelData, Qt.Horizontal)
                 visible: columnWidth > 0
-                // TODO -5 for the handle?
                 SplitView.preferredWidth: columnWidth - 5
                 SplitView.minimumWidth: 75
-
-                color: '#aaaaaa'
-                font.pixelSize: 15
-                padding: 10
-                verticalAlignment: Text.AlignVCenter
-                background: Rectangle { color: "#333333" }
-                elide: Text.ElideRight
-
-                // compensate for table margin for leftmost
                 leftInset: modelData == 0 ? -tableView.leftMargin : 0
 
-                // spawn individual mouse areas per header
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: console.log("clicked headers", modelData)
+                onClicked: {
+                    // TODO sort data here
+                    console.log("clicked headers", modelData)
                 }
             }
         }
