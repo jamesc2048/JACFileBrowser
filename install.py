@@ -2,7 +2,7 @@ import shutil
 import os
 import subprocess as sp
 
-install_dir = "install"
+install_dir = "JACFileBrowser-0.2"
 qt_sdk_path = r"C:\SDK\Qt\6.2.0\msvc2019_64"
 
 shutil.rmtree(install_dir, ignore_errors=True)
