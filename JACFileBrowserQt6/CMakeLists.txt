@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(JACFileBrowserQt6 VERSION 0.1 LANGUAGES CXX)
+project(JACFileBrowserQt6 VERSION 0.2 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -23,7 +23,7 @@ set(PROJECT_SOURCES
         qml.qrc
 )
 
-# TODO always add WIN32 even on Linux/Mac?
+# TODO always add WIN32 even on Linux/Mac? To hide terminal window
 qt_add_executable(JACFileBrowserQt6 WIN32
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}

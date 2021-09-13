@@ -73,6 +73,19 @@ ApplicationWindow {
                    text: "&Quit"
                    onTriggered: Qt.quit()
                }
+
+               Platform.MenuItem {
+                   text: "Switch view"
+
+                   onTriggered: {
+                        if (viewLoader.source == "ContentsGridView.qml") {
+                            viewLoader.source = "ContentsTableView.qml"
+                        }
+                        else {
+                            viewLoader.source = "ContentsGridView.qml"
+                        }
+                   }
+               }
            }
 
 
@@ -191,8 +204,10 @@ ApplicationWindow {
                 }
            }
 
-           ContentsTableView {
-               id: tableView
+           Loader {
+               id: viewLoader
+               source: "ContentsTableView.qml"
+               asynchronous: true
            }
         }
 }

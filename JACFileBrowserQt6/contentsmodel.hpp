@@ -25,8 +25,8 @@ class ContentsModel : public QAbstractListModel
         { Qt::UserRole + 0, "Name" },
         { Qt::UserRole + 1, "Size" },
         { Qt::UserRole + 2, "IsDir" },
-        { Qt::UserRole + 3, "Absolute Path" },
-        { Qt::UserRole + 4, "Last Modified" },
+        { Qt::UserRole + 3, "AbsolutePath" },
+        { Qt::UserRole + 4, "LastModified" },
         { Qt::UserRole + 5, "IsSelected" },
     };
 

@@ -27,3 +27,8 @@ QString Utils::getApplicationVersion()
 {
     return qApp->applicationVersion();
 }
+
+QUrl Utils::getLocalUrl(QString url)
+{
+    return QUrl::fromLocalFile(url);
+}

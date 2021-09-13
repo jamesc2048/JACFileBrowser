@@ -58,7 +58,10 @@ QVariant TableModelProxy::data(const QModelIndex &index, int role) const
 
 QVariant TableModelProxy::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    return proxy->roleNames().find(Qt::UserRole + section).value();
+    QByteArray roleName = proxy->roleNames().find(Qt::UserRole + section).value();
+
+    // TODO insert space in PascalCase string
+    return roleName;
 }
 
 

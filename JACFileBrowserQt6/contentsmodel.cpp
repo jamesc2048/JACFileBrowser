@@ -130,7 +130,7 @@ void ContentsModel::clearSelection()
         flags &= ~(uint8_t)ContentFlags::IsSelected;
     }
 
-    emit dataChanged(index(0, 0), index(contentFlags.size() - 1, 0), QList<int>() << (int)ContentFlags::IsSelected);
+    emit dataChanged(index(0, 0), index(contentFlags.size() - 1, 0), QList<int>() << Qt::UserRole + 5);
 }
 
 const QString &ContentsModel::currentDir() const
