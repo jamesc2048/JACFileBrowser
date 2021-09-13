@@ -7,6 +7,7 @@ Planned:
 - [x] Table View
 - [x] Grid View
 - [x] Selection
+- [ ] GridView thumbnails
 - [ ] In app media preview
 - [ ] Tabs
 - [ ] Full keyboard navigation
