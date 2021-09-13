@@ -170,13 +170,18 @@ TableView {
 
             console.log("single click", pos)
 
+            if (window.shiftPressed) {
+                if (contentsModel.lastSelectedIndex) {
+                    // TODO
+                }
+            }
+
             if (!window.ctrlPressed) {
                 contentsModel.clearSelection();
             }
 
             var index = contentsModel.index(pos.y, 0)
             var isSelected = contentsModel.data(index, Qt.UserRole + 5)
-            console.log(isSelected)
 
             contentsModel.setData(index, !isSelected, Qt.UserRole + 5)
         }

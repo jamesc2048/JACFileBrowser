@@ -15,19 +15,33 @@ ApplicationWindow {
     color: Universal.theme == Universal.Dark ? "#333" : "white"
 
     property bool ctrlPressed: false
+    property bool shiftPressed: false
 
     Item {
         id: keyFocus
         anchors.fill: parent
+        focus: true
 
         Keys.onPressed: {
-            if (event.key == Qt.Key_Control) {
-                window.ctrlPressed = true
+            switch (event.key) {
+                case Qt.Key_Control:
+                    window.ctrlPressed = true
+                    break;
+
+                case Qt.Key_Shift:
+                    window.shiftPressed = true
+                    break;
             }
         }
         Keys.onReleased: {
-            if (event.key == Qt.Key_Control) {
-                window.ctrlPressed = false
+            switch (event.key) {
+                case Qt.Key_Control:
+                    window.ctrlPressed = false
+                    break;
+
+                case Qt.Key_Shift:
+                    window.shiftPressed = false
+                    break;
             }
         }
     }
