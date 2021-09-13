@@ -13,3 +13,4 @@ Planned:
 - [ ] Drag and drop 
 - [ ] Split / merge tabs
 - [ ] Android?
+- [ ] Preview engines (plugins for previews)
