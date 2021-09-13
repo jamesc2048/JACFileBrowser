@@ -1,6 +1,7 @@
 # JACFileBrowser
 
-Windows 11 Explorer still hasn't got tabs and advanced features. Guess I'vr got to make my own!
+Windows 11 Explorer still hasn't got tabs and advanced features. Guess I've got to make my own!
+
 Cross platform file browser for people who are tired of Windows Explorer and hopping between different Linux file managers.
 
 Planned:
