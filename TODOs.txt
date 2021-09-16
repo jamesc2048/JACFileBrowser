@@ -1,0 +1,6 @@
+Font rendering is not crisp? switch to native font rendering
+links down the side (documents etc)
+drag and drop into links to side (favourites)
+context menu
+Github actions for builds
+Table resizing in real time (timer every 50 ms that calls ForceLayout()?)
