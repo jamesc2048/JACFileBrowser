@@ -5,8 +5,7 @@ import QtQuick.Layouts
 GridView {
     id: gridView
 
-    SplitView.fillWidth: true
-    SplitView.fillHeight: true
+    anchors.fill: parent
 
     property int cellsPerRow: Math.trunc(gridView.width / cellWidth)
 

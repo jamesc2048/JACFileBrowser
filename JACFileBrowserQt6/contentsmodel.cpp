@@ -1,5 +1,7 @@
 #include "contentsmodel.hpp"
 
+#include <QtConcurrent/QtConcurrent>
+
 ContentsModel::ContentsModel(QObject *parent) : QAbstractListModel(parent)
 {
 }
@@ -111,16 +113,22 @@ void ContentsModel::loadDirectory(QString path)
     beginResetModel();
 
     setCurrentDir(cleanPath);
+    setLoading(true);
 
-    contents = QDir(cleanPath)
+    auto future = QtConcurrent::run([&]
+    {
+        contents = QDir(cleanPath)
                 .entryInfoList(QDir::AllEntries | QDir::Filter::NoDotAndDotDot,
                                QDir::SortFlag::DirsFirst | QDir::SortFlag::Name);
-    contentFlags.resize(contents.size());
-    memset(contentFlags.data(), 0, contentFlags.size());
 
-    qDebug("%s: entryInfoList returned %d items", qPrintable(currentDir()), contents.size());
+        contentFlags.resize(contents.size());
+        memset(contentFlags.data(), 0, contentFlags.size());
 
-    endResetModel();
+        qDebug("%s: entryInfoList returned %d items", qPrintable(currentDir()), contents.size());
+        endResetModel();
+
+        setLoading(false);
+    });
 }
 
 void ContentsModel::clearSelection()
@@ -146,4 +154,17 @@ void ContentsModel::setCurrentDir(const QString &newCurrentDir)
     m_currentDir = newCurrentDir;
 
     emit currentDirChanged();
+}
+
+bool ContentsModel::loading() const
+{
+    return m_loading;
+}
+
+void ContentsModel::setLoading(bool newLoading)
+{
+    if (m_loading == newLoading)
+        return;
+    m_loading = newLoading;
+    emit loadingChanged();
 }

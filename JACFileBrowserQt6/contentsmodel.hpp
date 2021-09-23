@@ -37,8 +37,10 @@ class ContentsModel : public QAbstractListModel
 
     QString m_currentDir;
     Q_PROPERTY(QString currentDir READ currentDir WRITE setCurrentDir NOTIFY currentDirChanged)
+    Q_PROPERTY(bool loading READ loading WRITE setLoading NOTIFY loadingChanged)
 
 
+    bool m_loading;
 
 public:
     explicit ContentsModel(QObject *parent = nullptr);
@@ -54,8 +56,12 @@ public:
     const QString &currentDir() const;
     void setCurrentDir(const QString &newCurrentDir);
 
+    bool loading() const;
+    void setLoading(bool newLoading);
+
 signals:
     void currentDirChanged();
+    void loadingChanged();
 };
 
 #endif // CONTENTSMODEL_HPP

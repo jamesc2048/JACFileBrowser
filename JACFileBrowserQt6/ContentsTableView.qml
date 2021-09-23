@@ -16,6 +16,16 @@ TableView {
         0,      // isSelected
     ]
 
+    Connections {
+        target: contentsModel
+
+        function onModelAboutToBeReset() {
+            // Workaround for Qt quirk (6.2.0 beta4)... If model is reset whilst contentX/Y is non zero,
+            // the view won't update properly
+            tableView.resetView()
+        }
+    }
+
     function resetView() {
         tableView.positionViewAtCell(Qt.point(0, 0), Qt.AlignLeft | Qt.AlignTop,
                                      Qt.point(-tableView.leftMargin, -columnsHeader.height))
@@ -35,8 +45,7 @@ TableView {
     model: tableModelProxy
     topMargin: columnsHeader.height
 
-    SplitView.fillWidth: true
-    SplitView.fillHeight: true
+    anchors.fill: parent
 
     columnWidthProvider: function(column) {
         const colWidth = columnWidths[column]

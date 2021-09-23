@@ -65,11 +65,6 @@ ApplicationWindow {
     Connections {
         target: contentsModel
 
-        function onModelAboutToBeReset() {
-            // Workaround for Qt quirk...
-            tableView.resetView()
-        }
-
         function onModelReset() {
             // I don't think I can bind this directly? Would have to make a QProperty?
             contentsCountLabel.contentsCount = contentsModel.rowCount()
@@ -222,6 +217,10 @@ ApplicationWindow {
                id: viewLoader
                source: "ContentsTableView.qml"
                asynchronous: true
+
+               SplitView.fillWidth: true
+               SplitView.fillHeight: true
+
            }
         }
 }
