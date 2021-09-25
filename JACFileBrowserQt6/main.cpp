@@ -11,7 +11,10 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    app.setApplicationName("JACFileBrowser");
     app.setApplicationVersion(APP_VERSION);
+    app.setOrganizationName("JAC");
+    app.setOrganizationDomain("crisafulli.me");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

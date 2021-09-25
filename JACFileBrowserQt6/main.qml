@@ -5,6 +5,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Universal
 
 import Qt.labs.platform as Platform
+import Qt.labs.settings as Settings
 
 ApplicationWindow {
     id: window
@@ -13,6 +14,13 @@ ApplicationWindow {
     visible: true
     title: `JACFileBrowser ${utils.getApplicationVersion()}`
     color: Universal.theme == Universal.Dark ? "#333" : "white"
+
+    Settings.Settings {
+        id: settings
+
+        property double gridCellWidth: 200
+        property double gridCellHeight: 200
+    }
 
     property bool ctrlPressed: false
     property bool shiftPressed: false
@@ -93,6 +101,28 @@ ApplicationWindow {
                         else {
                             viewLoader.source = "ContentsGridView.qml"
                         }
+                   }
+               }
+
+               Platform.MenuItem {
+                   text: "Increase grid size"
+                   enabled: viewLoader.source == "ContentsGridView.qml"
+
+                   onTriggered: {
+                       settings.gridCellWidth *= 1.5
+                       settings.gridCellHeight *= 1.5
+                       settings.sync()
+                   }
+               }
+
+               Platform.MenuItem {
+                   text: "Decrease grid size"
+                   enabled: viewLoader.source == "ContentsGridView.qml"
+
+                   onTriggered: {
+                       settings.gridCellWidth /= 1.5
+                       settings.gridCellHeight /= 1.5
+                       settings.sync()
                    }
                }
            }

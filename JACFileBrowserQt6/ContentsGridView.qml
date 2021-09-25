@@ -8,14 +8,13 @@ GridView {
     anchors.fill: parent
 
     property int cellsPerRow: Math.trunc(gridView.width / cellWidth)
-
     model: contentsModel
 
     boundsBehavior: Flickable.StopAtBounds
     boundsMovement: Flickable.StopAtBounds
 
-    cellWidth: 200
-    cellHeight: 200
+    cellWidth: settings.gridCellWidth
+    cellHeight: settings.gridCellHeight
 
     flickDeceleration: 5000
 

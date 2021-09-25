@@ -65,6 +65,7 @@ TableView {
         component LabelComponent : Label {
             text: display
             elide: Text.ElideRight
+            visible: !contentsModel.loading
         }
 
         component SelectionRectangleComponent : Rectangle {
@@ -73,8 +74,8 @@ TableView {
             height: parent.height
             color: "blue"
             opacity: 0.4
-            visible: IsSelected
-            enabled: IsSelected
+            visible: IsSelected && !contentsModel.loading
+            enabled: IsSelected && !contentsModel.loading
             x: -5
         }
 
@@ -82,6 +83,8 @@ TableView {
             column: 0
 
             Item {
+                visible: !contentsModel.loading
+
                 RowLayout {
                     width: parent.width
 
@@ -300,28 +303,37 @@ TableView {
         }
     }
 
-    Rectangle {
-        property int rowPosition: -1
-        property int rowHeight: tableView.rowHeightProvider(0)
+    Item {
+        Rectangle {
+            property int rowPosition: -1
+            property int rowHeight: tableView.rowHeightProvider(0)
 
-        id: highlightRect
-        color: "lightblue"
+            id: highlightRect
+            color: "lightblue"
 
-        visible: rowPosition >= 0
-        enabled: rowPosition >= 0
+            visible: rowPosition >= 0 && !contentsModel.loading
 
-        width: tableView.contentWidth
-        height: rowHeight
+            width: tableView.contentWidth
+            height: rowHeight
 
-        y: rowHeight * rowPosition
-        opacity: 0.4
+            y: rowHeight * rowPosition
+            opacity: 0.4
 
-        Connections {
-            target: contentsModel
+            Connections {
+                target: contentsModel
 
-            function onModelAboutToBeReset() {
-                highlightRect.rowPosition = -1
+                function onModelAboutToBeReset() {
+                    highlightRect.rowPosition = -1
+                }
             }
+        }
+
+        Label {
+            id: message
+            text: "Loading..."
+            horizontalAlignment: Text.AlignHCenter
+            width: tableView.width
+            visible: contentsModel.loading
         }
     }
 }
