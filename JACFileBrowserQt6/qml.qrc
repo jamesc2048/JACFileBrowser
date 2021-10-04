@@ -4,5 +4,6 @@
         <file>qtquickcontrols2.conf</file>
         <file>ContentsTableView.qml</file>
         <file>ContentsGridView.qml</file>
+        <file>DrivesView.qml</file>
     </qresource>
 </RCC>

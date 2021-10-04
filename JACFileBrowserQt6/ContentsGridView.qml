@@ -18,6 +18,12 @@ GridView {
 
     flickDeceleration: 5000
 
+    property var imageFileExtensions: [ "jpg", "jpeg", "png" ]
+
+    function isImageFile(fileName) {
+        return imageFileExtensions.indexOf(fileName.substring(fileName.length - 3, fileName.length)) != -1
+    }
+
     delegate: Item {
         width: gridView.cellWidth - 10
         height: gridView.cellHeight - 10
@@ -29,7 +35,7 @@ GridView {
                 // TODO proper centering and padding
                 Layout.maximumWidth: parent.width - 20
                 Layout.fillHeight: true
-                source: utils.getLocalUrl(AbsolutePath)
+                source: isImageFile(Name) ? utils.getLocalUrl(AbsolutePath) : ""
                 asynchronous: true
                 sourceSize: Qt.size(gridView.cellWidth, gridView.cellHeight)
                 autoTransform: true
