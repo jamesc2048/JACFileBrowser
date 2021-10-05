@@ -115,7 +115,7 @@ void ContentsModel::loadDirectory(QString path)
     setCurrentDir(cleanPath);
     setLoading(true);
 
-    auto future = QtConcurrent::run([&]
+    auto future = QtConcurrent::run([&, cleanPath]
     {
         contents = QDir(cleanPath)
                 .entryInfoList(QDir::AllEntries | QDir::Filter::NoDotAndDotDot,
