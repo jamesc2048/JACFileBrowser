@@ -14,6 +14,9 @@ ColumnLayout {
 
     ListView {
        id: listView
+
+       property int rowHeight: 25
+
        Layout.fillWidth: true
        Layout.fillHeight: true
 
@@ -58,9 +61,16 @@ ColumnLayout {
            }
 
            onPositionChanged: {
-               const pos = listView.indexAt(mouse.x, mouse.y);
+               //const pos = listView.indexAt(0, mouse.y);
+               // indexAt has gaps? use row height
+               const pos = mouse.y / listView.rowHeight | 0;
 
-               highlightRect.rowPosition = pos
+               if (pos < drivesModel.rowCount()) {
+                    highlightRect.rowPosition = pos
+               }
+               else {
+                     highlightRect.rowPosition = -1
+               }
            }
 
            onExited: highlightRect.rowPosition = -1
@@ -69,7 +79,7 @@ ColumnLayout {
 
        Rectangle {
            property int rowPosition: -1
-           property int rowHeight: 25
+           property int rowHeight: listView.rowHeight
 
            id: highlightRect
            color: "lightblue"
