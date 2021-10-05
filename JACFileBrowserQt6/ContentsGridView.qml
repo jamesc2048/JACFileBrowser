@@ -18,10 +18,10 @@ GridView {
 
     flickDeceleration: 5000
 
-    property var imageFileExtensions: [ "jpg", "jpeg", "png" ]
+    property var imageFileExtensions: [ "jpg", "jpeg", "png", "tif", "tiff" ]
 
     function isImageFile(fileName) {
-        return imageFileExtensions.indexOf(fileName.substring(fileName.length - 3, fileName.length)) != -1
+        return imageFileExtensions.indexOf(fileName.toLowerCase().substring(fileName.length - 3, fileName.length)) != -1
     }
 
     delegate: Item {
@@ -44,7 +44,7 @@ GridView {
                 Layout.alignment: Qt.AlignHCenter
             }
 
-            Text {
+            Label {
                 Layout.maximumWidth: gridView.cellWidth
                 text: Name
                 wrapMode: Text.WrapAnywhere

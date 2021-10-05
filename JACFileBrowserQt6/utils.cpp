@@ -32,3 +32,4 @@ QUrl Utils::getLocalUrl(QString url)
 {
     return QUrl::fromLocalFile(url);
 }
+

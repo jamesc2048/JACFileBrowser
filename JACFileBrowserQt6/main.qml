@@ -194,7 +194,6 @@ ApplicationWindow {
            anchors.fill: parent
 
            DrivesView {
-
            }
 
            Loader {

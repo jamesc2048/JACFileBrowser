@@ -335,6 +335,22 @@ TableView {
             width: tableView.width
             visible: contentsModel.loading
         }
+
+        Label {
+            id: emptyMessage
+            text: "Folder is empty"
+            horizontalAlignment: Text.AlignHCenter
+            width: tableView.width
+
+            Connections {
+                target: contentsModel
+
+                function onModelReset() {
+                    // I don't think I can bind this directly? Would have to make a QProperty?
+                    emptyMessage.visible = contentsModel.rowCount() == 0
+                }
+            }
+        }
     }
 }
 
