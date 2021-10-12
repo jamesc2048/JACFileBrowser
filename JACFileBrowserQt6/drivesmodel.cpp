@@ -19,6 +19,7 @@ DrivesModel::DrivesModel(QObject *parent) : QAbstractListModel(parent)
         });
     };
 
+    append(QStandardPaths::HomeLocation);
     append(QStandardPaths::DesktopLocation);
     append(QStandardPaths::DownloadLocation);
     append(QStandardPaths::DocumentsLocation);
