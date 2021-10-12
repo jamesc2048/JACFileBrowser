@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickWindow>
 
 #include "drivesmodel.hpp"
 #include "contentsmodel.hpp"
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(APP_VERSION);
     app.setOrganizationName("JAC");
     app.setOrganizationDomain("crisafulli.me");
+
+    QQuickWindow::setTextRenderType(QQuickWindow::TextRenderType::NativeTextRendering);
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
