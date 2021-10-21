@@ -1,6 +1,14 @@
-Font rendering is not crisp? switch to native font rendering
-links down the side (documents etc)
 drag and drop into links to side (favourites)
 context menu
 Github actions for builds
 Table resizing in real time (timer every 50 ms that calls ForceLayout()?)
+Sorting of table, maybe make QML table lib with all that functionality??
+Different icon for not empty folder
+extensible "operations" system (kind of like windows shell commands but not using them directly)
+File operations (cut copy paste create delete, with queuing)
+zip file as folder
+zip file operations
+image preview in right pane (mac os style?)
+video file preview
+image full screen preview
+video full screen preview
