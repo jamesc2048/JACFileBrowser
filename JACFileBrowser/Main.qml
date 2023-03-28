@@ -11,7 +11,9 @@ ApplicationWindow {
     visible: true
     title: "JAC File Browser"
 
-    property var contentsModel: TestTableModel {
+    property var contentsModel: ContentsModel{
+        currentDir: "C:\\SDK\\Qt"
+    } /*TestTableModel {
         rows: 100
         columns: 20
 
@@ -33,10 +35,20 @@ ApplicationWindow {
         function sortByColumn(index) {
             console.log("sortByColumn", index);
         }
-    }
+    }*/
 
     property var listModel: TestListModel {
         rows: 100
+    }
+
+    menuBar: MenuBar {
+        Menu {
+            title: "File"
+            Action {
+                text: "Open in native file browser"
+                onTriggered: console.log("TODO")
+            }
+        }
     }
 
     header: ToolBar {
@@ -186,6 +198,11 @@ ApplicationWindow {
                     text: display
                     clip: true
                     elide: Text.ElideRight
+
+//                        background: Rectangle {
+//                            visible: isSelected
+//                            color: "lightblue"
+//                        }
                 }
 
                 // Bug in Qt 6.5
@@ -210,6 +227,19 @@ ApplicationWindow {
                 }
 
                 model: contentsModel
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onDoubleClicked: (mouse) => {
+                        var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
+                        console.log(mouse.x, mouse.y, cell)
+
+                        if (cell.x != -1 && cell.y != -1) {
+                            contentsModel.cellDoubleClicked(cell)
+                        }
+                    }
+                }
             }
         }
     }

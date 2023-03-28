@@ -4,13 +4,14 @@ project(JACFileBrowser VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick QuickControls2 Qml)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick QuickControls2 Qml Concurrent)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(appJACFileBrowser
     main.cpp
     testmodels.hpp testmodels.cpp
+    contentsmodel.hpp contentsmodel.cpp
 )
 
 qt_add_qml_module(appJACFileBrowser
@@ -28,7 +29,7 @@ set_target_properties(appJACFileBrowser PROPERTIES
 )
 
 target_link_libraries(appJACFileBrowser
-    PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Qml
+    PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Qml Qt6::Concurrent
 )
 
 install(TARGETS appJACFileBrowser
