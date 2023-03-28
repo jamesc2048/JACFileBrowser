@@ -5,31 +5,67 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 ApplicationWindow {
+    id: window
     width: 1024
     height: 768
     visible: true
     title: "JAC File Browser"
 
+    property var contentsModel: TestTableModel {
+        rows: 100
+        columns: 20
+
+        property string currentDir: "D:\\"
+        onCurrentDirChanged: console.log("onCurrentDirChanged", currentDir)
+
+        function undo() {
+            console.log("undo");
+        }
+
+        function redo() {
+            console.log("redo");
+        }
+
+        function parentDir() {
+            console.log("parentDir");
+        }
+
+        function sortByColumn(index) {
+            console.log("sortByColumn", index);
+        }
+    }
+
+    property var listModel: TestListModel {
+        rows: 100
+    }
+
     header: ToolBar {
         RowLayout {
             anchors.fill: parent
+
             ToolButton {
                 text: "🡐"
+                onClicked: contentsModel.undo()
             }
             ToolButton {
                 text: "🡒"
+                onClicked: contentsModel.redo()
             }
             ToolButton {
                 text: "🡑"
+                onClicked: contentsModel.parentDir()
             }
 
             TextField {
-                text: "C:\\"
+                id: currentDirTextField
                 Layout.fillWidth: true
+                text: contentsModel.currentDir
+                onAccepted: contentsModel.currentDir = text
             }
 
             ToolButton {
-               text: "Go"
+                text: "Go"
+                onClicked: contentsModel.currentDir = currentDirTextField.text
             }
         }
     }
@@ -44,9 +80,7 @@ ApplicationWindow {
             delegate: Label { text: display }
 
             boundsBehavior: Flickable.StopAtBounds
-            model: TestListModel {
-                rows: 100
-            }
+            model: listModel
 
             ScrollBar.vertical: ScrollBar {
                 //policy: ScrollBar.AlwaysOn
@@ -58,9 +92,9 @@ ApplicationWindow {
             SplitView.fillHeight: true
 
             HorizontalHeaderView {
+                Layout.fillWidth: true
                 syncView: tableView
                 clip: true
-                Layout.fillWidth: true
 
                 boundsBehavior: Flickable.StopAtBounds
                 // New in Qt 6.5: no need to do it by hand!!
@@ -76,7 +110,7 @@ ApplicationWindow {
                         // with just the binding, when using Button?
                         // Maybe bug to be raised to Qt?
                         text: tableView.model.headerData(index, Qt.Horizontal, Qt.DisplayRole)
-                        onClicked: console.log("TODO sorting", index)
+                        onClicked: contentsModel.sortByColumn(index)
                     }
                     Rectangle {
                         Layout.preferredWidth: 5
@@ -116,13 +150,6 @@ ApplicationWindow {
             }
 
             TableView {
-                Component.onCompleted: {
-//                    setTimeout(2000, () => {
-//                        tableView.resizableColumns = true;
-//                        tableView.forceLayout();
-//                    })
-                }
-
                 function setTimeout(delayTime, cb) {
                     return _timer(delayTime, cb, false)
                 }
@@ -182,10 +209,7 @@ ApplicationWindow {
                     return 30;
                 }
 
-                model: TestTableModel {
-                    rows: 100
-                    columns: 20
-                }
+                model: contentsModel
             }
         }
     }
