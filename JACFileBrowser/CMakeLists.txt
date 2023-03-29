@@ -12,6 +12,7 @@ qt_add_executable(appJACFileBrowser
     main.cpp
     testmodels.hpp testmodels.cpp
     contentsmodel.hpp contentsmodel.cpp
+    utilities.hpp utilities.cpp
 )
 
 qt_add_qml_module(appJACFileBrowser

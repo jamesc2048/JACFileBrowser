@@ -11,7 +11,12 @@ ApplicationWindow {
     visible: true
     title: "JAC File Browser"
 
-    property var contentsModel: ContentsModel{
+    Utilities {
+        id: utilities
+    }
+
+    ContentsModel{
+        id: contentsModel
         currentDir: "C:\\SDK\\Qt"
     } /*TestTableModel {
         rows: 100
@@ -37,16 +42,22 @@ ApplicationWindow {
         }
     }*/
 
-    property var listModel: TestListModel {
+    TestListModel {
+        id: listModel
         rows: 100
     }
 
     menuBar: MenuBar {
         Menu {
             title: "File"
+
             Action {
                 text: "Open in native file browser"
-                onTriggered: console.log("TODO")
+                onTriggered: utilities.openInNativeBrowser(contentsModel.currentDir)
+            }
+            Action {
+                text: "Quit"
+                onTriggered: Qt.quit()
             }
         }
     }
@@ -89,7 +100,12 @@ ApplicationWindow {
             SplitView.preferredWidth: 300
             SplitView.fillHeight: true
             clip: true
-            delegate: Label { text: display }
+            delegate: Label {
+                text: display
+                clip: true
+                elide: Text.ElideRight
+                padding: 5
+            }
 
             boundsBehavior: Flickable.StopAtBounds
             model: listModel
@@ -128,35 +144,7 @@ ApplicationWindow {
                         Layout.preferredWidth: 5
                         Layout.fillHeight: true
 
-                        //color: ma.containsMouse ? "darkgray" : "gray"
                         color: "darkgray"
-
-                        // Could be useful to make drag target bigger without
-                        // making it visually bigger.
-                        // This is used in SplitView handle
-                        //containmentMask: Item {
-                        //     x: (handleDelegate.width - width) / 2
-                        //     width: 64
-                        //     height: splitView.height
-                        // }
-
-//                        MouseArea {
-//                            id: ma
-//                            hoverEnabled: true
-//                            anchors.fill: parent
-//                            onHoveredChanged: console.log("header hover", index, containsMouse)
-//                            onPressed: console.log("header click", index, mouse.x)
-//                            onReleased: console.log("header release", index, mouse.x)
-//                            onPositionChanged: {
-//                                // TODO could use to make columns draggable?
-//                                // IDEA: use index to index into array of column widths.
-//                                // as you end the drag we update the width and
-//                                // call forceLayout() on the tableView
-//                            //    if (pressed) console.log("header move", index, mouse.x)
-//                            }
-//                            //preventStealing: true
-//                            propagateComposedEvents: true
-//                        }
                     }
                 }
             }
@@ -198,6 +186,7 @@ ApplicationWindow {
                     text: display
                     clip: true
                     elide: Text.ElideRight
+                    padding: 5
 
 //                        background: Rectangle {
 //                            visible: isSelected
