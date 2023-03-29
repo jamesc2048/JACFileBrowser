@@ -4,6 +4,8 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: windows-latest
     steps:
+    - uses: seanmiddleditch/gha-setup-ninja@master
+    - uses: jwlawson/actions-setup-cmake@v1.13
     - uses: jurplel/install-qt-action@v3.1.0
       with:
         version: '6.5.0'
@@ -13,6 +15,8 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
       with:
-        python-version: '3.10' 
-    - run: pip install path
-    - run: python install.py
+        python-version: '3.10'
+    - run: echo $GITHUB_WORKSPACE
+    - run:  
+    #- run: pip install path
+    #- run: python install.py
