@@ -1,6 +1,7 @@
 #include "contentsmodel.hpp"
 
 #include <QtConcurrent>
+#include <QLocale>
 
 #ifdef Q_OS_WIN
 #define WIN32_LEAN_AND_MEAN
@@ -30,6 +31,8 @@ int ContentsModel::columnCount(const QModelIndex &parent) const
 
 QVariant ContentsModel::data(const QModelIndex &index, int role) const
 {
+    static const QLocale locale;
+
     const int row = index.row();
     const int col = index.column();
 
@@ -51,7 +54,9 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
             return fi.isFile() ? u"File"_qs : u"Directory"_qs;
         case 3:
             // Size
-            return fi.isFile() ? QString("%1 MB").arg(fi.size() / (1024. * 1024.), 0, 'f', 2) : "";
+            return fi.isFile() ?
+                        locale.toString(ceil(fi.size() / 1024.)) + u" KB"_qs :
+                        u""_qs;
         default:
             return "Unknown";
         }

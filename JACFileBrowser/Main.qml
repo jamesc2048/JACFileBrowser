@@ -187,6 +187,7 @@ ApplicationWindow {
                     clip: true
                     elide: Text.ElideRight
                     padding: 5
+                    horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
 
 //                        background: Rectangle {
 //                            visible: isSelected

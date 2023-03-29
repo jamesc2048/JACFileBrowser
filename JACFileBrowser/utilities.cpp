@@ -9,6 +9,8 @@ Utilities::Utilities(QObject *parent)
 
 bool Utilities::openInNativeBrowser(const QString &dirPath)
 {
+    // TODO would be cool to preserve the selection
+    // "explorer /select,FileName"
     QDir dir(dirPath);
 
     if (dir.exists())
