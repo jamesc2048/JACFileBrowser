@@ -2,6 +2,7 @@
 
 #include <QtConcurrent>
 #include <QLocale>
+#include <QDir>
 
 #ifdef Q_OS_WIN
 #define WIN32_LEAN_AND_MEAN
@@ -14,7 +15,7 @@
 using namespace Qt::Literals::StringLiterals;
 
 ContentsModel::ContentsModel(QObject *parent)
-    : QAbstractItemModel(parent)
+    : QAbstractTableModel(parent)
 {
 }
 
@@ -33,11 +34,17 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
 {
     static const QLocale locale;
 
+    if (!index.isValid())
+    {
+        return {};
+    }
+
     const int row = index.row();
     const int col = index.column();
 
     const QFileInfo &fi = fileInfoList.at(row);
 
+    // Table mode
     if (role == Qt::DisplayRole)
     {
         switch (col)
@@ -46,8 +53,8 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
             // Filename
             return fi.fileName();
         case 1:
-            // Date Modified
-            return fi.lastModified().toString();
+            // Last Modified
+            return fi.lastModified().toString(u"dd/MM/yyyy hh:mm"_qs);
         case 2:
             // Type
             // TODO
@@ -62,47 +69,58 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
         }
     }
 
-    return {};
+    // Roles which apply to both table and list mode
+    switch (role)
+    {
+    case ContentsModel::IsFileRole:
+        return fi.isFile();
+    case ContentsModel::FileSizeRole:
+        return fi.size();
+    case ContentsModel::LastModifiedRole:
+        return fi.lastModified();
+    }
+
+    // List mode: map to columns
+    // Or maybe it should be done the other way round? Roles first, mapping to columns?
+    // Have a think about this
+    if (role > Qt::UserRole)
+    {
+        switch (role)
+        {
+            // case ContentsModel::FileNameRole:
+            //return data(createIndex(row, 0), Qt::DisplayRole);
+        }
+
+        // TODO
+        // filename
+        // last modified
+        // type
+        // size
+    }
+
+    return u"Invalid Data"_qs;
 }
 
 QHash<int, QByteArray> ContentsModel::roleNames() const
 {
-    return QAbstractItemModel::roleNames();
+    return {
+        { Qt::DisplayRole, "display"_qba },
+        { ContentsModel::IsFileRole, "isFile"_qba },
+        { ContentsModel::FileSizeRole, "fileSize"_qba },
+        { ContentsModel::LastModifiedRole, "lastModified"_qba },
+    };
 }
 
 QVariant ContentsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    const QString headers[] = { u"Name"_qs, u"Date Modified"_qs, u"Type"_qs, u"Size"_qs };
+    static const QString headers[] = { u"Name"_qs, u"Date Modified"_qs, u"Type"_qs, u"Size"_qs };
 
-    if (role == Qt::DisplayRole && section >= 0 && section <= 4)
+    if (role == Qt::DisplayRole && section >= 0 && section <= sizeof headers)
     {
         return headers[section];
     }
 
     return "Unknown header";
-}
-
-QModelIndex ContentsModel::index(int row, int column, const QModelIndex &parent) const
-{
-    return createIndex(row, column);
-}
-
-QModelIndex ContentsModel::parent(const QModelIndex &child) const
-{
-    return {};
-}
-
-ModelMode ContentsModel::modelMode() const
-{
-    return m_modelMode;
-}
-
-void ContentsModel::setModelMode(ModelMode newModelMode)
-{
-    if (m_modelMode == newModelMode)
-        return;
-    m_modelMode = newModelMode;
-    emit modelModeChanged();
 }
 
 QString ContentsModel::currentDir() const
@@ -157,3 +175,4 @@ void ContentsModel::cellDoubleClicked(QPoint point)
 #endif
     }
 }
+

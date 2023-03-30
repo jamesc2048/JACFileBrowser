@@ -15,7 +15,7 @@ ApplicationWindow {
         id: utilities
     }
 
-    ContentsModel{
+    ContentsModel {
         id: contentsModel
         currentDir: "C:\\SDK\\Qt"
     } /*TestTableModel {
@@ -68,15 +68,15 @@ ApplicationWindow {
 
             ToolButton {
                 text: "🡐"
-                onClicked: contentsModel.undo()
+                onPressed: contentsModel.undo()
             }
             ToolButton {
                 text: "🡒"
-                onClicked: contentsModel.redo()
+                onPressed: contentsModel.redo()
             }
             ToolButton {
                 text: "🡑"
-                onClicked: contentsModel.parentDir()
+                onPressed: contentsModel.parentDir()
             }
 
             TextField {
@@ -138,7 +138,22 @@ ApplicationWindow {
                         // with just the binding, when using Button?
                         // Maybe bug to be raised to Qt?
                         text: tableView.model.headerData(index, Qt.Horizontal, Qt.DisplayRole)
-                        onClicked: contentsModel.sortByColumn(index)
+                        onClicked: {
+                            // TODO would be nice to draw the litle arrows to show
+                            // which column is being sorted.
+                            let order = Qt.AscendingOrder;
+
+                            if (sortModel.sortColumn == index) {
+                                order = sortModel.sortOrder
+
+                                if (order == Qt.AscendingOrder)
+                                    order = Qt.DescendingOrder
+                                else
+                                    order = Qt.AscendingOrder
+                            }
+
+                            sortModel.sort(index, order)
+                        }
                     }
                     Rectangle {
                         Layout.preferredWidth: 5
@@ -216,7 +231,10 @@ ApplicationWindow {
                     return 30;
                 }
 
-                model: contentsModel
+                model: SortModel {
+                    id: sortModel
+                    model: contentsModel
+                }
 
                 MouseArea {
                     anchors.fill: parent
