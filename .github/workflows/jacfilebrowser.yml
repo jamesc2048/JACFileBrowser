@@ -17,6 +17,7 @@ jobs:
       with:
         python-version: '3.10'
     - run: echo $GITHUB_WORKSPACE
-    - run:  
+    - run: ls -lah $GITHUB_WORKSPACE
+    #- run:  
     #- run: pip install path
     #- run: python install.py
