@@ -11,6 +11,43 @@ ApplicationWindow {
     visible: true
     title: "JAC File Browser"
 
+    Shortcut {
+       sequences: [ StandardKey.Cut ]
+       onActivated: console.log("TODO cut")
+    }
+
+    Shortcut {
+       sequences: [ StandardKey.Copy ]
+       onActivated: console.log("TODO copy")
+    }
+
+    Shortcut {
+       sequences: [ StandardKey.Paste ]
+       onActivated: console.log("TODO paste")
+    }
+
+    Shortcut {
+       sequences: [ StandardKey.Undo ]
+       onActivated: console.log("TODO undo")
+    }
+
+    Shortcut {
+       sequences: [ StandardKey.Redo, "Ctrl+Shift+Z" ]
+       onActivated: console.log("TODO redo")
+    }
+
+    Shortcut {
+       sequences: [ StandardKey.SelectAll ]
+       onActivated: {
+           console.log("TODO select all")
+       }
+    }
+
+    Shortcut {
+       sequences: [ StandardKey.Find ]
+       onActivated: console.log("TODO find")
+    }
+
     Utilities {
         id: utilities
     }
@@ -116,6 +153,7 @@ ApplicationWindow {
         }
 
         ColumnLayout {
+            spacing: 0
             SplitView.fillWidth: true
             SplitView.fillHeight: true
 
@@ -165,23 +203,7 @@ ApplicationWindow {
             }
 
             TableView {
-                function setTimeout(delayTime, cb) {
-                    return _timer(delayTime, cb, false)
-                }
-
-                function setInterval(delayTime, cb) {
-                    return _timer(delayTime, cb, true)
-                }
-
-                function _timer(delayTime, cb, isInterval) {
-                    var timer = Qt.createQmlObject("import QtQuick 2.0; Timer {}", root);
-                    timer.interval = delayTime;
-                    timer.repeat = isInterval;
-                    timer.triggered.connect(cb);
-                    timer.start();
-                }
-
-                property list<string> columnWidths
+                property real rowCellHeight: 30
 
                 id: tableView
                 clip: true
@@ -228,7 +250,7 @@ ApplicationWindow {
                 }
 
                 rowHeightProvider: (row) => {
-                    return 30;
+                    return rowCellHeight;
                 }
 
                 model: SortModel {
@@ -238,15 +260,36 @@ ApplicationWindow {
 
                 MouseArea {
                     anchors.fill: parent
+                    hoverEnabled: true
 
                     onDoubleClicked: (mouse) => {
                         var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
-                        console.log(mouse.x, mouse.y, cell)
 
                         if (cell.x != -1 && cell.y != -1) {
                             contentsModel.cellDoubleClicked(cell)
                         }
                     }
+
+                    onPositionChanged: (mouse) => {
+                        var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
+                        //console.log(mouse.x, mouse.y, cell)
+
+                        if (cell.x != -1 && cell.y != -1) {
+                            highlightRect.visible = true;
+                            highlightRect.y = cell.y * tableView.rowCellHeight;
+                        }
+                        else {
+                            highlightRect.visible = false;
+                        }
+                    }
+                }
+
+                Rectangle {
+                    id: highlightRect
+                    color: "lightblue"
+                    width: parent.width
+                    height: tableView.rowCellHeight
+                    visible: false
                 }
             }
         }
