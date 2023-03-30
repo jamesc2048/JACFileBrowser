@@ -19,6 +19,7 @@ Planned:
 - [ ] File operations queuing (kind of like TeraCopy)
 - [ ] In app media preview
 - [ ] Split Image preview in right pane (mac os style?)
+- [ ] Theming / dark mode
 - [ ] Full keyboard navigation
 - [ ] Fast Search for file by typing beginning characters (best Windows explorer feature)
 - [ ] Per-user Settings
