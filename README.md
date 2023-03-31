@@ -23,6 +23,7 @@ Planned:
 - [ ] Full keyboard navigation
 - [ ] Fast Search for file by typing beginning characters (best Windows explorer feature)
 - [ ] Per-user Settings
+- [ ] Gestures (like Chrome: e.g. double finger swipe left/right for forward/back)
 - [ ] Extensible context menus
 - [ ] Extensions/Plugins
 - [ ] Tabs
