@@ -15,6 +15,7 @@ Eventually will be fully configurable but for now defaults to fulfill my own cur
 - [ ] Table sorting customisation 
 - [ ] Context menu basic actions
 - [ ] File operations (move, copy, delete, create etc) 
+- [ ] Sort by type (file/directory)
 ## Version 0.1
 - [ ] File operations queuing (kind of like TeraCopy)
 - [ ] In app media preview
