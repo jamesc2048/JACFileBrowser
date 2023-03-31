@@ -4,7 +4,7 @@ Cross platform file browser for people who want the best out of all file manager
 Optimised for speed and productivity.
 Eventually will be fully configurable but for now defaults to fulfill my own current needs/preferences.
 
-Planned:
+## Planned:
 - [x] Basic file browser functionality (browse directories, open files)
 - [x] Table View
 - [x] Table column resizing 
