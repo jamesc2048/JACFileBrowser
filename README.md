@@ -4,7 +4,7 @@ Cross platform file browser for people who want the best out of all file manager
 Optimised for speed and productivity.
 Eventually will be fully configurable but for now defaults to fulfill my own current needs/preferences.
 
-Planned:
+## Planned:
 - [x] Basic file browser functionality (browse directories, open files)
 - [x] Table View
 - [x] Table column resizing 
@@ -15,6 +15,7 @@ Planned:
 - [ ] Table sorting customisation 
 - [ ] Context menu basic actions
 - [ ] File operations (move, copy, delete, create etc) 
+- [ ] Sort by type (file/directory)
 ## Version 0.1
 - [ ] File operations queuing (kind of like TeraCopy)
 - [ ] In app media preview
@@ -23,6 +24,7 @@ Planned:
 - [ ] Full keyboard navigation
 - [ ] Fast Search for file by typing beginning characters (best Windows explorer feature)
 - [ ] Per-user Settings
+- [ ] Gestures (like Chrome: e.g. double finger swipe left/right for forward/back)
 - [ ] Extensible context menus
 - [ ] Extensions/Plugins
 - [ ] Tabs
