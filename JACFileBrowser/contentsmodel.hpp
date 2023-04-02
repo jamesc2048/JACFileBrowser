@@ -16,9 +16,10 @@ class ContentsModel : public QAbstractTableModel
     QML_ELEMENT
 
     Q_PROPERTY(QString currentDir READ currentDir WRITE setCurrentDir NOTIFY currentDirChanged)
-    QString m_currentDir;
+    Q_PROPERTY(int rows READ rows NOTIFY rowsChanged)
 
-    QFileInfoList fileInfoList;
+    QString m_currentDir;
+    QFileInfoList m_fileInfoList;
 
 public:
     enum Roles
@@ -39,6 +40,7 @@ public:
     // Properties
     QString currentDir() const;
     void setCurrentDir(const QString &newCurrentDir);
+    int rows() const;
 
     // Invokables
     Q_INVOKABLE void parentDir();
@@ -46,7 +48,7 @@ public:
 
 signals:
     void currentDirChanged();
-
+    void rowsChanged();
 };
 
 #endif // CONTENTSMODEL_H

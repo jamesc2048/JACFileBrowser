@@ -21,7 +21,7 @@ ContentsModel::ContentsModel(QObject *parent)
 
 int ContentsModel::rowCount(const QModelIndex &parent) const
 {
-    return (int)fileInfoList.size();
+    return (int)m_fileInfoList.size();
 }
 
 int ContentsModel::columnCount(const QModelIndex &parent) const
@@ -42,7 +42,7 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
     const int row = index.row();
     const int col = index.column();
 
-    const QFileInfo &fi = fileInfoList.at(row);
+    const QFileInfo &fi = m_fileInfoList.at(row);
 
     // Table mode
     if (role == Qt::DisplayRole)
@@ -62,7 +62,7 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
         case 3:
             // Size
             return fi.isFile() ?
-                        locale.toString(ceil(fi.size() / 1024.)) + u" KB"_qs :
+                        locale.toString(ceil(fi.size() / 1024.), 'f', 0) + u" KB"_qs :
                         u""_qs;
         default:
             return "Unknown";
@@ -141,10 +141,12 @@ void ContentsModel::setCurrentDir(const QString &newCurrentDir)
 
     qDebug("Fetch dir %s", qPrintable(dir.absolutePath()));
 
-    fileInfoList = dir.entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
+    m_fileInfoList = dir.entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
                                      QDir::SortFlag::DirsFirst | QDir::SortFlag::Name | QDir::SortFlag::IgnoreCase);
 
-    qDebug("Fetched files %u", fileInfoList.size());
+    emit rowsChanged();
+
+    qDebug("Fetched files %u", m_fileInfoList.size());
 
     endResetModel();
 }
@@ -158,7 +160,7 @@ void ContentsModel::parentDir()
 
 void ContentsModel::cellDoubleClicked(QPoint point)
 {
-    const QFileInfo& fi = fileInfoList.at(point.y());
+    const QFileInfo& fi = m_fileInfoList.at(point.y());
 
     auto d = QDir(m_currentDir);
     QString clickedPath = d.absoluteFilePath(fi.fileName());
@@ -176,3 +178,7 @@ void ContentsModel::cellDoubleClicked(QPoint point)
     }
 }
 
+int ContentsModel::rows() const
+{
+    return rowCount();
+}

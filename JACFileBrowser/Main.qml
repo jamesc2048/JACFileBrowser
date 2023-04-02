@@ -3,6 +3,9 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
 import QtQuick.Controls
+import Qt.labs.platform as Labs
+
+import QtQuick.Controls.Universal
 
 ApplicationWindow {
     id: window
@@ -10,6 +13,24 @@ ApplicationWindow {
     height: 768
     visible: true
     title: "JAC File Browser"
+
+    Universal.theme: Universal.System
+
+    Component.onCompleted: {
+        // Make it less crazy dark
+        if (Universal.theme == Universal.Dark) {
+            Universal.background = "#333"
+            Universal.foreground = "#eee"
+        }
+
+        console.log("Loaded ApplicationWindow Component")
+    }
+
+    component NiceLabel: Label {
+        clip: true
+        elide: Text.ElideRight
+        padding: 5
+    }
 
     Shortcut {
        sequences: [ StandardKey.Cut ]
@@ -48,41 +69,38 @@ ApplicationWindow {
        onActivated: console.log("TODO find")
     }
 
+    // Global
     Utilities {
         id: utilities
     }
 
+    // Per tab
     ContentsModel {
         id: contentsModel
         currentDir: "C:\\SDK\\Qt"
-    } /*TestTableModel {
-        rows: 100
-        columns: 20
-
-        property string currentDir: "D:\\"
-        onCurrentDirChanged: console.log("onCurrentDirChanged", currentDir)
-
-        function undo() {
-            console.log("undo");
-        }
-
-        function redo() {
-            console.log("redo");
-        }
-
-        function parentDir() {
-            console.log("parentDir");
-        }
-
-        function sortByColumn(index) {
-            console.log("sortByColumn", index);
-        }
-    }*/
-
-    TestListModel {
-        id: listModel
-        rows: 100
     }
+
+    DrivesModel {
+        id: drivesModel
+    }
+//    TestDrivesModel {
+//        id: drivesModel
+//    }
+
+//    Labs.MenuBar {
+//        Labs.Menu {
+//            title: "File"
+
+//            Labs.MenuItem {
+//                text: "Open in native file browser"
+//                onTriggered: utilities.openInNativeBrowser(contentsModel.currentDir)
+//            }
+//            Labs.MenuItem {
+//                text: "Quit"
+//                onTriggered: Qt.quit()
+//            }
+//        }
+//    }
 
     menuBar: MenuBar {
         Menu {
@@ -97,6 +115,12 @@ ApplicationWindow {
                 onTriggered: Qt.quit()
             }
         }
+    }
+
+    footer: NiceLabel {
+        id: footerLabel
+        // TODO this needs to change for tabs (1 contentsModel per tab).
+        text: `${contentsModel.rows} item`
     }
 
     header: ToolBar {
@@ -137,18 +161,24 @@ ApplicationWindow {
             SplitView.preferredWidth: 300
             SplitView.fillHeight: true
             clip: true
-            delegate: Label {
+            flickDeceleration: 10000
+
+            delegate: NiceLabel {
                 text: display
-                clip: true
-                elide: Text.ElideRight
-                padding: 5
             }
 
             boundsBehavior: Flickable.StopAtBounds
-            model: listModel
+            model: drivesModel
 
             ScrollBar.vertical: ScrollBar {
                 //policy: ScrollBar.AlwaysOn
+            }
+
+            NiceLabel {
+                width: parent.width
+                horizontalAlignment: Qt.AlignHCenter
+                text: "Loading..."
+                visible: drivesModel.rows == 0
             }
         }
 
@@ -209,6 +239,7 @@ ApplicationWindow {
                 clip: true
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                flickDeceleration: 10000
 
                 boundsBehavior: Flickable.StopAtBounds
 
@@ -219,11 +250,8 @@ ApplicationWindow {
                     //policy: ScrollBar.AlwaysOn
                 }
 
-                delegate: Label {
+                delegate: NiceLabel {
                     text: display
-                    clip: true
-                    elide: Text.ElideRight
-                    padding: 5
                     horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
 
 //                        background: Rectangle {
@@ -275,7 +303,10 @@ ApplicationWindow {
                         //console.log(mouse.x, mouse.y, cell)
 
                         if (cell.x != -1 && cell.y != -1) {
-                            highlightRect.visible = true;
+                            if (!highlightRect.visible) {
+                                highlightRect.visible = true;
+                            }
+
                             highlightRect.y = cell.y * tableView.rowCellHeight;
                         }
                         else {
@@ -290,6 +321,14 @@ ApplicationWindow {
                     width: parent.width
                     height: tableView.rowCellHeight
                     visible: false
+
+                    Connections {
+                        target: contentsModel
+
+                        function onModelReset() {
+                            highlightRect.visible = false
+                        }
+                    }
                 }
             }
         }

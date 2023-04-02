@@ -41,4 +41,24 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 };
 
+class TestDrivesModel : public QAbstractListModel
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+public:
+    TestDrivesModel(QObject *parent = nullptr) {};
+
+    int rowCount(const QModelIndex &parent) const override
+    {
+        return 4;
+    }
+    QVariant data(const QModelIndex &index, int role) const override
+    {
+        static QString drives[] = { "C:\\", "D:\\", "E:\\", "Z:\\" };
+
+        return drives[index.row()];
+    }
+};
+
 #endif // TESTMODELS_HPP
