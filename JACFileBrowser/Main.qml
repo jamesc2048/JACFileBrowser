@@ -69,6 +69,14 @@ ApplicationWindow {
        onActivated: console.log("TODO find")
     }
 
+    Shortcut {
+       sequences: [ "Ctrl+L" ]
+       onActivated: {
+           currentDirTextField.forceActiveFocus()
+           currentDirTextField.selectAll()
+       }
+    }
+
     // Global
     Utilities {
         id: utilities
@@ -144,7 +152,10 @@ ApplicationWindow {
                 id: currentDirTextField
                 Layout.fillWidth: true
                 text: contentsModel.currentDir
-                onAccepted: contentsModel.currentDir = text
+                onAccepted: {
+                    // TODO would be nice to remove focus here
+                    contentsModel.currentDir = text
+                }
             }
 
             ToolButton {
