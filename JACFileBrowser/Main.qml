@@ -32,6 +32,23 @@ ApplicationWindow {
         padding: 5
     }
 
+    component HighlightRectangle : Rectangle {
+        id: highlightRect
+        color: Universal.theme == Universal.Dark ? "#666" : "#ccc"
+        width: parent.width
+        height: tableView.rowCellHeight
+        visible: false
+        z: -1
+
+        Connections {
+            target: contentsModel
+
+            function onModelReset() {
+                highlightRect.visible = false
+            }
+        }
+    }
+
     Shortcut {
        sequences: [ StandardKey.Cut ]
        onActivated: console.log("TODO cut")
@@ -169,12 +186,14 @@ ApplicationWindow {
         anchors.fill: parent
 
         ListView {
+            id: listView
             SplitView.preferredWidth: 300
             SplitView.fillHeight: true
             clip: true
             flickDeceleration: 10000
 
             delegate: NiceLabel {
+                width: parent.width
                 text: display
             }
 
@@ -190,6 +209,46 @@ ApplicationWindow {
                 horizontalAlignment: Qt.AlignHCenter
                 text: "Loading..."
                 visible: drivesModel.rows == 0
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+
+                onContainsMouseChanged: {
+                    if (!containsMouse) {
+                        listHighlightRect.visible = false;
+                    }
+                }
+
+                onPositionChanged: (mouse) => {
+                    var cell = listView.indexAt(mouse.x, mouse.y)
+
+                   if (cell != -1) {
+                       if (!listHighlightRect.visible) {
+                           listHighlightRect.visible = true;
+                       }
+
+                       listHighlightRect.y = cell * tableView.rowCellHeight;
+                   }
+                    else {
+                        listHighlightRect.visible = false;
+                    }
+                }
+
+                onDoubleClicked: (mouse) => {
+                    var cell = listView.indexAt(mouse.x, mouse.y)
+
+                    if (cell != -1) {
+                        // TODO make the enums nicer here
+                        let dir = drivesModel.data(drivesModel.index(cell, 0), Qt.UserRole + 1)
+                        contentsModel.currentDir = dir;
+                    }
+                }
+            }
+
+            HighlightRectangle {
+                id: listHighlightRect
             }
         }
 
@@ -262,7 +321,7 @@ ApplicationWindow {
                 }
 
                 delegate: NiceLabel {
-                    text: display
+                    text: `${column == 0 && !isFile ? '📁' : ''}${display}`
                     horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
 
 //                        background: Rectangle {
@@ -301,6 +360,12 @@ ApplicationWindow {
                     anchors.fill: parent
                     hoverEnabled: true
 
+                    onContainsMouseChanged: {
+                        if (!containsMouse) {
+                            tableHighlightRect.visible = false;
+                        }
+                    }
+
                     onDoubleClicked: (mouse) => {
                         var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
 
@@ -311,35 +376,22 @@ ApplicationWindow {
 
                     onPositionChanged: (mouse) => {
                         var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
-                        //console.log(mouse.x, mouse.y, cell)
 
                         if (cell.x != -1 && cell.y != -1) {
-                            if (!highlightRect.visible) {
-                                highlightRect.visible = true;
+                            if (!tableHighlightRect.visible) {
+                                tableHighlightRect.visible = true;
                             }
 
-                            highlightRect.y = cell.y * tableView.rowCellHeight;
+                            tableHighlightRect.y = cell.y * tableView.rowCellHeight;
                         }
                         else {
-                            highlightRect.visible = false;
+                            tableHighlightRect.visible = false;
                         }
                     }
                 }
 
-                Rectangle {
-                    id: highlightRect
-                    color: "lightblue"
-                    width: parent.width
-                    height: tableView.rowCellHeight
-                    visible: false
-
-                    Connections {
-                        target: contentsModel
-
-                        function onModelReset() {
-                            highlightRect.visible = false
-                        }
-                    }
+                HighlightRectangle {
+                    id: tableHighlightRect
                 }
             }
         }
