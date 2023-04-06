@@ -27,29 +27,6 @@ ApplicationWindow {
         console.log("Loaded ApplicationWindow Component")
     }
 
-    component NiceLabel: Label {
-        clip: true
-        elide: Text.ElideRight
-        padding: 5
-    }
-
-    component HighlightRectangle : Rectangle {
-        id: highlightRect
-        color: Universal.theme == Universal.Dark ? "#666" : "#ccc"
-        width: parent.width
-        height: tableView.rowCellHeight
-        visible: false
-        z: -1
-
-        Connections {
-            target: contentsModel
-
-            function onModelReset() {
-                highlightRect.visible = false
-            }
-        }
-    }
-
     Shortcut {
        sequences: [ StandardKey.Cut ]
        onActivated: console.log("TODO cut")
@@ -95,19 +72,27 @@ ApplicationWindow {
        }
     }
 
+    Shortcut {
+       sequences: [ "Ctrl+W" ]
+       onActivated: {
+           // When tabs are implemented, quit tab
+           Qt.quit()
+       }
+    }
+
     // Global
     Utilities {
         id: utilities
     }
 
-    // Per tab
+    DrivesModel {
+        id: drivesModel
+    }
+
+    // Move this into ContentsPanel.qml when tabs are implemented
     ContentsModel {
         id: contentsModel
         currentDir: "C:\\SDK\\Qt"
-    }
-
-    DrivesModel {
-        id: drivesModel
     }
 //    TestDrivesModel {
 //        id: drivesModel
@@ -186,215 +171,14 @@ ApplicationWindow {
     SplitView {
         anchors.fill: parent
 
-        ListView {
-            id: listView
+        LeftPanel {
             SplitView.preferredWidth: 300
             SplitView.fillHeight: true
-            clip: true
-            flickDeceleration: 10000
-
-            delegate: NiceLabel {
-                width: parent.width
-                text: display
-            }
-
-            boundsBehavior: Flickable.StopAtBounds
-            model: drivesModel
-
-            ScrollBar.vertical: ScrollBar {
-                //policy: ScrollBar.AlwaysOn
-            }
-
-            NiceLabel {
-                width: parent.width
-                horizontalAlignment: Qt.AlignHCenter
-                text: "Loading..."
-                visible: drivesModel.rows == 0
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-
-                onContainsMouseChanged: {
-                    if (!containsMouse) {
-                        listHighlightRect.visible = false;
-                    }
-                }
-
-                onPositionChanged: (mouse) => {
-                    var cell = listView.indexAt(mouse.x, mouse.y)
-
-                   if (cell != -1) {
-                       if (!listHighlightRect.visible) {
-                           listHighlightRect.visible = true;
-                       }
-
-                       listHighlightRect.y = cell * tableView.rowCellHeight;
-                   }
-                    else {
-                        listHighlightRect.visible = false;
-                    }
-                }
-
-                onDoubleClicked: (mouse) => {
-                    var cell = listView.indexAt(mouse.x, mouse.y)
-
-                    if (cell != -1) {
-                        // TODO make the enums nicer here
-                        let dir = drivesModel.data(drivesModel.index(cell, 0), Qt.UserRole + 1)
-                        contentsModel.currentDir = dir;
-                    }
-                }
-            }
-
-            HighlightRectangle {
-                id: listHighlightRect
-            }
         }
 
-        ColumnLayout {
-            spacing: 0
+        ContentsPanel {
             SplitView.fillWidth: true
             SplitView.fillHeight: true
-
-            HorizontalHeaderView {
-                Layout.fillWidth: true
-                syncView: tableView
-                clip: true
-
-                boundsBehavior: Flickable.StopAtBounds
-                // New in Qt 6.5: no need to do it by hand!!
-                resizableColumns: true
-
-                delegate: RowLayout {
-                    spacing: 0
-
-                    Button {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        // TODO workaround: not sure why this doesn't work
-                        // with just the binding, when using Button?
-                        // Maybe bug to be raised to Qt?
-                        text: tableView.model.headerData(index, Qt.Horizontal, Qt.DisplayRole)
-                        onClicked: {
-                            // TODO would be nice to draw the litle arrows to show
-                            // which column is being sorted.
-                            let order = Qt.AscendingOrder;
-
-                            if (sortModel.sortColumn == index) {
-                                order = sortModel.sortOrder
-
-                                if (order == Qt.AscendingOrder)
-                                    order = Qt.DescendingOrder
-                                else
-                                    order = Qt.AscendingOrder
-                            }
-
-                            sortModel.sort(index, order)
-                        }
-                    }
-                    Rectangle {
-                        Layout.preferredWidth: 5
-                        Layout.fillHeight: true
-
-                        color: "darkgray"
-                    }
-                }
-            }
-
-            TableView {
-                property real rowCellHeight: 30
-
-                id: tableView
-                clip: true
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                flickDeceleration: 10000
-
-                boundsBehavior: Flickable.StopAtBounds
-
-                ScrollBar.horizontal: ScrollBar {
-                    //policy: ScrollBar.AlwaysOn
-                }
-                ScrollBar.vertical: ScrollBar {
-                    //policy: ScrollBar.AlwaysOn
-                }
-
-                delegate: NiceLabel {
-                    text: `${column == 0 && !isFile ? '📁' : ''}${display}`
-                    horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
-
-//                        background: Rectangle {
-//                            visible: isSelected
-//                            color: "lightblue"
-//                        }
-                }
-
-                // Bug in Qt 6.5
-                //resizableColumns: true
-                onLayoutChanged: {
-                    // Can save explicitColumnWidth() output to remember column sizes
-                    //console.log("layout")
-                }
-                columnWidthProvider: (column) => {
-                    // Set through setColumnWidths() or resizable column
-                    // return 0 = hide column
-                    let w = explicitColumnWidth(column)
-                    if (w >= 0)
-                        return Math.max(80, w);
-                    else
-                        // implicit delegate size. Clamp to 80 minimum
-                        return Math.max(80, implicitColumnWidth(column))
-                }
-
-                rowHeightProvider: (row) => {
-                    return rowCellHeight;
-                }
-
-                model: SortModel {
-                    id: sortModel
-                    model: contentsModel
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-
-                    onContainsMouseChanged: {
-                        if (!containsMouse) {
-                            tableHighlightRect.visible = false;
-                        }
-                    }
-
-                    onDoubleClicked: (mouse) => {
-                        var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
-
-                        if (cell.x != -1 && cell.y != -1) {
-                            contentsModel.cellDoubleClicked(cell)
-                        }
-                    }
-
-                    onPositionChanged: (mouse) => {
-                        var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
-
-                        if (cell.x != -1 && cell.y != -1) {
-                            if (!tableHighlightRect.visible) {
-                                tableHighlightRect.visible = true;
-                            }
-
-                            tableHighlightRect.y = cell.y * tableView.rowCellHeight;
-                        }
-                        else {
-                            tableHighlightRect.visible = false;
-                        }
-                    }
-                }
-
-                HighlightRectangle {
-                    id: tableHighlightRect
-                }
-            }
         }
     }
 }
