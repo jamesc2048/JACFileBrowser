@@ -160,6 +160,12 @@ void ContentsModel::parentDir()
 
 void ContentsModel::cellDoubleClicked(QPoint point)
 {
+    if (point.y() < 0)
+    {
+        qWarning("Invalid point for double click: %d, %d", point.x(), point.y());
+        return;
+    }
+
     const QFileInfo& fi = m_fileInfoList.at(point.y());
 
     auto d = QDir(m_currentDir);

@@ -126,7 +126,10 @@ Item {
                     var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
 
                     if (cell.x != -1 && cell.y != -1) {
-                        contentsModel.cellDoubleClicked(cell)
+                        var i = sortModel.index(cell.y, cell.x)
+                        var sourceCell = sortModel.mapToSource(i)
+
+                        contentsModel.cellDoubleClicked(Qt.point(sourceCell.column, sourceCell.row))
                     }
                 }
 
