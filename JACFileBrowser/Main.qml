@@ -17,6 +17,12 @@ ApplicationWindow {
 
     Universal.theme: Universal.System
 
+    Settings {
+        property bool showPreviewPanel
+
+        id: settings
+    }
+
     Component.onCompleted: {
         // Make it less crazy dark
         if (Universal.theme == Universal.Dark) {
@@ -25,6 +31,12 @@ ApplicationWindow {
         }
 
         console.log("Loaded ApplicationWindow Component")
+    }
+
+    Component.onDestruction: {
+        settings.sync()
+
+        console.log("Destroying ApplicationWindow Component")
     }
 
     Shortcut {
@@ -121,9 +133,21 @@ ApplicationWindow {
                 text: "Open in native file browser"
                 onTriggered: utilities.openInNativeBrowser(contentsModel.currentDir)
             }
+
             Action {
                 text: "Quit"
                 onTriggered: Qt.quit()
+            }
+        }
+
+        Menu {
+            title: "View"
+
+            Action {
+                text: "Show Preview panel"
+                checkable: true
+                checked: settings.showPreviewPanel
+                onCheckedChanged: settings.showPreviewPanel = checked
             }
         }
     }
@@ -228,12 +252,11 @@ ApplicationWindow {
                     SplitView.fillHeight: true
                 }
 
-                // TODO preview panel can appear here
-//                NiceLabel {
-//                    visible: false
-//                    SplitView.preferredWidth: 300
-//                    text: "Preview panel"
-//                }
+                NiceLabel {
+                    visible: settings.showPreviewPanel
+                    SplitView.preferredWidth: 300
+                    text: "Preview panel (TODO)"
+                }
             }
 
             NiceLabel {
