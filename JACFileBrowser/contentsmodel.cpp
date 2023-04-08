@@ -78,6 +78,8 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
         return fi.size();
     case ContentsModel::LastModifiedRole:
         return fi.lastModified();
+    case ContentsModel::AbsolutePathRole:
+        return fi.absoluteFilePath();
     }
 
     // List mode: map to columns
@@ -146,7 +148,7 @@ void ContentsModel::setCurrentDir(const QString &newCurrentDir)
 
     emit rowsChanged();
 
-    qDebug("Fetched files %u", m_fileInfoList.size());
+    qDebug("Fetched files %lu", m_fileInfoList.size());
 
     endResetModel();
 }
@@ -167,19 +169,17 @@ void ContentsModel::cellDoubleClicked(QPoint point)
     }
 
     const QFileInfo& fi = m_fileInfoList.at(point.y());
-
-    auto d = QDir(m_currentDir);
-    QString clickedPath = d.absoluteFilePath(fi.fileName());
+    QString absPath = fi.absoluteFilePath();
 
     if (fi.isDir())
     {
-        setCurrentDir(clickedPath);
+        setCurrentDir(absPath);
     }
     else
     {
 // TODO mac and linux
 #ifdef Q_OS_WIN
-        ShellExecuteW(nullptr, L"open", clickedPath.toStdWString().c_str(), nullptr, nullptr, SW_SHOW);
+        ShellExecuteW(nullptr, L"open", absPath.toStdWString().c_str(), nullptr, nullptr, SW_SHOW);
 #endif
     }
 }

@@ -26,7 +26,8 @@ public:
     {
         IsFileRole = Qt::UserRole + 1,
         FileSizeRole = Qt::UserRole + 2,
-        LastModifiedRole = Qt::UserRole + 3
+        LastModifiedRole = Qt::UserRole + 3,
+        AbsolutePathRole = Qt::UserRole + 4
     };
 
     explicit ContentsModel(QObject *parent = nullptr);

@@ -61,6 +61,20 @@ Item {
         TableView {
             property real rowCellHeight: 30
 
+            property list<bool> selection: []
+
+            Component.onCompleted: {
+                tableView.selection = Array(contentsModel.rows).fill(false);
+            }
+
+            Connections {
+                target: contentsModel
+
+                function onModelReset() {
+                    tableView.selection = Array(contentsModel.rows).fill(false);
+                }
+            }
+
             id: tableView
             clip: true
             Layout.fillWidth: true
@@ -80,10 +94,11 @@ Item {
                 text: `${column == 0 && !isFile ? '📁' : ''}${display}`
                 horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
 
-    //                        background: Rectangle {
-    //                            visible: isSelected
-    //                            color: "lightblue"
-    //                        }
+                background: Rectangle {
+                    // Prevent some error happening when delegates are reused?
+                    visible: row < tableView.selection.length ? tableView.selection[row] : false
+                    color: "lightblue"
+                }
             }
 
             // Bug in Qt 6.5
@@ -119,6 +134,18 @@ Item {
                 onContainsMouseChanged: {
                     if (!containsMouse) {
                         tableHighlightRect.visible = false;
+                    }
+                }
+
+                onClicked: (mouse) => {
+                    var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
+
+                    if (cell.x != -1 && cell.y != -1) {
+                        var i = sortModel.index(cell.y, cell.x)
+                        var sourceCell = sortModel.mapToSource(i)
+
+                        tableView.selection.fill(false)
+                        tableView.selection[sourceCell.row] = !tableView.selection[sourceCell.row]
                     }
                 }
 
