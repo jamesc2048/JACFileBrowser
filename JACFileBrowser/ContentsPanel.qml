@@ -144,7 +144,10 @@ Item {
                         var i = sortModel.index(cell.y, cell.x)
                         var sourceCell = sortModel.mapToSource(i)
 
-                        tableView.selection.fill(false)
+                        if (!container.isCtrlPressed) {
+                            tableView.selection.fill(false)
+                        }
+
                         tableView.selection[sourceCell.row] = !tableView.selection[sourceCell.row]
                     }
                 }

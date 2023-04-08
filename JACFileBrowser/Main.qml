@@ -168,17 +168,39 @@ ApplicationWindow {
         }
     }
 
-    SplitView {
+    Item {
+        id: container
         anchors.fill: parent
+        focus: true
 
-        LeftPanel {
-            SplitView.preferredWidth: 300
-            SplitView.fillHeight: true
+        property bool isCtrlPressed: false
+
+        Keys.onPressed: (key) => {
+            console.log("key pressed", key.modifiers, key.key)
+            if (key.key == Qt.Key_Control) {
+                isCtrlPressed = true
+            }
         }
 
-        ContentsPanel {
-            SplitView.fillWidth: true
-            SplitView.fillHeight: true
+        Keys.onReleased:  (key) => {
+            console.log("key released", key.modifiers, key.key)
+            if (key.key == Qt.Key_Control) {
+                isCtrlPressed = false
+            }
+        }
+
+        SplitView {
+            anchors.fill: parent
+
+            LeftPanel {
+                SplitView.preferredWidth: 300
+                SplitView.fillHeight: true
+            }
+
+            ContentsPanel {
+                SplitView.fillWidth: true
+                SplitView.fillHeight: true
+            }
         }
     }
 }
