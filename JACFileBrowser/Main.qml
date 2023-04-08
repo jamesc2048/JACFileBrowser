@@ -252,10 +252,19 @@ ApplicationWindow {
                     SplitView.fillHeight: true
                 }
 
-                NiceLabel {
+                Loader {
                     visible: settings.showPreviewPanel
                     SplitView.preferredWidth: 300
-                    text: "Preview panel (TODO)"
+                    SplitView.fillHeight: true
+
+                    // Types of preview?
+                    // Image, Video, Text, more?
+                    // TODO Load suitable component to view
+                    // Also need to be able to find out the current selected item
+                    // Maybe driven by file extension of selected file?
+                    sourceComponent: NiceLabel {
+                        text: "Preview Panel"
+                    }
                 }
             }
 
