@@ -135,6 +135,20 @@ ApplicationWindow {
     }
 
     header: ToolBar {
+        Keys.onPressed: (key) => {
+            console.log("toolbar key pressed", key.modifiers, key.key)
+            if (key.key == Qt.Key_Control) {
+                container.isCtrlPressed = true
+            }
+        }
+
+        Keys.onReleased:  (key) => {
+            console.log("toolbar key released", key.modifiers, key.key)
+            if (key.key == Qt.Key_Control) {
+                container.isCtrlPressed = false
+            }
+        }
+
         RowLayout {
             anchors.fill: parent
 
