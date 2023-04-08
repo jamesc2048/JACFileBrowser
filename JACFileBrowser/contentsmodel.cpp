@@ -132,8 +132,9 @@ QString ContentsModel::currentDir() const
 
 void ContentsModel::setCurrentDir(const QString &newCurrentDir)
 {
-    if (m_currentDir == newCurrentDir)
-        return;
+    // Remove this check to allow for folder refresh
+    // if (m_currentDir == newCurrentDir)
+    //      return;
     m_currentDir = QDir::toNativeSeparators(newCurrentDir);
     emit currentDirChanged();
 

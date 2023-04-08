@@ -128,92 +128,120 @@ ApplicationWindow {
         }
     }
 
-    footer: NiceLabel {
-        id: footerLabel
-        // TODO this needs to change for tabs (1 contentsModel per tab).
-        text: `${contentsModel.rows} item`
-    }
-
-    header: ToolBar {
-        Keys.onPressed: (key) => {
-            console.log("toolbar key pressed", key.modifiers, key.key)
-            if (key.key == Qt.Key_Control) {
-                container.isCtrlPressed = true
-            }
-        }
-
-        Keys.onReleased:  (key) => {
-            console.log("toolbar key released", key.modifiers, key.key)
-            if (key.key == Qt.Key_Control) {
-                container.isCtrlPressed = false
-            }
-        }
-
-        RowLayout {
-            anchors.fill: parent
-
-            ToolButton {
-                text: "🡐"
-                onPressed: contentsModel.undo()
-            }
-            ToolButton {
-                text: "🡒"
-                onPressed: contentsModel.redo()
-            }
-            ToolButton {
-                text: "🡑"
-                onPressed: contentsModel.parentDir()
-            }
-
-            TextField {
-                id: currentDirTextField
-                Layout.fillWidth: true
-                text: contentsModel.currentDir
-                onAccepted: {
-                    // TODO would be nice to remove focus here
-                    contentsModel.currentDir = text
-                }
-            }
-
-            ToolButton {
-                text: "Go"
-                onClicked: contentsModel.currentDir = currentDirTextField.text
-            }
-        }
-    }
-
     Item {
         id: container
         anchors.fill: parent
         focus: true
 
         property bool isCtrlPressed: false
+        property bool isShiftPressed: false
 
         Keys.onPressed: (key) => {
-            console.log("key pressed", key.modifiers, key.key)
-            if (key.key == Qt.Key_Control) {
-                isCtrlPressed = true
+            switch (key.key) {
+                case Qt.Key_Control:
+                    // Control held down on its own
+                    console.log("Ctrl key pressed")
+                    isCtrlPressed = true
+                    break
+                case Qt.Key_Shift:
+                    console.log("Shift key pressed")
+                    isShiftPressed = true
+                    break
+                case Qt.Key_Down:
+                    console.log("TODO select downward")
+                    key.accepted = true
+                    break;
+                case Qt.Key_Up:
+                    console.log("TODO select upward")
+                    key.accepted = true
+                    break;
+
             }
         }
 
         Keys.onReleased:  (key) => {
-            console.log("key released", key.modifiers, key.key)
-            if (key.key == Qt.Key_Control) {
-                isCtrlPressed = false
+            switch (key.key) {
+                case Qt.Key_Control:
+                    console.log("Ctrl key released")
+                    isCtrlPressed = false
+                    break
+                case Qt.Key_Shift:
+                    console.log("Shift key released")
+                    isShiftPressed = false
+                    break
             }
         }
 
-        SplitView {
+        ColumnLayout {
             anchors.fill: parent
 
-            LeftPanel {
-                SplitView.preferredWidth: 300
-                SplitView.fillHeight: true
+            ToolBar {
+                Layout.fillWidth: true
+
+                RowLayout {
+                    anchors.fill: parent
+
+                    ToolButton {
+                        text: "🡐"
+                        onPressed: contentsModel.undo()
+                    }
+                    ToolButton {
+                        text: "🡒"
+                        onPressed: contentsModel.redo()
+                    }
+                    ToolButton {
+                        text: "🡑"
+                        onPressed: contentsModel.parentDir()
+                    }
+
+                    TextField {
+                        id: currentDirTextField
+                        Layout.fillWidth: true
+                        text: contentsModel.currentDir
+                        onAccepted: {
+                            contentsModel.currentDir = text
+                            container.forceActiveFocus()
+                        }
+                    }
+
+                    ToolButton {
+                        text: "Go"
+                        onClicked: {
+                            contentsModel.currentDir = currentDirTextField.text
+                            container.forceActiveFocus()
+                        }
+                    }
+                }
             }
 
-            ContentsPanel {
-                SplitView.fillWidth: true
-                SplitView.fillHeight: true
+            SplitView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                LeftPanel {
+                    SplitView.preferredWidth: 300
+                    SplitView.fillHeight: true
+                }
+
+                ContentsPanel {
+                    SplitView.fillWidth: true
+                    SplitView.fillHeight: true
+                }
+
+                // TODO preview panel can appear here
+//                NiceLabel {
+//                    visible: false
+//                    SplitView.preferredWidth: 300
+//                    text: "Preview panel"
+//                }
+            }
+
+            NiceLabel {
+                Layout.fillWidth: true
+                id: footerLabel
+                // TODO this needs to change for tabs (1 contentsModel per tab).
+                text: `${contentsModel.rows} item`
+                focus: false
             }
         }
     }
