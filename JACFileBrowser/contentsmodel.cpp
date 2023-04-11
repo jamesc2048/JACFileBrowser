@@ -3,6 +3,7 @@
 #include <QtConcurrent>
 #include <QLocale>
 #include <QDir>
+#include <QDesktopServices>
 
 #ifdef Q_OS_WIN
 #define WIN32_LEAN_AND_MEAN
@@ -10,7 +11,6 @@
 #include <Windows.h>
 #include <shellapi.h>
 #endif
-
 
 using namespace Qt::Literals::StringLiterals;
 
@@ -178,9 +178,17 @@ void ContentsModel::cellDoubleClicked(QPoint point)
     }
     else
     {
-// TODO mac and linux
 #ifdef Q_OS_WIN
+        qDebug("Opening file %s using ShellExecute", qPrintable(absPath));
         ShellExecuteW(nullptr, L"open", absPath.toStdWString().c_str(), nullptr, nullptr, SW_SHOW);
+#else
+        qDebug("Opening file %s using QDesktopServices", qPrintable(absPath));
+        QUrl url = QUrl::fromLocalFile(absPath);
+
+        if (!QDesktopServices::openUrl(url))
+        {
+            qWarning("Couldn't open url %s", qPrintable(url.toString()));
+        }
 #endif
     }
 }
