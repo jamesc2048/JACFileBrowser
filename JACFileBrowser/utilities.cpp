@@ -18,7 +18,7 @@ bool Utilities::openInNativeBrowser(const QString &dirPath)
         QString program;
 
 #ifdef Q_OS_WIN
-        program = u"explorer"_qs;
+        program = u"explorer"_s;
 #endif
 
 #ifdef Q_OS_MACOS

@@ -22,7 +22,6 @@ qt_add_qml_module(appJACFileBrowser
     VERSION ${CMAKE_PROJECT_VERSION}
     QML_FILES Main.qml LeftPanel.qml ContentsPanel.qml
     NiceLabel.qml HighlightRectangle.qml
-
 )
 
 set_target_properties(appJACFileBrowser PROPERTIES
@@ -36,6 +35,12 @@ set_target_properties(appJACFileBrowser PROPERTIES
 # Keep file and line number info in logs
 target_compile_definitions(appJACFileBrowser PUBLIC QT_MESSAGELOGCONTEXT)
 target_compile_definitions(appJACFileBrowser PUBLIC APP_VERSION="${CMAKE_PROJECT_VERSION}")
+
+if (MSVC)
+  target_compile_options(appJACFileBrowser PRIVATE /W4 /WX)
+else()
+  target_compile_options(appJACFileBrowser PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
 
 target_link_libraries(appJACFileBrowser
     PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Qml Qt6::Concurrent Qt6::Widgets

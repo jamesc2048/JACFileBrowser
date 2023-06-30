@@ -2,6 +2,8 @@
 
 #include <QtConcurrent>
 
+using namespace Qt::StringLiterals;
+
 DrivesModel::DrivesModel(QObject *parent)
     : QAbstractListModel{parent}
 {
@@ -18,6 +20,7 @@ DrivesModel::DrivesModel(QObject *parent)
 
 int DrivesModel::rowCount(const QModelIndex &parent = {}) const
 {
+    Q_UNUSED(parent)
     return (int)m_drives.size();
 }
 
@@ -45,8 +48,8 @@ QVariant DrivesModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> DrivesModel::roleNames() const
 {
     return {
-        { Qt::DisplayRole, "display"_qba },
-        { DrivesModel::RootPathRole, "rootPath"_qba }
+        { Qt::DisplayRole, "display"_ba },
+        { DrivesModel::RootPathRole, "rootPath"_ba }
     };
 }
 

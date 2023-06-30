@@ -7,6 +7,7 @@ TestListModel::TestListModel(QObject *parent) : QAbstractListModel(parent)
 
 int TestListModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return m_rows;
 }
 
@@ -27,11 +28,13 @@ TestTableModel::TestTableModel(QObject *parent) : QAbstractTableModel(parent)
 
 int TestTableModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return m_rows;
 }
 
 int TestTableModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return m_columns;
 }
 
@@ -48,6 +51,7 @@ QVariant TestTableModel::data(const QModelIndex &index, int role) const
 
 QVariant TestTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    Q_UNUSED(orientation)
     switch (role)
     {
     case Qt::DisplayRole:

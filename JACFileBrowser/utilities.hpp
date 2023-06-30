@@ -4,6 +4,8 @@
 #include <QtQml>
 #include <QObject>
 
+using namespace Qt::StringLiterals;
+
 class Utilities : public QObject
 {
     Q_OBJECT

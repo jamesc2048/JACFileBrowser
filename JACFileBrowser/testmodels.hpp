@@ -47,14 +47,19 @@ class TestDrivesModel : public QAbstractListModel
     QML_ELEMENT
 
 public:
-    TestDrivesModel(QObject *parent = nullptr) {};
+    TestDrivesModel(QObject *parent = nullptr)
+    {
+        Q_UNUSED(parent)
+    };
 
     int rowCount(const QModelIndex &parent) const override
     {
+        Q_UNUSED(parent)
         return 4;
     }
     QVariant data(const QModelIndex &index, int role) const override
     {
+        Q_UNUSED(role)
         static QString drives[] = { "C:\\", "D:\\", "E:\\", "Z:\\" };
 
         return drives[index.row()];
