@@ -21,11 +21,13 @@ ContentsModel::ContentsModel(QObject *parent)
 
 int ContentsModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return (int)m_fileInfoList.size();
 }
 
 int ContentsModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     // Filename, Date Modified, Type, Size
     return 4;
 }
@@ -54,16 +56,16 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
             return fi.fileName();
         case 1:
             // Last Modified
-            return fi.lastModified().toString(u"dd/MM/yyyy hh:mm"_qs);
+            return fi.lastModified().toString(u"dd/MM/yyyy hh:mm"_s);
         case 2:
             // Type
             // TODO
-            return fi.isFile() ? u"File"_qs : u"Directory"_qs;
+            return fi.isFile() ? u"File"_s : u"Directory"_s;
         case 3:
             // Size
             return fi.isFile() ?
-                        locale.toString(ceil(fi.size() / 1024.), 'f', 0) + u" KB"_qs :
-                        u""_qs;
+                        locale.toString(ceil(fi.size() / 1024.), 'f', 0) + u" KB"_s :
+                        u""_s;
         default:
             return "Unknown";
         }
@@ -87,11 +89,11 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
     // Have a think about this
     if (role > Qt::UserRole)
     {
-        switch (role)
-        {
+        //switch (role)
+        //{
             // case ContentsModel::FileNameRole:
             //return data(createIndex(row, 0), Qt::DisplayRole);
-        }
+        //}
 
         // TODO
         // filename
@@ -100,24 +102,25 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
         // size
     }
 
-    return u"Invalid Data"_qs;
+    return u"Invalid Data"_s;
 }
 
 QHash<int, QByteArray> ContentsModel::roleNames() const
 {
     return {
-        { Qt::DisplayRole, "display"_qba },
-        { ContentsModel::IsFileRole, "isFile"_qba },
-        { ContentsModel::FileSizeRole, "fileSize"_qba },
-        { ContentsModel::LastModifiedRole, "lastModified"_qba },
+        { Qt::DisplayRole, "display"_ba },
+        { ContentsModel::IsFileRole, "isFile"_ba },
+        { ContentsModel::FileSizeRole, "fileSize"_ba },
+        { ContentsModel::LastModifiedRole, "lastModified"_ba },
     };
 }
 
 QVariant ContentsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    static const QString headers[] = { u"Name"_qs, u"Date Modified"_qs, u"Type"_qs, u"Size"_qs };
+    Q_UNUSED(orientation)
+    static const QString headers[] = { u"Name"_s, u"Date Modified"_s, u"Type"_s, u"Size"_s };
 
-    if (role == Qt::DisplayRole && section >= 0 && section <= sizeof headers)
+    if (role == Qt::DisplayRole && section >= 0 && section <= (int)sizeof headers)
     {
         return headers[section];
     }
