@@ -146,6 +146,7 @@ void ContentsModel::setCurrentDir(const QString &newCurrentDir)
 
     qDebug("Fetch dir %s", qPrintable(dir.absolutePath()));
 
+    // TODO this should be using QtConcurrent
     m_fileInfoList = dir.entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
                                      QDir::SortFlag::DirsFirst | QDir::SortFlag::Name | QDir::SortFlag::IgnoreCase);
 

@@ -17,6 +17,15 @@ void SortModel::setModel(QAbstractItemModel *newModel)
     emit modelChanged();
 }
 
+int SortModel::sortColumn() const
+{
+    return QSortFilterProxyModel::sortColumn();
+}
+
+Qt::SortOrder SortModel::sortOrder() const
+{
+    return QSortFilterProxyModel::sortOrder();
+}
 
 bool SortModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
 {

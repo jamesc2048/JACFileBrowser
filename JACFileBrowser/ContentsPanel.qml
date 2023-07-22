@@ -37,8 +37,8 @@ Item {
                         // which column is being sorted.
                         let order = Qt.AscendingOrder;
 
-                        if (sortModel.sortColumn == index) {
-                            order = sortModel.sortOrder
+                        if (sortModel.sortColumn() == index) {
+                            order = sortModel.sortOrder()
 
                             if (order == Qt.AscendingOrder)
                                 order = Qt.DescendingOrder
@@ -61,20 +61,6 @@ Item {
         TableView {
             property real rowCellHeight: 30
 
-            property list<bool> selection: []
-
-            Component.onCompleted: {
-                tableView.selection = Array(contentsModel.rows).fill(false);
-            }
-
-            Connections {
-                target: contentsModel
-
-                function onModelReset() {
-                    tableView.selection = Array(contentsModel.rows).fill(false);
-                }
-            }
-
             id: tableView
             clip: true
             Layout.fillWidth: true
@@ -95,8 +81,7 @@ Item {
                 horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
 
                 background: Rectangle {
-                    // Prevent some error happening when delegates are reused?
-                    visible: row < tableView.selection.length ? tableView.selection[row] : false
+                    visible: false//isSelected
                     color: "lightblue"
                 }
             }
@@ -144,11 +129,7 @@ Item {
                         var i = sortModel.index(cell.y, cell.x)
                         var sourceCell = sortModel.mapToSource(i)
 
-                        if (!container.isCtrlPressed) {
-                            tableView.selection.fill(false)
-                        }
-
-                        tableView.selection[sourceCell.row] = !tableView.selection[sourceCell.row]
+                        // TODO redo selection here but inside the model
                     }
                 }
 

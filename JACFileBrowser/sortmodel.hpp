@@ -7,22 +7,14 @@ class SortModel : public QSortFilterProxyModel
     QML_ELEMENT
 
     Q_PROPERTY(QAbstractItemModel* model READ model WRITE setModel NOTIFY modelChanged)
-    Q_PROPERTY(int sortColumn READ sortColumn)
-    Q_PROPERTY(Qt::SortOrder sortOrder READ sortOrder)
 
 public:
     QAbstractItemModel *model() const;
     void setModel(QAbstractItemModel *newModel);
 
-    int sortColumn() const
-    {
-        return QSortFilterProxyModel::sortColumn();
-    }
-
-    Qt::SortOrder sortOrder() const
-    {
-        return QSortFilterProxyModel::sortOrder();
-    };
+    // Need foward to QML as the functions in the base class are not Q_INVOKABLE
+    Q_INVOKABLE int sortColumn() const;
+    Q_INVOKABLE Qt::SortOrder sortOrder() const;
 
 signals:
     void modelChanged();
