@@ -272,7 +272,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 id: footerLabel
                 // TODO this needs to change for tabs (1 contentsModel per tab).
-                text: `${contentsModel.rows} item`
+                text: `${contentsModel.rows} item${contentsModel.rows != 1 ? "s" : ""}`
                 focus: false
             }
         }

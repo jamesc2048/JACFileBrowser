@@ -6,7 +6,7 @@ class SortModel : public QSortFilterProxyModel
     Q_OBJECT
     QML_ELEMENT
 
-    Q_PROPERTY(QAbstractItemModel* model READ model WRITE setModel NOTIFY modelChanged);
+    Q_PROPERTY(QAbstractItemModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(int sortColumn READ sortColumn)
     Q_PROPERTY(Qt::SortOrder sortOrder READ sortOrder)
 

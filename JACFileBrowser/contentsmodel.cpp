@@ -7,7 +7,6 @@
 
 #ifdef Q_OS_WIN
 #define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
 #include <Windows.h>
 #include <shellapi.h>
 #endif
@@ -152,7 +151,7 @@ void ContentsModel::setCurrentDir(const QString &newCurrentDir)
 
     emit rowsChanged();
 
-    qDebug("Fetched files %lu", m_fileInfoList.size());
+    qDebug("Fetched files %lld", m_fileInfoList.size());
 
     endResetModel();
 }
