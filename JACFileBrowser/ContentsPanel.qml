@@ -81,7 +81,7 @@ Item {
                 horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
 
                 background: Rectangle {
-                    visible: false//isSelected
+                    visible: isSelected
                     color: "lightblue"
                 }
             }
@@ -129,7 +129,9 @@ Item {
                         var i = sortModel.index(cell.y, cell.x)
                         var sourceCell = sortModel.mapToSource(i)
 
-                        // TODO redo selection here but inside the model
+                        // TODO need constants in QML
+                        var isSelected = contentsModel.data(sourceCell, Qt.UserRole + 5)
+                        contentsModel.setData(sourceCell, !isSelected, Qt.UserRole + 5)
                     }
                 }
 

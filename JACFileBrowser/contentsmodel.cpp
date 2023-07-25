@@ -79,8 +79,8 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
         return fi.size();
     case ContentsModel::LastModifiedRole:
         return fi.lastModified();
-    case ContentsModel::AbsolutePathRole:
-        return fi.absoluteFilePath();
+    case ContentsModel::IsSelectedRole:
+        return m_selectionList.at(row);
     }
 
     // List mode: map to columns
@@ -106,12 +106,16 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
 
 QHash<int, QByteArray> ContentsModel::roleNames() const
 {
-    return {
+    static QHash<int, QByteArray> roleNames =
+    {
         { Qt::DisplayRole, "display"_ba },
         { ContentsModel::IsFileRole, "isFile"_ba },
         { ContentsModel::FileSizeRole, "fileSize"_ba },
         { ContentsModel::LastModifiedRole, "lastModified"_ba },
+        { ContentsModel::IsSelectedRole, "isSelected"_ba },
     };
+
+    return roleNames;
 }
 
 QVariant ContentsModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -125,6 +129,34 @@ QVariant ContentsModel::headerData(int section, Qt::Orientation orientation, int
     }
 
     return "Unknown header";
+}
+
+bool ContentsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid())
+    {
+        return false;
+    }
+
+    int row = index.row();
+
+    switch (role)
+    {
+    case ContentsModel::IsSelectedRole:
+        if (row > m_selectionList.size())
+        {
+            return false;
+        }
+
+        m_selectionList[row] = value.toBool();
+        // Invalidate entire tableview row to make selection rectangles redraw themselves in delegate
+        emit dataChanged(createIndex(row, 0), createIndex(row, columnCount() + 1), { ContentsModel::IsSelectedRole });
+        break;
+    default:
+        return false;
+    }
+
+    return true;
 }
 
 QString ContentsModel::currentDir() const
@@ -149,6 +181,8 @@ void ContentsModel::setCurrentDir(const QString &newCurrentDir)
     // TODO this should be using QtConcurrent
     m_fileInfoList = dir.entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
                                      QDir::SortFlag::DirsFirst | QDir::SortFlag::Name | QDir::SortFlag::IgnoreCase);
+
+    m_selectionList = QList<bool>(m_fileInfoList.size());
 
     emit rowsChanged();
 

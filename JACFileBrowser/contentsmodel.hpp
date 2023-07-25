@@ -20,6 +20,13 @@ class ContentsModel : public QAbstractTableModel
 
     QString m_currentDir;
     QFileInfoList m_fileInfoList;
+    // For use in UI to avoid a linear search everytime a delegate is rendered
+    QList<bool> m_selectionList;
+    // Stores the actually selected indices for convenience when an operation is actually selected (copying, pasting etc)
+    // Is used to update the preview panel as well
+    // TODO implement this
+    // Or maybe use a custom struct copied around to hold all the selections?
+    QList<uint64_t> m_selectionIndices;
 
 public:
     enum Roles
@@ -27,7 +34,8 @@ public:
         IsFileRole = Qt::UserRole + 1,
         FileSizeRole = Qt::UserRole + 2,
         LastModifiedRole = Qt::UserRole + 3,
-        AbsolutePathRole = Qt::UserRole + 4
+        AbsolutePathRole = Qt::UserRole + 4,
+        IsSelectedRole = Qt::UserRole + 5
     };
 
     explicit ContentsModel(QObject *parent = nullptr);
@@ -37,6 +45,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     // Properties
     QString currentDir() const;
