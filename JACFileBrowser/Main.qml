@@ -19,6 +19,7 @@ ApplicationWindow {
 
     Settings {
         property bool showPreviewPanel
+        property bool sortFoldersWithFiles
 
         id: settings
     }
@@ -148,6 +149,13 @@ ApplicationWindow {
                 checkable: true
                 checked: settings.showPreviewPanel
                 onCheckedChanged: settings.showPreviewPanel = checked
+            }
+
+            Action {
+                text: "Sort folders together with files"
+                checkable: true
+                checked: settings.sortFoldersWithFiles
+                onCheckedChanged: settings.sortFoldersWithFiles = checked
             }
         }
     }
