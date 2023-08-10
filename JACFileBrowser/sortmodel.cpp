@@ -29,23 +29,30 @@ Qt::SortOrder SortModel::sortOrder() const
 
 bool SortModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
 {
-    bool isFileLeft = sourceModel()->data(sourceLeft, ContentsModel::IsFileRole).toBool();
-    bool isFileRight = sourceModel()->data(sourceRight, ContentsModel::IsFileRole).toBool();
+    static QSettings settings;
 
-    // Always put dirs on top
-    // Better way of doing this?
-    if (sortOrder() == Qt::DescendingOrder)
+    // TODO this needs a wrapper so that when the event gets toggled,
+    // a signal gets sent and we can invalidate the sort model.
+    if (!settings.value("sortFoldersWithFiles").toBool())
     {
-        if (isFileLeft < isFileRight)
+        bool isFileLeft = sourceModel()->data(sourceLeft, ContentsModel::IsFileRole).toBool();
+        bool isFileRight = sourceModel()->data(sourceRight, ContentsModel::IsFileRole).toBool();
+
+        // Always put dirs on top
+        // Better way of doing this?
+        if (sortOrder() == Qt::DescendingOrder)
         {
-            return false;
+            if (isFileLeft < isFileRight)
+            {
+                return false;
+            }
         }
-    }
-    else
-    {
-        if (isFileLeft > isFileRight)
+        else
         {
-            return false;
+            if (isFileLeft > isFileRight)
+            {
+                return false;
+            }
         }
     }
 
