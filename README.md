@@ -17,7 +17,6 @@ Eventually will be fully configurable but for now defaults to fulfill my own cur
 - [ ] File operations (move, copy, delete, create etc) 
 - [ ] Grid View
 - [ ] GridView thumbnails
-## Version 0.1
 - [ ] Table sorting customisation 
 - [ ] File operations queuing (kind of like TeraCopy)
 - [ ] In app media preview
