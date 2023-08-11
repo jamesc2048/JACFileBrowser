@@ -126,16 +126,24 @@ ApplicationWindow {
 //        }
 //    }
 
+    component ResizingMenuItem: MenuItem {
+        onImplicitWidthChanged: {
+            if (menu.contentWidth < implicitWidth) {
+                menu.contentWidth = implicitWidth
+            }
+        }
+    }
+
     menuBar: MenuBar {
         Menu {
             title: "File"
 
-            Action {
+            ResizingMenuItem {
                 text: "Open in native file browser"
                 onTriggered: utilities.openInNativeBrowser(contentsModel.currentDir)
             }
 
-            Action {
+            ResizingMenuItem {
                 text: "Quit"
                 onTriggered: Qt.quit()
             }
@@ -144,14 +152,14 @@ ApplicationWindow {
         Menu {
             title: "View"
 
-            Action {
+            ResizingMenuItem {
                 text: "Show Preview panel"
                 checkable: true
                 checked: settings.showPreviewPanel
                 onCheckedChanged: settings.showPreviewPanel = checked
             }
 
-            Action {
+            ResizingMenuItem {
                 text: "Sort folders together with files"
                 checkable: true
                 checked: settings.sortFoldersWithFiles
