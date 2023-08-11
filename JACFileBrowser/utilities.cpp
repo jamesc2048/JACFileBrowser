@@ -42,3 +42,18 @@ bool Utilities::openInNativeBrowser(const QString &dirPath)
     return false;
 }
 
+void Utilities::runOnMainThread(std::function<void()> callback)
+{
+    QTimer* timer = new QTimer();
+    timer->moveToThread(qApp->thread());
+    timer->setSingleShot(true);
+
+    QObject::connect(timer, &QTimer::timeout, [=]()
+    {
+        callback();
+        timer->deleteLater();
+    });
+
+    QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
+}
+

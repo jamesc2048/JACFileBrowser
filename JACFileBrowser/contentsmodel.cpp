@@ -11,6 +11,8 @@
 #include <shellapi.h>
 #endif
 
+#include "utilities.hpp"
+
 using namespace Qt::Literals::StringLiterals;
 
 ContentsModel::ContentsModel(QObject *parent)
@@ -166,29 +168,30 @@ QString ContentsModel::currentDir() const
 
 void ContentsModel::setCurrentDir(const QString &newCurrentDir)
 {
-    // Remove this check to allow for folder refresh
-    // if (m_currentDir == newCurrentDir)
-    //      return;
     m_currentDir = QDir::toNativeSeparators(newCurrentDir);
     emit currentDirChanged();
 
-    beginResetModel();
+    QThreadPool::globalInstance()->start([&] {
+        Utilities::runOnMainThread([this] {
+            beginResetModel();
+        });
 
-    QDir dir(m_currentDir);
+        QDir dir(m_currentDir);
 
-    qDebug("Fetch dir %s", qPrintable(dir.absolutePath()));
+        qDebug("Fetch dir %s", qPrintable(dir.absolutePath()));
 
-    // TODO this should be using QtConcurrent
-    m_fileInfoList = dir.entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
-                                     QDir::SortFlag::DirsFirst | QDir::SortFlag::Name | QDir::SortFlag::IgnoreCase);
+        m_fileInfoList = dir.entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
+                                         QDir::SortFlag::DirsFirst | QDir::SortFlag::Name | QDir::SortFlag::IgnoreCase);
 
-    m_selectionList = QList<bool>(m_fileInfoList.size());
+        m_selectionList = QList<bool>(m_fileInfoList.size());
 
-    emit rowsChanged();
+        Utilities::runOnMainThread([this] {
+            emit rowsChanged();
+            endResetModel();
+        });
 
-    qDebug("Fetched files %lld", m_fileInfoList.size());
-
-    endResetModel();
+        qDebug("Fetched files %lld", m_fileInfoList.size());
+    });
 }
 
 void ContentsModel::parentDir()

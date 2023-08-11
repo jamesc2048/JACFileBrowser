@@ -1,20 +1,36 @@
 #include "drivesmodel.hpp"
 
 #include <QtConcurrent>
+#include <QElapsedTimer>
+
+#include <utilities.hpp>
 
 using namespace Qt::StringLiterals;
 
 DrivesModel::DrivesModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-    QFuture<void> fut = QtConcurrent::run([&]
+    // It seems like since Qt 6.6, one cannot call the begin/endResetModel functions
+    // from another thread anymore.
+    // This worked in 6.5... So we use the dispatcher function instead
+    QThreadPool::globalInstance()->start([&]
     {
+        QElapsedTimer t;
+        t.start();
         qDebug() << "Fetching mountedVolumes";
-        beginResetModel();
+
+        Utilities::runOnMainThread([this] {
+            beginResetModel();
+        });
+
         m_drives = QStorageInfo::mountedVolumes();
-        emit rowsChanged();
-        endResetModel();
-        qDebug() << "Fetched mountedVolumes";
+
+        Utilities::runOnMainThread([this] {
+            emit rowsChanged();
+            endResetModel();
+        });
+
+        qDebug("Fetched mountedVolumes, len=%u, time=%.03fs", m_drives.size(), t.elapsed() / 1000.);
     });
 }
 

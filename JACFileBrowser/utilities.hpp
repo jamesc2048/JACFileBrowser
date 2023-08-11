@@ -15,7 +15,7 @@ public:
 
     Q_INVOKABLE bool openInNativeBrowser(const QString& dirPath);
 
-
+    static void runOnMainThread(std::function<void()> callback);
 };
 
 #endif // UTILITIES_HPP

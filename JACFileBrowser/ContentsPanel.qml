@@ -165,6 +165,11 @@ Item {
             HighlightRectangle {
                 id: tableHighlightRect
             }
+
+            Connections {
+                target: contentsModel
+                onModelReset: tableView.contentY = 0
+            }
         }
     }
 }
