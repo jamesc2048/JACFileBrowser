@@ -152,8 +152,10 @@ bool ContentsModel::setData(const QModelIndex &index, const QVariant &value, int
             return false;
         }
 
-        m_selectionList[row] = value.toBool();
+        m_lastSelectedUrl = QUrl::fromLocalFile(m_fileInfoList.at(row).absoluteFilePath());
+        emit lastSelectedUrlChanged();
 
+        m_selectionList[row] = value.toBool();
         // Invalidate entire tableview row to make selection rectangles redraw themselves in delegate
         auto begin = this->index(row, 0);
         auto end = this->index(row, columnCount() - 1);
@@ -241,6 +243,7 @@ void ContentsModel::cellDoubleClicked(QPoint point)
 
 void ContentsModel::deselectAll()
 {
+    // Bulk deselect everything (reset bool list to all false)
     memset(m_selectionList.data(), 0, m_selectionList.size());
     emit dataChanged(index(0, 0),
                     index(rowCount() - 1, columnCount() - 1),

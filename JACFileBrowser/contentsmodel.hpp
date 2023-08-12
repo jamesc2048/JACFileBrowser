@@ -15,20 +15,17 @@ class ContentsModel : public QAbstractTableModel
     Q_OBJECT
     QML_ELEMENT
 
-    Q_PROPERTY(QString currentDir READ currentDir WRITE setCurrentDir NOTIFY currentDirChanged)
-    Q_PROPERTY(int rows READ rows NOTIFY rowsChanged)
+    Q_PROPERTY(QString currentDir READ currentDir WRITE setCurrentDir NOTIFY currentDirChanged FINAL)
+    Q_PROPERTY(int rows READ rows NOTIFY rowsChanged FINAL)
+    Q_PROPERTY(QUrl lastSelectedUrl MEMBER m_lastSelectedUrl NOTIFY lastSelectedUrlChanged FINAL)
 
     QString m_currentDir;
     QFileInfoList m_fileInfoList;
     // For use in UI to avoid a linear search everytime a delegate is rendered
     QList<bool> m_selectionList;
     // Stores the actually selected indices for convenience when an operation is actually selected (copying, pasting etc)
-    // Is used to update the preview panel as well
-    // TODO implement this
     // Or maybe use a custom struct copied around to hold all the selections?
     QList<uint32_t> m_selectionIndices;
-    // Maybe have a "lastSelectedItem" for the preview panel. That would do for now?
-    // Maybe even QObject * would do the trick to be bindable?
 
 public:
     enum Roles
@@ -63,6 +60,9 @@ public:
 signals:
     void currentDirChanged();
     void rowsChanged();
+    void lastSelectedUrlChanged();
+private:
+    QUrl m_lastSelectedUrl;
 };
 
 #endif // CONTENTSMODEL_H

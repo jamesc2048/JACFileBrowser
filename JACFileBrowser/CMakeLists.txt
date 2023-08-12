@@ -21,7 +21,7 @@ qt_add_qml_module(appJACFileBrowser
     URI JACFileBrowser
     VERSION ${CMAKE_PROJECT_VERSION}
     QML_FILES Main.qml LeftPanel.qml ContentsPanel.qml
-    NiceLabel.qml HighlightRectangle.qml
+    NiceLabel.qml HighlightRectangle.qml PreviewPanel.qml
 )
 
 set_target_properties(appJACFileBrowser PROPERTIES
