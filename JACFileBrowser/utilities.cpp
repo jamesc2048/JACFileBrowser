@@ -1,5 +1,9 @@
 #include "utilities.hpp"
+
 #include <QProcess>
+#include <QTextStream>
+
+using namespace Qt::StringLiterals;
 
 Utilities::Utilities(QObject *parent)
     : QObject{parent}
@@ -40,6 +44,43 @@ bool Utilities::openInNativeBrowser(const QString &dirPath)
     }
 
     return false;
+}
+
+QString Utilities::readTextFile(const QUrl &path, int sizeTruncation)
+{
+    QFile f(path.toLocalFile());
+    bool success = f.open(QIODevice::ReadOnly | QIODevice::ReadOnly);
+    qDebug() << "read text file open" << success;
+
+    if (!success)
+    {
+        return u"(error)"_s;
+    }
+
+    QTextStream stream(&f);
+
+    QString str;
+
+    if (sizeTruncation == -1)
+    {
+        // No limit
+        str = stream.readAll();
+    }
+    else
+    {
+        str = stream.read(sizeTruncation);
+
+        if (str.size() == sizeTruncation)
+        {
+            //Needed to truncate
+            QString addition = QString::asprintf("\n\n... Truncated as text file is over size %d kb ...", sizeTruncation / 1024);
+            str += addition;
+        }
+    }
+
+    qDebug() << "read text file len:" << str.length() << "truncation" << sizeTruncation;
+
+    return str;
 }
 
 void Utilities::runOnMainThread(std::function<void()> callback)

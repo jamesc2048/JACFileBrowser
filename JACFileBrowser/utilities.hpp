@@ -14,6 +14,7 @@ public:
     explicit Utilities(QObject *parent = nullptr);
 
     Q_INVOKABLE bool openInNativeBrowser(const QString& dirPath);
+    Q_INVOKABLE QString readTextFile(const QUrl& path, int sizeTruncation = -1);
 
     static void runOnMainThread(std::function<void()> callback);
 };

@@ -61,7 +61,6 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
             return fi.lastModified().toString(u"dd/MM/yyyy hh:mm"_s);
         case 2:
             // Type
-            // TODO
             return fi.isFile() ? u"File"_s : u"Directory"_s;
         case 3:
             // Size
@@ -94,7 +93,7 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
         //switch (role)
         //{
             // case ContentsModel::FileNameRole:
-            //return data(createIndex(row, 0), Qt::DisplayRole);
+            //return data(this->index(row, 0), Qt::DisplayRole);
         //}
 
         // TODO

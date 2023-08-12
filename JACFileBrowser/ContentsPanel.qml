@@ -65,8 +65,8 @@ Item {
             clip: true
             Layout.fillWidth: true
             Layout.fillHeight: true
-            flickDeceleration: 10000
 
+            flickDeceleration: 10000
             boundsBehavior: Flickable.StopAtBounds
 
             ScrollBar.horizontal: ScrollBar {
