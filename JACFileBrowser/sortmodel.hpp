@@ -15,6 +15,7 @@ public:
     // Need foward to QML as the functions in the base class are not Q_INVOKABLE
     Q_INVOKABLE int sortColumn() const;
     Q_INVOKABLE Qt::SortOrder sortOrder() const;
+    Q_INVOKABLE void select(QPoint point, bool isCtrlPressed, bool isShiftPressed);
 
 signals:
     void modelChanged();

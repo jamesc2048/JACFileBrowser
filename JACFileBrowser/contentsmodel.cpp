@@ -35,6 +35,7 @@ int ContentsModel::columnCount(const QModelIndex &parent) const
 
 QVariant ContentsModel::data(const QModelIndex &index, int role) const
 {
+    //qDebug() << "Data for index" << index << "role" << role;
     static const QLocale locale;
 
     if (!index.isValid())
@@ -145,15 +146,20 @@ bool ContentsModel::setData(const QModelIndex &index, const QVariant &value, int
     switch (role)
     {
     case ContentsModel::IsSelectedRole:
+    {
         if (row > m_selectionList.size())
         {
             return false;
         }
 
         m_selectionList[row] = value.toBool();
+
         // Invalidate entire tableview row to make selection rectangles redraw themselves in delegate
-        emit dataChanged(createIndex(row, 0), createIndex(row, columnCount() + 1), { ContentsModel::IsSelectedRole });
+        auto begin = this->index(row, 0);
+        auto end = this->index(row, columnCount() - 1);
+        emit dataChanged(begin, end, { ContentsModel::IsSelectedRole });
         break;
+    }
     default:
         return false;
     }
@@ -231,6 +237,14 @@ void ContentsModel::cellDoubleClicked(QPoint point)
         }
 #endif
     }
+}
+
+void ContentsModel::deselectAll()
+{
+    memset(m_selectionList.data(), 0, m_selectionList.size());
+    emit dataChanged(index(0, 0),
+                    index(rowCount() - 1, columnCount() - 1),
+                    { ContentsModel::IsSelectedRole });
 }
 
 int ContentsModel::rows() const

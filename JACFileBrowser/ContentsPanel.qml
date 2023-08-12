@@ -126,12 +126,16 @@ Item {
                     var cell = tableView.cellAtPosition(mouse.x, mouse.y, true)
 
                     if (cell.x != -1 && cell.y != -1) {
-                        var i = sortModel.index(cell.y, cell.x)
-                        var sourceCell = sortModel.mapToSource(i)
+                        //var i = sortModel.index(cell.y, cell.x)
+                        //var sourceCell = sortModel.mapToSource(i)
 
-                        // TODO need constants in QML
-                        var isSelected = contentsModel.data(sourceCell, Qt.UserRole + 5)
-                        contentsModel.setData(sourceCell, !isSelected, Qt.UserRole + 5)
+                        //console.log(`Selecting at index ${i}`)
+
+                        sortModel.select(cell, container.isCtrlPressed, container.isShiftPressed);
+                        //var isSelected = contentsModel.data(sourceCell, Qt.UserRole + 5)
+                        //contentsModel.setData(sourceCell, !isSelected, Qt.UserRole + 5)
+
+                        //console.log(`Row was ${isSelected ? "de" : ""}selected`)
                     }
                 }
 
@@ -168,7 +172,10 @@ Item {
 
             Connections {
                 target: contentsModel
-                onModelReset: tableView.contentY = 0
+
+                function onModelReset() {
+                    tableView.contentY = 0
+                }
             }
         }
     }

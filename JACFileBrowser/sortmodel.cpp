@@ -27,6 +27,30 @@ Qt::SortOrder SortModel::sortOrder() const
     return QSortFilterProxyModel::sortOrder();
 }
 
+void SortModel::select(QPoint point, bool isCtrlPressed, bool isShiftPressed)
+{
+    qDebug() << point << isCtrlPressed << isShiftPressed;
+
+    auto proxyIndex = index(point.y(), point.x());
+    auto sourceIndex = mapToSource(proxyIndex);
+
+    if (!isCtrlPressed && !isShiftPressed)
+    {
+        // deselect all
+        ((ContentsModel *)sourceModel())->deselectAll();
+        sourceModel()->setData(sourceIndex, true, ContentsModel::IsSelectedRole);
+    }
+    else if (isCtrlPressed)
+    {
+        QVariant data = sourceModel()->data(sourceIndex, ContentsModel::IsSelectedRole);
+        sourceModel()->setData(sourceIndex, !data.toBool(), ContentsModel::IsSelectedRole);
+    }
+    else if (isShiftPressed)
+    {
+        // TODO
+    }
+}
+
 bool SortModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const
 {
     static QSettings settings;

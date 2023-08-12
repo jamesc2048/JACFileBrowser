@@ -26,7 +26,9 @@ class ContentsModel : public QAbstractTableModel
     // Is used to update the preview panel as well
     // TODO implement this
     // Or maybe use a custom struct copied around to hold all the selections?
-    QList<uint64_t> m_selectionIndices;
+    QList<uint32_t> m_selectionIndices;
+    // Maybe have a "lastSelectedItem" for the preview panel. That would do for now?
+    // Maybe even QObject * would do the trick to be bindable?
 
 public:
     enum Roles
@@ -55,6 +57,8 @@ public:
     // Invokables
     Q_INVOKABLE void parentDir();
     Q_INVOKABLE void cellDoubleClicked(QPoint point);
+
+    void deselectAll();
 
 signals:
     void currentDirChanged();

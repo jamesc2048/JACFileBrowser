@@ -199,7 +199,7 @@ ApplicationWindow {
             }
         }
 
-        Keys.onReleased:  (key) => {
+        Keys.onReleased: (key) => {
             switch (key.key) {
                 case Qt.Key_Control:
                     console.log("Ctrl key released")
