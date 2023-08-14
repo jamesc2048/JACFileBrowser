@@ -30,7 +30,7 @@ DrivesModel::DrivesModel(QObject *parent)
             endResetModel();
         });
 
-        qDebug("Fetched mountedVolumes, len=%u, time=%.03fs", m_drives.size(), t.elapsed() / 1000.);
+        qDebug("Fetched mountedVolumes, len=%llu, time=%.03fs", m_drives.size(), t.elapsed() / 1000.);
     });
 }
 
