@@ -5,6 +5,8 @@
 #include <QtQml>
 #include <QAbstractTableModel>
 #include <QFileInfo>
+#include <QFileIconProvider>
+#include <QFileSystemWatcher>
 
 // IDEA for "universal model":
 // Provide mapping to columns from roleNames.
@@ -27,6 +29,8 @@ class ContentsModel : public QAbstractTableModel
     // Or maybe use a custom struct copied around to hold all the selections?
     QList<uint32_t> m_selectionIndices;
 
+    QFileIconProvider iconProvider;
+
 public:
     enum Roles
     {
@@ -34,7 +38,7 @@ public:
         FileSizeRole = Qt::UserRole + 2,
         LastModifiedRole = Qt::UserRole + 3,
         AbsolutePathRole = Qt::UserRole + 4,
-        IsSelectedRole = Qt::UserRole + 5
+        IsSelectedRole = Qt::UserRole + 5,
     };
 
     explicit ContentsModel(QObject *parent = nullptr);

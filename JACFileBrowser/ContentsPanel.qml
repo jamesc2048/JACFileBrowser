@@ -3,8 +3,10 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Layouts
 import QtQuick.Controls
-import Qt.labs.platform as Labs
 import QtQuick.Controls.Universal
+
+import Qt.labs.platform as Labs
+import Qt.labs.qmlmodels
 
 import JACFileBrowser
 
@@ -76,16 +78,76 @@ Item {
                 //policy: ScrollBar.AlwaysOn
             }
 
-            delegate: NiceLabel {
-                text: `${column == 0 && !isFile ? '📁' : ''}${display}`
-                horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
+            Component {
+                id: iconComponent
+                QMLIconPainter { path: absolutePath }
+            }
 
-                background: Rectangle {
-                    visible: isSelected
-                    color: "lightblue"
+            Component {
+                id: labelComponent
+
+                NiceLabel {
+                    text: display
+                    horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
+
+                    background: Rectangle {
+                        visible: isSelected
+                        color: "lightblue"
+                    }
                 }
             }
 
+            component NiceSelectionRectangle : Rectangle {
+                color: "lightblue"
+                opacity: 0.7
+            }
+
+            delegate: DelegateChooser {
+                DelegateChoice {
+                    column: 0
+
+                    Item {
+                        // Have to forward this to make the table column automatic sizing work
+                        // adding offset for icon and padding
+                        implicitWidth: delegateLabel.implicitWidth + 35
+
+                        RowLayout {
+                            anchors.fill: parent
+
+                            QMLIconPainter {
+                                Layout.leftMargin: 5
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: 22
+                                path: absolutePath
+                            }
+
+                            NiceLabel {
+                                id: delegateLabel
+                                text: display
+                                horizontalAlignment: Qt.AlignLeft
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                            }
+                        }
+
+                        NiceSelectionRectangle {
+                            visible: isSelected
+                            anchors.fill: parent
+                        }
+                    }
+                }
+
+                DelegateChoice {
+                    NiceLabel {
+                        text: display
+                        horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
+
+                        background:  NiceSelectionRectangle {
+                            visible: isSelected
+                        }
+                    }
+                }
+            }
             // Bug in Qt 6.5
             //resizableColumns: true
             onLayoutChanged: {
@@ -93,14 +155,16 @@ Item {
                 //console.log("layout")
             }
             columnWidthProvider: (column) => {
+                const minColumnSize = 100;
+
                 // Set through setColumnWidths() or resizable column
                 // return 0 = hide column
                 let w = explicitColumnWidth(column)
                 if (w >= 0)
-                    return Math.max(80, w);
+                    return Math.max(minColumnSize, w);
                 else
-                    // implicit delegate size. Clamp to 80 minimum
-                    return Math.max(80, implicitColumnWidth(column))
+                    // implicit delegate size. Clamp to a minimum
+                    return Math.max(minColumnSize, implicitColumnWidth(column))
             }
 
             rowHeightProvider: (row) => {

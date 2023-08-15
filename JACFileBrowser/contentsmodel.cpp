@@ -81,6 +81,8 @@ QVariant ContentsModel::data(const QModelIndex &index, int role) const
         return fi.size();
     case ContentsModel::LastModifiedRole:
         return fi.lastModified();
+    case ContentsModel::AbsolutePathRole:
+        return fi.absoluteFilePath();
     case ContentsModel::IsSelectedRole:
         return m_selectionList.at(row);
     }
@@ -114,6 +116,7 @@ QHash<int, QByteArray> ContentsModel::roleNames() const
         { ContentsModel::IsFileRole, "isFile"_ba },
         { ContentsModel::FileSizeRole, "fileSize"_ba },
         { ContentsModel::LastModifiedRole, "lastModified"_ba },
+        { ContentsModel::AbsolutePathRole, "absolutePath"_ba },
         { ContentsModel::IsSelectedRole, "isSelected"_ba },
     };
 
@@ -187,6 +190,7 @@ void ContentsModel::setCurrentDir(const QString &newCurrentDir)
 
         qDebug("Fetch dir %s", qPrintable(dir.absolutePath()));
 
+        // TODO should not sort here but rather sort at the SortModel level. If not it's being sorted twice...
         m_fileInfoList = dir.entryInfoList(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot,
                                          QDir::SortFlag::DirsFirst | QDir::SortFlag::Name | QDir::SortFlag::IgnoreCase);
 

@@ -10,11 +10,6 @@ qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(appJACFileBrowser
     main.cpp
-    testmodels.hpp testmodels.cpp
-    contentsmodel.hpp contentsmodel.cpp
-    sortmodel.hpp sortmodel.cpp
-    drivesmodel.hpp drivesmodel.cpp
-    utilities.hpp utilities.cpp
 )
 
 qt_add_qml_module(appJACFileBrowser
@@ -22,6 +17,12 @@ qt_add_qml_module(appJACFileBrowser
     VERSION ${CMAKE_PROJECT_VERSION}
     QML_FILES Main.qml LeftPanel.qml ContentsPanel.qml
     NiceLabel.qml HighlightRectangle.qml PreviewPanel.qml
+    SOURCES qmliconpainter.hpp qmliconpainter.cpp
+    testmodels.hpp testmodels.cpp
+    contentsmodel.hpp contentsmodel.cpp
+    sortmodel.hpp sortmodel.cpp
+    drivesmodel.hpp drivesmodel.cpp
+    utilities.hpp utilities.cpp
 )
 
 set_target_properties(appJACFileBrowser PROPERTIES
