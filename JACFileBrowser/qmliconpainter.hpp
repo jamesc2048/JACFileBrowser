@@ -12,12 +12,15 @@ class QMLIconPainter : public QQuickPaintedItem
     Q_OBJECT
     QML_ELEMENT
 
-    Q_PROPERTY(QString path MEMBER m_path NOTIFY pathChanged FINAL)
+    Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged FINAL)
 
 public:
     QMLIconPainter();
 
     void paint(QPainter *painter) override;
+    QString path() const;
+    void setPath(const QString &newPath);
+
 signals:
     void pathChanged();
 private:
