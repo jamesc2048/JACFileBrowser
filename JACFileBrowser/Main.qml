@@ -98,10 +98,6 @@ ApplicationWindow {
         id: utilities
     }
 
-    DrivesModel {
-        id: drivesModel
-    }
-
     // Move this into ContentsPanel.qml when tabs are implemented
     ContentsModel {
         id: contentsModel
@@ -269,6 +265,8 @@ ApplicationWindow {
                 }
 
                 PreviewPanel {
+                    SplitView.preferredWidth: 300
+                    SplitView.fillHeight: true
                     visible: settings.showPreviewPanel
                 }
             }

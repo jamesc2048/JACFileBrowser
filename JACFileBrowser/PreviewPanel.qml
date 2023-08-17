@@ -6,9 +6,6 @@ import QtQuick.Controls.Universal
 Item {
     id: previewRoot
 
-    SplitView.preferredWidth: 300
-    SplitView.fillHeight: true
-
     property string textPreview
 
     Component {
@@ -86,6 +83,8 @@ Item {
     ColumnLayout {
         anchors.fill: parent
 
+        // TODO should only print filename here at least
+        // The width of the label is expanding the preview element as well!
         NiceLabel {
             text: contentsModel.lastSelectedUrl !== Qt.url("") ?
                       "Selected: " + contentsModel.lastSelectedUrl.toString() :

@@ -114,6 +114,9 @@ Item {
                         RowLayout {
                             anchors.fill: parent
 
+                            // TODO this needs optimisation
+                            // E.G. on network paths it's slow
+                            // Maybe cache the icon once the extension has been seen?
                             QMLIconPainter {
                                 Layout.leftMargin: 5
                                 Layout.fillHeight: true
