@@ -184,6 +184,8 @@ void ContentsModel::setCurrentDir(const QString &newCurrentDir)
     QThreadPool::globalInstance()->start([&] {
         Utilities::runOnMainThread([this] {
             beginResetModel();
+            m_isLoading = true;
+            emit isLoadingChanged();
         });
 
         QDir dir(m_currentDir);
@@ -197,8 +199,10 @@ void ContentsModel::setCurrentDir(const QString &newCurrentDir)
         m_selectionList = QList<bool>(m_fileInfoList.size());
 
         Utilities::runOnMainThread([this] {
-            emit rowsChanged();
             endResetModel();
+            emit rowsChanged();
+            m_isLoading = false;
+            emit isLoadingChanged();
         });
 
         qDebug("Fetched files %lld", m_fileInfoList.size());

@@ -16,6 +16,7 @@ Item {
         spacing: 0
 
         HorizontalHeaderView {
+            id: headerView
             Layout.fillWidth: true
             syncView: tableView
             clip: true
@@ -241,9 +242,26 @@ Item {
                 target: contentsModel
 
                 function onModelReset() {
+                    // Scroll tableview to top when model reset
                     tableView.contentY = 0
                 }
             }
         }
+    }
+
+    NiceLabel {
+        text: "This folder is empty."
+        y: headerView.height + 5
+        width: parent.width
+        horizontalAlignment: Qt.AlignHCenter
+        visible: contentsModel.rows === 0 && !contentsModel.isLoading
+    }
+
+    NiceLabel {
+        text: "Loading..."
+        y: headerView.height + 5
+        width: parent.width
+        horizontalAlignment: Qt.AlignHCenter
+        visible: contentsModel.isLoading
     }
 }

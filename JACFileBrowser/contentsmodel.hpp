@@ -20,6 +20,7 @@ class ContentsModel : public QAbstractTableModel
     Q_PROPERTY(QString currentDir READ currentDir WRITE setCurrentDir NOTIFY currentDirChanged FINAL)
     Q_PROPERTY(int rows READ rows NOTIFY rowsChanged FINAL)
     Q_PROPERTY(QUrl lastSelectedUrl MEMBER m_lastSelectedUrl NOTIFY lastSelectedUrlChanged FINAL)
+    Q_PROPERTY(bool isLoading MEMBER m_isLoading NOTIFY isLoadingChanged FINAL)
 
     QString m_currentDir;
     QFileInfoList m_fileInfoList;
@@ -65,8 +66,11 @@ signals:
     void currentDirChanged();
     void rowsChanged();
     void lastSelectedUrlChanged();
+    void isLoadingChanged();
+
 private:
     QUrl m_lastSelectedUrl;
+    bool m_isLoading = false;
 };
 
 #endif // CONTENTSMODEL_H
