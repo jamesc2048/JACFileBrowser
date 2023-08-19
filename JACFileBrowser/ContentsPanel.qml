@@ -79,25 +79,6 @@ Item {
                 //policy: ScrollBar.AlwaysOn
             }
 
-            Component {
-                id: iconComponent
-                QMLIconPainter { path: absolutePath }
-            }
-
-            Component {
-                id: labelComponent
-
-                NiceLabel {
-                    text: display
-                    horizontalAlignment: column == 3 ? Qt.AlignRight : Qt.AlignLeft
-
-                    background: Rectangle {
-                        visible: isSelected
-                        color: "lightblue"
-                    }
-                }
-            }
-
             component NiceSelectionRectangle : Rectangle {
                 color: "lightblue"
                 opacity: 0.7
@@ -110,6 +91,7 @@ Item {
                     Item {
                         // Have to forward this to make the table column automatic sizing work
                         // adding offset for icon and padding
+                        // TODO should not be hard coded value
                         implicitWidth: delegateLabel.implicitWidth + 35
 
                         RowLayout {
