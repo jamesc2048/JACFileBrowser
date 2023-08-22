@@ -10,6 +10,7 @@ void QMLIconPainter::paint(QPainter *painter)
 {
     static QFileIconProvider iconProvider;
 
+    // TODO performance: if it's a .lnk file or .exe always fetch the icon. if not use a cache
     QIcon icon = iconProvider.icon(QFileInfo(m_path));
 
     //qDebug() << "Paint icon for" << m_path << icon;
