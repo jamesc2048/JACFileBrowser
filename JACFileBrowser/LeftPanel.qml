@@ -39,6 +39,11 @@ ColumnLayout {
         id: drivesModel
     }
 
+    NiceLabel {
+        Layout.alignment: Qt.AlignHCenter
+        text: "Folders"
+    }
+
     ListView {
         id: standardLocationsView
         Layout.fillWidth: true
@@ -94,6 +99,11 @@ ColumnLayout {
         }
     }
 
+    NiceLabel {
+        Layout.alignment: Qt.AlignHCenter
+        text: "Drives"
+    }
+
     ListView {
         id: drivesView
         Layout.fillWidth: true
@@ -118,7 +128,7 @@ ColumnLayout {
 
         NiceLabel {
             horizontalAlignment: Qt.AlignHCenter
-            text: "Drives loading..."
+            text: "Loading..."
             visible: drivesModel.rows == 0
         }
 
