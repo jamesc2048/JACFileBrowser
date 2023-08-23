@@ -18,10 +18,10 @@ ApplicationWindow {
     Universal.theme: Universal.System
 
     Settings {
+        id: settings
+
         property bool showPreviewPanel
         property bool sortFoldersWithFiles
-
-        id: settings
     }
 
     Component.onCompleted: {
@@ -103,6 +103,7 @@ ApplicationWindow {
         id: contentsModel
         currentDir: "C:\\SDK\\Qt"
     }
+
 //    TestDrivesModel {
 //        id: drivesModel
 //    }
@@ -186,9 +187,17 @@ ApplicationWindow {
                 case Qt.Key_Down:
                     console.log("TODO select downward")
                     key.accepted = true
-                    break;
+                    break
                 case Qt.Key_Up:
                     console.log("TODO select upward")
+                    key.accepted = true
+                    break
+                case Qt.Key_Left:
+                    console.log("TODO select left (for grid)")
+                    key.accepted = true
+                    break;
+                case Qt.Key_Right:
+                    console.log("TODO select right (for grid)")
                     key.accepted = true
                     break;
 
@@ -217,17 +226,35 @@ ApplicationWindow {
                 RowLayout {
                     anchors.fill: parent
 
-                    ToolButton {
+                    component NiceToolButton : ToolButton {
+                        font.pixelSize: 16
+                        hoverEnabled: true
+                        ToolTip.visible: hovered
+                        ToolTip.delay: 500
+                    }
+
+                    NiceToolButton {
                         text: "🡐"
                         onPressed: contentsModel.undo()
+                        ToolTip.text: "Undo"
                     }
-                    ToolButton {
+
+                    NiceToolButton {
                         text: "🡒"
                         onPressed: contentsModel.redo()
+                        ToolTip.text: "Redo"
                     }
-                    ToolButton {
+
+                    NiceToolButton {
                         text: "🡑"
                         onPressed: contentsModel.parentDir()
+                        ToolTip.text: "Go to parent directory"
+                    }
+
+                    NiceToolButton {
+                        text: "⟳"
+                        onPressed: contentsModel.currentDir = contentsModel.currentDir
+                        ToolTip.text: "Reload current directory"
                     }
 
                     TextField {
