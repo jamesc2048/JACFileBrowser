@@ -10,7 +10,15 @@ void QMLIconPainter::paint(QPainter *painter)
 {
     static QFileIconProvider iconProvider;
 
+    if (!isVisible() || !isEnabled())
+    {
+        return;
+    }
+
     // TODO performance: if it's a .lnk file or .exe always fetch the icon. if not use a cache
+    // Could there be a way to pass the QFileInfo directly?
+    // Maybe pass a weak reference to the QFileInfo in the array?
+    // Have an API that returns the QFileInfos?
     QIcon icon = iconProvider.icon(QFileInfo(m_path));
 
     //qDebug() << "Paint icon for" << m_path << icon;

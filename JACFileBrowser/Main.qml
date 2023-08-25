@@ -20,8 +20,9 @@ ApplicationWindow {
     Settings {
         id: settings
 
-        property bool showPreviewPanel
-        property bool sortFoldersWithFiles
+        property bool showPreviewPanel: false
+        property bool sortFoldersWithFiles: false
+        property bool showIcons: true
     }
 
     Component.onCompleted: {
@@ -161,6 +162,13 @@ ApplicationWindow {
                 checkable: true
                 checked: settings.sortFoldersWithFiles
                 onCheckedChanged: settings.sortFoldersWithFiles = checked
+            }
+
+            ResizingMenuItem {
+                text: "Show icons"
+                checkable: true
+                checked: settings.showIcons
+                onCheckedChanged: settings.showIcons = checked
             }
         }
     }
