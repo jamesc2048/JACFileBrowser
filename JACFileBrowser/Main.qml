@@ -17,6 +17,9 @@ ApplicationWindow {
 
     Universal.theme: Universal.System
 
+    // preparing for tabs: this can bind to allContentPanels[currentTabIndex]. The rest of UI should work
+    property var activeContentsPanel: contentsPanel
+
     Settings {
         id: settings
 
@@ -98,17 +101,6 @@ ApplicationWindow {
     // Global
     Utilities {
         id: utilities
-    }
-
-    // Move this into ContentsPanel.qml when tabs are implemented
-    ContentsModel {
-        id: contentsModel
-        currentDir: "C:\\SDK\\Qt"
-    }
-
-    SortModel {
-        id: sortModel
-        model: contentsModel
     }
 
 //    TestDrivesModel {
@@ -256,34 +248,34 @@ ApplicationWindow {
 
                     NiceToolButton {
                         text: "🡐"
-                        onPressed: contentsModel.undo()
+                        onPressed: activeContentsPanel.contentsModel.undo()
                         ToolTip.text: "Undo"
                     }
 
                     NiceToolButton {
                         text: "🡒"
-                        onPressed: contentsModel.redo()
+                        onPressed: activeContentsPanel.contentsModel.redo()
                         ToolTip.text: "Redo"
                     }
 
                     NiceToolButton {
                         text: "🡑"
-                        onPressed: contentsModel.parentDir()
+                        onPressed: activeContentsPanel.contentsModel.parentDir()
                         ToolTip.text: "Go to parent directory"
                     }
 
                     NiceToolButton {
                         text: "⟳"
-                        onPressed: contentsModel.currentDir = contentsModel.currentDir
+                        onPressed: activeContentsPanel.contentsModel.currentDir = activeContentsPanel.contentsModel.currentDir
                         ToolTip.text: "Reload current directory"
                     }
 
                     TextField {
                         id: currentDirTextField
                         Layout.fillWidth: true
-                        text: contentsModel.currentDir
+                        text: activeContentsPanel.contentsModel.currentDir
                         onAccepted: {
-                            contentsModel.currentDir = text
+                            activeContentsPanel.contentsModel.currentDir = text
                             container.forceActiveFocus()
                         }
                     }
@@ -291,7 +283,7 @@ ApplicationWindow {
                     ToolButton {
                         text: "Go"
                         onClicked: {
-                            contentsModel.currentDir = currentDirTextField.text
+                            activeContentsPanel.contentsModel.currentDir = currentDirTextField.text
                             container.forceActiveFocus()
                         }
                     }
@@ -300,7 +292,7 @@ ApplicationWindow {
                         Layout.preferredWidth: 150
                         onTextChanged: {
                             // TODO expose regex, case sensitive
-                            sortModel.filterRegularExpression = new RegExp(text, "i")
+                            activeContentsPanel.sortModel.filterRegularExpression = new RegExp(text, "i")
                         }
                         placeholderText: "Search folder"
                     }
@@ -317,6 +309,7 @@ ApplicationWindow {
                 }
 
                 ContentsPanel {
+                    id: contentsPanel
                     SplitView.fillWidth: true
                     SplitView.fillHeight: true
                 }
@@ -332,7 +325,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 id: footerLabel
                 // TODO this needs to change for tabs (1 contentsModel per tab).
-                text: `${contentsModel.rows} item${contentsModel.rows != 1 ? "s" : ""}`
+                text: `${activeContentsPanel.contentsModel.rows} item${activeContentsPanel.contentsModel.rows != 1 ? "s" : ""}`
                 focus: false
             }
         }

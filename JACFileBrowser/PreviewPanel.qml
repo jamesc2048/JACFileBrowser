@@ -12,7 +12,7 @@ Item {
         id: imageComponent
 
         Image {
-            source: contentsModel.lastSelectedUrl
+            source: activeContentsPanel.contentsModel.lastSelectedUrl
             autoTransform: true
             fillMode: Image.PreserveAspectFit
             asynchronous: true
@@ -86,8 +86,8 @@ Item {
         // TODO should only print filename here at least
         // The width of the label is expanding the preview element as well!
         NiceLabel {
-            text: contentsModel.lastSelectedUrl !== Qt.url("") ?
-                      "Selected: " + contentsModel.lastSelectedUrl.toString() :
+            text: activeContentsPanel.contentsModel.lastSelectedUrl !== Qt.url("") ?
+                      "Selected: " + activeContentsPanel.contentsModel.lastSelectedUrl.toString() :
                       "No selection"
         }
 
@@ -100,14 +100,14 @@ Item {
                     return null
                 }
 
-                if (isImageFile(contentsModel.lastSelectedUrl)) {
+                if (isImageFile(activeContentsPanel.contentsModel.lastSelectedUrl)) {
                     return imageComponent
                 }
 
-                if (isTextFile(contentsModel.lastSelectedUrl)) {
+                if (isTextFile(activeContentsPanel.contentsModel.lastSelectedUrl)) {
                     // TODO should be configurable
                     let sizeTruncation = 1024 ** 2; // 1 MB limit so not to slow down
-                    previewRoot.textPreview = utilities.readTextFile(contentsModel.lastSelectedUrl, sizeTruncation)
+                    previewRoot.textPreview = utilities.readTextFile(activeContentsPanel.contentsModel.lastSelectedUrl, sizeTruncation)
                     return textComponent
                 }
 

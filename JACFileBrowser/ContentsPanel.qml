@@ -11,6 +11,14 @@ import Qt.labs.qmlmodels
 import JACFileBrowser
 
 Item {
+    property var contentsModel: ContentsModel {
+        currentDir: "C:\\SDK\\Qt"
+    }
+
+    property var sortModel: SortModel {
+        model: contentsModel
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -196,10 +204,10 @@ Item {
 
                         console.log(contentsModel.data(sourceCell, Qt.UserRole + 1))
 
-                        var comp = Qt.createComponent("PreviewDialog.qml", null);
-                        var item = comp.createObject(window, { "name": "testssss" })
-                        item.open()
-                        //contentsModel.cellDoubleClicked(Qt.point(sourceCell.column, sourceCell.row))
+//                        var comp = Qt.createComponent("PreviewDialog.qml", null);
+//                        var item = comp.createObject(window, { "name": "testssss" })
+//                        item.open()
+                        contentsModel.cellDoubleClicked(Qt.point(sourceCell.column, sourceCell.row))
                     }
                 }
 

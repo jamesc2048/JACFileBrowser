@@ -12,7 +12,7 @@ Rectangle {
     z: -1
 
     Connections {
-        target: contentsModel
+        target: activeContentsPanel.contentsModel
 
         function onModelReset() {
             highlightRect.visible = false
