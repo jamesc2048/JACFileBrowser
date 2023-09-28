@@ -23,6 +23,7 @@ ApplicationWindow {
         property bool showPreviewPanel: false
         property bool sortFoldersWithFiles: false
         property bool showIcons: true
+        property bool enableGallery: true
     }
 
     Component.onCompleted: {
@@ -105,6 +106,11 @@ ApplicationWindow {
         currentDir: "C:\\SDK\\Qt"
     }
 
+    SortModel {
+        id: sortModel
+        model: contentsModel
+    }
+
 //    TestDrivesModel {
 //        id: drivesModel
 //    }
@@ -169,6 +175,13 @@ ApplicationWindow {
                 checkable: true
                 checked: settings.showIcons
                 onCheckedChanged: settings.showIcons = checked
+            }
+
+            ResizingMenuItem {
+                text: "Enable Gallery view for supported file types"
+                checkable: true
+                checked: settings.enableGallery
+                onCheckedChanged: settings.enableGallery = checked
             }
         }
     }
@@ -281,6 +294,15 @@ ApplicationWindow {
                             contentsModel.currentDir = currentDirTextField.text
                             container.forceActiveFocus()
                         }
+                    }
+
+                    TextField {
+                        Layout.preferredWidth: 150
+                        onTextChanged: {
+                            // TODO expose regex, case sensitive
+                            sortModel.filterRegularExpression = new RegExp(text, "i")
+                        }
+                        placeholderText: "Search folder"
                     }
                 }
             }

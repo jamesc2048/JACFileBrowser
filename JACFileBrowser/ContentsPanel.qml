@@ -158,10 +158,7 @@ Item {
                 return rowCellHeight;
             }
 
-            model: SortModel {
-                id: sortModel
-                model: contentsModel
-            }
+            model: sortModel
 
             MouseArea {
                 anchors.fill: parent
@@ -197,7 +194,12 @@ Item {
                         var i = sortModel.index(cell.y, cell.x)
                         var sourceCell = sortModel.mapToSource(i)
 
-                        contentsModel.cellDoubleClicked(Qt.point(sourceCell.column, sourceCell.row))
+                        console.log(contentsModel.data(sourceCell, Qt.UserRole + 1))
+
+                        var comp = Qt.createComponent("PreviewDialog.qml", null);
+                        var item = comp.createObject(window, { "name": "testssss" })
+                        item.open()
+                        //contentsModel.cellDoubleClicked(Qt.point(sourceCell.column, sourceCell.row))
                     }
                 }
 
