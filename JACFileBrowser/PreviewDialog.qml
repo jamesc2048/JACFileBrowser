@@ -12,7 +12,6 @@ Dialog {
     width: parent.width
     height: parent.height
 
-    //anchors.: parent
     Item {
         focus: true
 
@@ -20,6 +19,8 @@ Dialog {
             text: name
         }
 
-        Keys.onPressed: (e) => console.log(e)
+        Keys.onPressed: {
+            console.log(e)
+        }
     }
 }
