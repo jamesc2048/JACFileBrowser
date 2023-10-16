@@ -14,8 +14,9 @@ jobs:
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
-          modules: 'qt3d qtactiveqt qtcharts qtconnectivity qtdatavis3d qtgraphs qtgrpc qthttpserver qtimageformats qtlanguageserver qtlocation qtlottie qtmultimedia qtnetworkauth qtpdf qtpositioning qtquick3dphysics qtquickeffectmaker qtremoteobjects qtscxml qtsensors qtserialbus qtserialport qtspeech qtvirtualkeyboard qtwebchannel qtwebengine qtwebsockets qtwebview debug_info qt5compat qtquick3d qtquicktimeline qtshadertools'
-          tools: 'tools_cmake tools_vcredist,qt.tools.vcredist_msvc2019_x64 tools_mingw90'
+          modules: 'qtimageformats qtmultimedia'
+          tools: 'tools_cmake tools_vcredist,qt.tools.vcredist_msvc2019_x64'
+          archives: 'qttranslations qttools qtsvg qtdeclarative qtbase d3dcompiler_47'
       - run: echo $GITHUB_WORKSPACE
       - run: ls -lah $GITHUB_WORKSPACE
       #- run: pip install path
