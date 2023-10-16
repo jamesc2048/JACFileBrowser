@@ -4,6 +4,8 @@ jobs:
   Build-JACFileExplorer:
     runs-on: windows-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Install Python
         uses: actions/setup-python@v4
       - name: Install Qt
@@ -16,8 +18,15 @@ jobs:
           arch: 'win64_msvc2019_64'
           modules: 'qtimageformats qtmultimedia'
           tools: 'tools_cmake tools_vcredist,qt.tools.vcredist_msvc2019_x64'
-          archives: 'qttranslations qttools qtsvg qtdeclarative qtbase d3dcompiler_47'
+          archives: 'qttools qtsvg qtdeclarative qtbase d3dcompiler_47'
       - run: echo $GITHUB_WORKSPACE
-      - run: ls -lah $GITHUB_WORKSPACE
+      - run: ls $GITHUB_WORKSPACE
       #- run: pip install path
       #- run: python install.py
+
+      # - name: Upload build
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: windows
+      #     path: |
+      #       spark.exe
