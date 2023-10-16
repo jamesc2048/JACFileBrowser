@@ -1,5 +1,5 @@
 name: JACFileBrowser build
-on: [push]
+on: push
 jobs:
   Build-JACFileExplorer:
     runs-on: windows-latest
