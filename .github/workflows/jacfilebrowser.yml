@@ -48,6 +48,8 @@ jobs:
 
   Build-JACFileExplorer-Linux:
       runs-on: ubuntu-latest
+      env:
+        LD_LIBRARY_PATH: /home/runner/work/JACFileBrowser/Qt/6.6.0/gcc_64/bin:$LD_LIBRARY_PATH
       steps:
         - name: Checkout
           uses: actions/checkout@v4
