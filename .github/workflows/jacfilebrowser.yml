@@ -11,6 +11,8 @@ jobs:
       - uses: TheMrMilchmann/setup-msvc-dev@v3
         with:
           arch: x64
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
         with:
@@ -24,6 +26,8 @@ jobs:
           archives: 'qttools qtsvg qtdeclarative qtbase d3dcompiler_47'
       - run: echo $GITHUB_WORKSPACE
       - run: ls $GITHUB_WORKSPACE
+      - run: cmake
+      - run: cl
       #- run: pip install path
       #- run: python install.py
 
