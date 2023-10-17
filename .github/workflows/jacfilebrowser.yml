@@ -26,8 +26,6 @@ jobs:
           archives: 'qttools qtsvg qtdeclarative qtbase d3dcompiler_47'
       - run: echo $GITHUB_WORKSPACE
       - run: ls $GITHUB_WORKSPACE
-      - run: cmake
-      - run: cl
       - name: Build with CMake
         uses: ashutoshvarma/action-cmake-build@master
         with:
