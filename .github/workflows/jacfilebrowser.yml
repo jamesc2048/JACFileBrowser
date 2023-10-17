@@ -39,11 +39,9 @@ jobs:
           install-build: true
       - run: windeployqt6 ${{ runner.workspace }}/install/bin/appJACFileBrowser.exe --qmldir JACFileBrowser --no-translations --no-opengl-sw --release --verbose 2
       - run: ls ${{ runner.workspace }}/install/bin/
-      
-
-      # - name: Upload build
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: windows
-      #     path: |
-      #       spark.exe
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          # TODO add the git hash here?
+          name: JACFileBrowser
+          path: ${{ runner.workspace }}/install/bin/
