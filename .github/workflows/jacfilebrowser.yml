@@ -1,4 +1,4 @@
-name: JACFileBrowser Windows build
+name: JACFileBrowser builds
 on: push
 jobs:
   Build-JACFileExplorer-Windows:
