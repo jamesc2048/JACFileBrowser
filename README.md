@@ -5,7 +5,7 @@ Inspired by the best between Windows, Mac and Linux file manager GUIs.
 Eventually will be fully configurable but for now defaults to fulfill my own current needs/preferences.
 
 Download:
-- Windows latest build: <https://nightly.link/jamesc2048/JACFileBrowser/workflows/jacfilebrowser/master/JACFileBrowser.zip>
+- Windows latest build: <https://github.com/jamesc2048/JACFileBrowser/actions>
 - Mac and Linux builds coming soon
 
 ## Version 0.1:
