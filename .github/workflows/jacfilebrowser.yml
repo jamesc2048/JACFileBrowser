@@ -38,8 +38,8 @@ jobs:
           configure-options: -G Ninja -DCMAKE_INSTALL_PREFIX=${{ runner.workspace }}/install
           build-type: Release
           install-build: true
-      #- run: pip install path
-      #- run: python install.py
+      - run: ls ${{ runner.workspace }}/install/
+      - run: ls ${{ runner.workspace }}/install/bin/
 
       # - name: Upload build
       #   uses: actions/upload-artifact@v2
