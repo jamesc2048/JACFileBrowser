@@ -36,6 +36,7 @@ jobs:
           configure-options: -G Ninja -DCMAKE_INSTALL_PREFIX=${{ runner.workspace }}/install
           build-type: Release
           install-build: true
+      - run: windeployqt6.exe
       - run: windeployqt6.exe ${{ runner.workspace }}/install/appJACFileBrowser.exe --qmldir JACFileBrowser --no-opengl-sw --release
       - run: ls ${{ runner.workspace }}/install/bin/
       
