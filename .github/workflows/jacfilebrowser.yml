@@ -24,6 +24,7 @@ jobs:
           modules: 'qtimageformats qtmultimedia'
           tools: 'tools_cmake tools_vcredist,qt.tools.vcredist_msvc2019_x64'
           archives: 'qttools qtsvg qtdeclarative qtbase d3dcompiler_47'
+          cache: true
       - run: echo $GITHUB_WORKSPACE
       - run: ls $GITHUB_WORKSPACE
       - name: Build with CMake
@@ -36,8 +37,7 @@ jobs:
           configure-options: -G Ninja -DCMAKE_INSTALL_PREFIX=${{ runner.workspace }}/install
           build-type: Release
           install-build: true
-      - run: windeployqt6
-      - run: windeployqt6 ${{ runner.workspace }}/install/appJACFileBrowser.exe --qmldir JACFileBrowser --no-opengl-sw --release
+      - run: windeployqt6 ${{ runner.workspace }}/install/appJACFileBrowser.exe --qmldir JACFileBrowser --no-translations --no-opengl-sw --release --verbose 2
       - run: ls ${{ runner.workspace }}/install/bin/
       
 
