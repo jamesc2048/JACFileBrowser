@@ -60,7 +60,7 @@ jobs:
           with:
             aqtversion: '==3.1.*'
             version: '6.6.*'
-            host: 'Linux'
+            host: 'linux'
             target: 'desktop'
             arch: 'gcc_64'
             modules: 'qtimageformats qtmultimedia'
