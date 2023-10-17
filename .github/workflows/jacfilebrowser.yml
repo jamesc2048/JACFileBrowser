@@ -45,3 +45,43 @@ jobs:
           # TODO add the git hash here?
           name: JACFileBrowser-Windows
           path: ${{ runner.workspace }}/install/bin/
+
+  Build-JACFileExplorer-Linux:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+        - name: Install Python
+          uses: actions/setup-python@v4
+        - name: Setup Ninja
+          uses: ashutoshvarma/setup-ninja@master
+        - name: Install Qt
+          uses: jurplel/install-qt-action@v3
+          with:
+            aqtversion: '==3.1.*'
+            version: '6.6.*'
+            host: 'Linux'
+            target: 'desktop'
+            arch: 'gcc_64'
+            modules: 'qtimageformats qtmultimedia'
+            tools: 'tools_cmake'
+            archives: 'qttools qtsvg qtdeclarative qtbase'
+            cache: true
+        - run: echo $GITHUB_WORKSPACE
+        - run: ls $GITHUB_WORKSPACE
+        - name: Build with CMake
+          uses: ashutoshvarma/action-cmake-build@master
+          with:
+            source-dir: JACFileBrowser
+            build-dir: ${{ runner.workspace }}/build
+            configure-options: -G Ninja -DCMAKE_INSTALL_PREFIX=${{ runner.workspace }}/install
+            build-type: Release
+            install-build: true
+        #- run: windeployqt6 ${{ runner.workspace }}/install/bin/appJACFileBrowser.exe --qmldir JACFileBrowser --no-translations --no-compiler-runtime --no-opengl-sw --release --verbose 2
+        - run: ls ${{ runner.workspace }}/install/bin/
+        - name: Upload build
+          uses: actions/upload-artifact@v3
+          with:
+            # TODO add the git hash here?
+            name: JACFileBrowser-Linux
+            path: ${{ runner.workspace }}/install/bin/
