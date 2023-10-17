@@ -4,6 +4,10 @@ Cross platform file browser for people who want the best out of all file manager
 Inspired by the best between Windows, Mac and Linux file manager GUIs.
 Eventually will be fully configurable but for now defaults to fulfill my own current needs/preferences.
 
+Download:
+- Windows Build: <https://github.com/jamesc2048/JACFileBrowser/actions>
+- Mac and Linux builds coming soon
+
 ## Version 0.1:
 - [x] Basic file browser functionality (browse directories, open files)
 - [x] Table View
