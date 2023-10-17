@@ -28,6 +28,14 @@ jobs:
       - run: ls $GITHUB_WORKSPACE
       - run: cmake
       - run: cl
+      - name: Build with CMake
+        uses: ashutoshvarma/action-cmake-build@master
+        with:
+          build-dir: ${{ runner.workspace }}/build
+          cc: cl
+          cxx: cl
+          configure-options: -G Ninja
+          build-type: Release
       #- run: pip install path
       #- run: python install.py
 
