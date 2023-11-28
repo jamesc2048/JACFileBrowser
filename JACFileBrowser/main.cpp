@@ -1,8 +1,9 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 #include <QQuickStyle>
 #include <QDateTime>
+#include <QStyleHints>
 
 static void loggingHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -11,9 +12,9 @@ static void loggingHandler(QtMsgType type, const QMessageLogContext &context, co
     //const QString message = qFormatLogMessage(type, context, msg);
 
 #ifdef Q_OS_WIN
-#define SEPARATOR_CHAR '\\'
+    #define SEPARATOR_CHAR '\\'
 #else
-#define SEPARATOR_CHAR '/'
+    #define SEPARATOR_CHAR '/'
 #endif
 
     const char *file = strrchr(context.file ? context.file : "", SEPARATOR_CHAR);
@@ -44,7 +45,7 @@ int main(int argc, char *argv[])
     //qSetMessagePattern("[%{time process}] %{threadid} file:/%{file}:%{line}: %{message}");
     qInstallMessageHandler(loggingHandler);
 
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     app.setApplicationName("JACFileBrowser");
     app.setApplicationVersion(APP_VERSION);
@@ -52,7 +53,9 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("crisafulli.me");
 
     QQuickWindow::setTextRenderType(QQuickWindow::TextRenderType::NativeTextRendering);
-    //QQuickStyle::setStyle("Basic");
+    // This seems to be the only way to force the dark mode title bar when needed
+    // EVen though we override it to Universal style in QML.
+    QQuickStyle::setStyle("Fusion");
 
     qInfo() << "Launching JACFileBrowser version " APP_VERSION;
 
