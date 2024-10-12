@@ -4,14 +4,14 @@ import subprocess as sp
 from pathlib import Path
 from argparse import ArgumentParser
 
-# Tested on Windows 10 with Visual Studio 2022 and Qt 6.6.0
+# Tested on Windows 10 with Visual Studio 2022 and Qt 6.8.0
 if os.name != "nt":
     raise RuntimeError("TODO This script is only for Windows")
 
 parser = ArgumentParser()
 parser.add_argument("--install_dir", type=str, default="JACFileBrowser-build-0.1")
-parser.add_argument("--qt_path", type=str, default=r"C:\SDK\Qt\6.6.0\msvc2019_64")
-parser.add_argument("--visual_studio_path", type=str, default=r"C:\Program Files\Microsoft Visual Studio\2022\Professional")
+parser.add_argument("--qt_path", type=str, default=r"C:\SDK\Qt\6.8.0\msvc2022_64")
+parser.add_argument("--visual_studio_path", type=str, default=r"C:\Program Files\Microsoft Visual Studio\2022\Community")
 
 args = parser.parse_args()
 
@@ -21,7 +21,10 @@ install_dir = Path(args.install_dir)
 qt_path = Path(args.qt_path)
 
 build_dir = current_dir / "build-JACFileBrowser"
-shutil.rmtree(build_dir)
+
+if build_dir.exists():
+    build_dir.rmtree()
+
 os.path.exists(build_dir) or os.makedirs(build_dir)
 os.chdir(build_dir)
 
