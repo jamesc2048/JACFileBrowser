@@ -89,7 +89,7 @@ ColumnLayout {
                     let pathUrl = standardLocationsModel.get(cell).pathUrl
 
                     console.log("Loading special dir", pathUrl)
-                    contentsModel.currentDir = pathUrl;
+                    activeContentsPanel.contentsModel.currentDir = pathUrl;
                 }
             }
         }
@@ -163,7 +163,7 @@ ColumnLayout {
                 if (cell != -1) {
                     // TODO make the enums nicer here
                     let dir = drivesModel.data(drivesModel.index(cell, 0), Qt.UserRole + 1)
-                    contentsModel.currentDir = dir;
+                    activeContentsPanel.contentsModel.currentDir = dir;
                 }
             }
         }

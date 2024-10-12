@@ -80,6 +80,14 @@ Item {
         return isText
     }
 
+    function isVideoFile(path) {
+        // Crude extension-based recognition
+        let pathStr = path.toString();
+        let isVideo = /\.(?:mp4|mpeg4|mkv|avi)$/i.test(pathStr);
+        console.log("Preview: testing for video heuristic", pathStr, isVideo)
+        return isVideo
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
@@ -100,15 +108,21 @@ Item {
                     return null
                 }
 
-                if (isImageFile(activeContentsPanel.contentsModel.lastSelectedUrl)) {
+                const lastUrl = activeContentsPanel.contentsModel.lastSelectedUrl
+
+                if (isImageFile(lastUrl)) {
                     return imageComponent
                 }
 
-                if (isTextFile(activeContentsPanel.contentsModel.lastSelectedUrl)) {
+                if (isTextFile(lastUrl)) {
                     // TODO should be configurable
                     let sizeTruncation = 1024 ** 2; // 1 MB limit so not to slow down
                     previewRoot.textPreview = utilities.readTextFile(activeContentsPanel.contentsModel.lastSelectedUrl, sizeTruncation)
                     return textComponent
+                }
+
+                if (isVideoFile(lastUrl)) {
+
                 }
 
                 return null
