@@ -15,6 +15,7 @@ public:
 
     Q_INVOKABLE bool openInNativeBrowser(const QString& dirPath);
     Q_INVOKABLE QString readTextFile(const QUrl& path, int sizeTruncation = -1);
+    Q_INVOKABLE QString toNativeSeparators(const QString& str);
 
     static void runOnMainThread(std::function<void()> callback);
 };

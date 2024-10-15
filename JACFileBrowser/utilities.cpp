@@ -83,6 +83,11 @@ QString Utilities::readTextFile(const QUrl &path, int sizeTruncation)
     return str;
 }
 
+QString Utilities::toNativeSeparators(const QString &str)
+{
+    return QDir::toNativeSeparators(str);
+}
+
 void Utilities::runOnMainThread(std::function<void()> callback)
 {
     QTimer* timer = new QTimer();

@@ -52,7 +52,7 @@ QVariant DrivesModel::data(const QModelIndex &index, int role) const
     switch (role)
     {
     case Qt::DisplayRole:
-        return QString("%1 (%2)").arg(si.displayName()).arg(si.rootPath());
+        return QString("%1 (%2)").arg(QDir::toNativeSeparators(si.displayName())).arg(QDir::toNativeSeparators(si.rootPath()));
 
     case DrivesModel::RootPathRole:
         return si.rootPath();
@@ -63,10 +63,12 @@ QVariant DrivesModel::data(const QModelIndex &index, int role) const
 
 QHash<int, QByteArray> DrivesModel::roleNames() const
 {
-    return {
+    static const QHash<int, QByteArray> staticRoleNames {
         { Qt::DisplayRole, "display"_ba },
         { DrivesModel::RootPathRole, "rootPath"_ba }
     };
+
+    return staticRoleNames;
 }
 
 int DrivesModel::rows() const

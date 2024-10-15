@@ -53,7 +53,7 @@ ColumnLayout {
 
         delegate: NiceLabel {
             width: parent.width
-            text: `${name} (${pathUrl})`
+            text: `${name} (${utilities.toNativeSeparators(pathUrl)})`
             height: rowHeight
         }
 
