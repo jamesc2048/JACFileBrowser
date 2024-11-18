@@ -4,6 +4,11 @@
 #include <QtQml>
 #include <QObject>
 
+#include <stacktrace>
+#include <exception>
+#include <string>
+#include <iostream>
+
 using namespace Qt::StringLiterals;
 
 class Utilities : public QObject
@@ -18,6 +23,15 @@ public:
     Q_INVOKABLE QString toNativeSeparators(const QString& str);
 
     static void runOnMainThread(std::function<void()> callback);
+};
+
+class Exception : public std::exception
+{
+//    std::stacktrace stacktrace;
+
+public:
+    Exception();
+    std::string str();
 };
 
 #endif // UTILITIES_HPP

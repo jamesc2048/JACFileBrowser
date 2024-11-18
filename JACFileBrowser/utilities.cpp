@@ -103,3 +103,13 @@ void Utilities::runOnMainThread(std::function<void()> callback)
     QMetaObject::invokeMethod(timer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
 }
 
+Exception::Exception()
+{
+    //stacktrace = std::stacktrace::current(1);
+}
+
+std::string Exception::str()
+{
+    return "";
+    //return std::to_string(stacktrace);
+}
